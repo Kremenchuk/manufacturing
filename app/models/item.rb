@@ -3,6 +3,8 @@ class Item < ApplicationRecord
 
   has_many :items_order_manufacturings
   has_many :order_manufacturings, through: :items_order_manufacturings
+  has_many :item_details #под вопросом
+  has_many :item_details, as: :item_detailable
 
 
   validates :name, :unit, :price, :weight,
