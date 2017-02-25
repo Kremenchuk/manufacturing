@@ -1,9 +1,8 @@
 class Payroll < ApplicationRecord
 
   belongs_to :worker
-  belongs_to :order_manufacturing_detail
 
 
-  validates :date, :qty, :sum,
+  validates :date,
       presence: true
 end

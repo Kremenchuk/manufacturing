@@ -1,0 +1,38 @@
+.col-md-2
+  .nav-menu
+    %ul.nav.nav-pills.nav-stacked
+      %li#order-manufacturing-li
+        =link_to 'Наряды в производство' , '#order-manufacturing', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+      %li.active
+        =link_to 'Зарплатные ведомости' , '#qwe', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+      %li
+        =link_to 'Продукция' , '#qwe', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+      %li
+        =link_to 'Работы' , '#qwe', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+      %li
+        =link_to 'Работники' , '#qwe', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+      %li
+        =link_to 'Контрагенты' , '#qwe', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+
+
+.tab-content
+  #order-manufacturing.tab-pane.fade.in
+    .col-md-10
+      = link_to '#asd', class: 'btn btn-default' do
+        %i.fa.fa-plus-square
+      #order-manufacturing-data
+  #asd.tab-pane.fade.in.active
+    .col-md-10
+      = link_to '#asd', class: 'btn btn-default' do
+        %i.fa.fa-plus-square
+      %h2 asd
+  #qwe.tab-pane.fade.in
+    .col-md-10
+      = link_to '#asd', class: 'btn btn-default' do
+        %i.fa.fa-plus-square
+      %h2 qwe
+
+
+:javascript
+  var order_manufacturing_index_path = "#{escape_javascript(order_manufacturing_index_path)}"
+

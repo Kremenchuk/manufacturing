@@ -1,0 +1,21 @@
+.login-container
+  .container
+    .card.card-container
+      =image_tag 'login_avatar.png', id: 'profile-img', class: 'profile-img-card'
+      %p#profile-name.profile-name-card
+      .form-signin
+        = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
+          %span#reauth-email.reauth-email
+          = f.email_field :email, autofocus: true, class: 'form-control', placeholder: 'Email address'
+          = f.password_field :password, autocomplete: "off", class: 'form-control', placeholder: 'Password'
+
+          -if devise_mapping.rememberable?
+            #remember.checkbox
+              = f.check_box :remember_me
+              = f.label :remember_me
+          = f.submit "Log in", class: 'btn btn-lg btn-primary btn-block btn-signin'
+
+          = render "devise/shared/links"
+
+
+
