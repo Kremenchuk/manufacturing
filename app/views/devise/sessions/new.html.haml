@@ -6,8 +6,8 @@
       .form-signin
         = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
           %span#reauth-email.reauth-email
-          = f.email_field :email, autofocus: true, class: 'form-control', placeholder: 'Email address'
-          = f.password_field :password, autocomplete: "off", class: 'form-control', placeholder: 'Password'
+            = f.email_field :email, autofocus: true, class: 'form-control', placeholder: 'Email address'
+            = f.password_field :password, autocomplete: "off", class: 'form-control', placeholder: 'Password'
 
           -if devise_mapping.rememberable?
             #remember.checkbox

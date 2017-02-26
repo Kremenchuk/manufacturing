@@ -11,6 +11,14 @@ body .wrapper .login-container {
   background-image: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));
 }
 
+#remember {
+  padding-left: 20px;
+}
+
+.checkbox label {
+  padding-left: 0 !important;
+}
+
 .card-container.card {
   max-width: 350px;
   padding: 40px 40px;

@@ -2,6 +2,6 @@ class OrderManufacturingController < ApplicationController
   layout false
 
   def index
-    @user = User.all
+    @order_manufacturings = OrderManufacturing.all.page params[:page]
   end
 end

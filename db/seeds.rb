@@ -11,3 +11,16 @@ User.find_or_initialize_by(email: 'kremenchuk@bk.ru').tap do |f|
   f.password = '1440518'
   f.save!
 end
+
+c = Counterparty.find_or_initialize_by(name: 'Форстор').tap do |f|
+  f.short_name = 'Ф'
+  f.c_type = 0
+  f.save!
+end
+
+OrderManufacturing.find_or_initialize_by(number: 'Ф-1').tap do |f|
+  f.date = Time.now.strftime('%d.%m.%Y')
+  f.invoice = 'A-1'
+  f.counterparty = c
+  f.save!
+end
