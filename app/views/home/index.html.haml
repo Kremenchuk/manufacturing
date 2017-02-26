@@ -21,11 +21,13 @@
       = link_to '#asd', class: 'btn btn-default' do
         %i.fa.fa-plus-square
       #order-manufacturing-data
+
   #payroll.tab-pane.fade.in
     .col-md-10
       = link_to '#asd', class: 'btn btn-default' do
         %i.fa.fa-plus-square
       #payroll-data
+
   #qwe.tab-pane.fade.in
     .col-md-10
       = link_to '#asd', class: 'btn btn-default' do
@@ -34,16 +36,9 @@
 
 
 :javascript
-  var order_manufacturing_index_path = "#{escape_javascript(order_manufacturing_index_path)}"
+  var order_manufacturings_path = "#{escape_javascript(order_manufacturings_path)}"
 
 :javascript
-  var payroll_index_path = "#{escape_javascript(payroll_index_path)}"
+  var payrolls_path = "#{escape_javascript(payrolls_path)}"
 
 
-:coffee
-  $ ->
-    document.getElementById("order-manufacturing-data").innerHTML = ''
-    $.ajax
-      url: order_manufacturing_index_path
-      success: (data) ->
-        $('#order-manufacturing-data').append(data);

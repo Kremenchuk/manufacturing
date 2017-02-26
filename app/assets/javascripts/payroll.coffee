@@ -5,6 +5,6 @@ $ ->
   $('#payroll-li').click ->
     document.getElementById("payroll-data").innerHTML = ''
     $.ajax
-      url: payroll_index_path
+      url: payrolls_path
       success: (data) ->
         $('#payroll-data').append(data);

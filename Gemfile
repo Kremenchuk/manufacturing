@@ -6,6 +6,7 @@ gem 'jquery-ui-rails'
 gem 'bootstrap-sass'
 gem 'font-awesome-sass'
 gem 'kaminari'
+gem 'bootstrap-kaminari-views'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.0', '>= 5.0.0.1'

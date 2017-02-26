@@ -1,4 +1,4 @@
-class PayrollController < ApplicationController
+class PayrollsController < ApplicationController
   layout false
 
   def index

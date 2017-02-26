@@ -5,8 +5,9 @@ $ ->
   $('#order-manufacturing-li').click ->
     document.getElementById("order-manufacturing-data").innerHTML = ''
     $.ajax
-      url: order_manufacturing_index_path
+      url: order_manufacturings_path
       success: (data) ->
+        console.log data
         $('#order-manufacturing-data').append(data);
 
 

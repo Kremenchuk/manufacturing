@@ -18,9 +18,11 @@ c = Counterparty.find_or_initialize_by(name: 'Форстор').tap do |f|
   f.save!
 end
 
-OrderManufacturing.find_or_initialize_by(number: 'Ф-1').tap do |f|
-  f.date = Time.now.strftime('%d.%m.%Y')
-  f.invoice = 'A-1'
-  f.counterparty = c
-  f.save!
+100.times do |i|
+  OrderManufacturing.find_or_initialize_by(number: "Ф-#{i}").tap do |f|
+    f.date = Time.now.strftime('%d.%m.%Y')
+    f.invoice = "A-#{i}"
+    f.counterparty = c
+    f.save!
+  end
 end
