@@ -26,3 +26,18 @@ end
     f.save!
   end
 end
+
+w = Worker.find_or_initialize_by(first_name: "Фамилия").tap do |f|
+  f.middle_name = 'Отчество'
+  f.last_name = 'Имя'
+  f.position = 'Электрик'
+end
+
+
+100.times do |i|
+  Payroll.create do |f|
+    f.date = Time.now.strftime('%d.%m.%Y')
+    f.worker = w
+    f.save!
+  end
+end

@@ -3,10 +3,7 @@
 #= require jquery_ujs
 #= require bootstrap.min.js
 #= require_tree .
+#= require dataTables/jquery.dataTables
 
 $ ->
-  document.getElementById("order-manufacturing-data").innerHTML = ''
-  $.ajax
-    url: order_manufacturings_path
-    success: (data) ->
-      $('#order-manufacturing-data').append(data);
+  $('.table-datatable').dataTable()
