@@ -1,5 +1,5 @@
 .col-md-12
-  %table#payroll.display{'data-source': '<%= payrolls_url(format: "json") %>'}
+  %table#payroll-table.display{"data-source": payrolls_url(format: "json")}
     %thead
       %th.table-data Дата
       %th.table-number Работник

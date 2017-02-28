@@ -32,37 +32,31 @@ ActiveRecord::Schema.define(version: 1200) do
 
   create_table "item_order_manufacturings", force: :cascade do |t|
     t.integer "item_id"
-    t.integer "order_manufacturings_id"
-    t.float   "qty",                     null: false
+    t.integer "order_manufacturing_id"
+    t.float   "qty",                    null: false
     t.index ["item_id"], name: "index_item_order_manufacturings_on_item_id"
-    t.index ["order_manufacturings_id"], name: "index_item_order_manufacturings_on_order_manufacturings_id"
+    t.index ["order_manufacturing_id"], name: "index_item_order_manufacturings_on_order_manufacturing_id"
   end
 
   create_table "items", force: :cascade do |t|
-    t.string   "name"
-    t.string   "unit"
+    t.string   "name",                   null: false
+    t.string   "unit",                   null: false
+    t.integer  "item_type",  default: 1
     t.float    "area"
-    t.float    "price"
+    t.float    "price",                  null: false
     t.float    "volume"
-    t.float    "weight"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.float    "weight",                 null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   create_table "jobs", force: :cascade do |t|
-    t.string   "name"
-    t.float    "price"
-    t.integer  "time"
-    t.boolean  "print"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "jobs_workers", id: false, force: :cascade do |t|
-    t.integer "job_id"
-    t.integer "worker_id"
-    t.index ["job_id"], name: "index_jobs_workers_on_job_id"
-    t.index ["worker_id"], name: "index_jobs_workers_on_worker_id"
+    t.string   "name",                      null: false
+    t.float    "price",                     null: false
+    t.integer  "time",                      null: false
+    t.boolean  "print",      default: true
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
   create_table "o_m_details", force: :cascade do |t|
@@ -76,8 +70,8 @@ ActiveRecord::Schema.define(version: 1200) do
   end
 
   create_table "order_manufacturings", force: :cascade do |t|
-    t.string   "number"
-    t.string   "date"
+    t.string   "number",          null: false
+    t.string   "date",            null: false
     t.string   "invoice"
     t.text     "note"
     t.integer  "counterparty_id"
@@ -88,13 +82,13 @@ ActiveRecord::Schema.define(version: 1200) do
 
   create_table "payroll_details", force: :cascade do |t|
     t.integer  "order_manufacturing_detail_id"
-    t.integer  "payrolls_id"
+    t.integer  "payroll_id"
     t.float    "qty",                           null: false
     t.float    "sum",                           null: false
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
     t.index ["order_manufacturing_detail_id"], name: "index_payroll_details_on_order_manufacturing_detail_id"
-    t.index ["payrolls_id"], name: "index_payroll_details_on_payrolls_id"
+    t.index ["payroll_id"], name: "index_payroll_details_on_payroll_id"
   end
 
   create_table "payrolls", force: :cascade do |t|
@@ -123,10 +117,10 @@ ActiveRecord::Schema.define(version: 1200) do
   end
 
   create_table "workers", force: :cascade do |t|
-    t.string   "first_name"
+    t.string   "first_name",  null: false
     t.string   "middle_name"
-    t.string   "last_name"
-    t.string   "position"
+    t.string   "last_name",   null: false
+    t.string   "position",    null: false
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
   end
