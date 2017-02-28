@@ -6,6 +6,7 @@ gem 'jquery-ui-rails'
 gem 'bootstrap-sass'
 gem 'font-awesome-sass'
 gem 'kaminari'
+gem 'will_paginate'
 gem 'bootstrap-kaminari-views'
 gem 'jquery-datatables-rails'
 

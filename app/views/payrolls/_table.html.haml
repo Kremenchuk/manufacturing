@@ -1,8 +1,8 @@
 .col-md-12
-  %table.table-datatable.display
+  %table#payroll.display{'data-source': '<%= payrolls_url(format: "json") %>'}
     %thead
       %th.table-data Дата
       %th.table-number Работник
     %tbody
-      =render @payrolls
+      -#=render @payrolls
 
