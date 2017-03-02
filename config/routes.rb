@@ -3,4 +3,5 @@ Rails.application.routes.draw do
   root 'home#index'
   resources :order_manufacturings
   resources :payrolls
+  resources :items
 end

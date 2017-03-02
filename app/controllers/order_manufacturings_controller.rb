@@ -1,14 +1,11 @@
 class OrderManufacturingsController < ApplicationController
-  layout false
 
   def index
-    # SELECT c.id FROM counterparties as c WHERE c.name like :search
     data_hash = {
         view_context: view_context,
         sort_column: %w[date number counterparty.name invoice],
         model: OrderManufacturing,
-        search_query: 'date like :search or number like :search or counterparties.id IN :join_table_var or invoice like :search',
-        join_table: 'counterparties'
+        search_query: 'date like :search or UPPER(number) like :search or UPPER(invoice) like :search or counterparty_id IN (SELECT counterparties.id FROM counterparties WHERE UPPER(counterparties.name) like :search)',
     }
 
     respond_to do |format|

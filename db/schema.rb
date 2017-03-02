@@ -12,6 +12,9 @@
 
 ActiveRecord::Schema.define(version: 1200) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "counterparties", force: :cascade do |t|
     t.string   "name",                   null: false
     t.string   "short_name",             null: false
@@ -27,15 +30,15 @@ ActiveRecord::Schema.define(version: 1200) do
     t.float    "qty",                  null: false
     t.datetime "created_at",           null: false
     t.datetime "updated_at",           null: false
-    t.index ["item_id"], name: "index_item_details_on_item_id"
+    t.index ["item_id"], name: "index_item_details_on_item_id", using: :btree
   end
 
   create_table "item_order_manufacturings", force: :cascade do |t|
     t.integer "item_id"
-    t.integer "order_manufacturing_id"
-    t.float   "qty",                    null: false
-    t.index ["item_id"], name: "index_item_order_manufacturings_on_item_id"
-    t.index ["order_manufacturing_id"], name: "index_item_order_manufacturings_on_order_manufacturing_id"
+    t.integer "order_manufacturings_id"
+    t.float   "qty",                     null: false
+    t.index ["item_id"], name: "index_item_order_manufacturings_on_item_id", using: :btree
+    t.index ["order_manufacturings_id"], name: "index_item_order_manufacturings_on_order_manufacturings_id", using: :btree
   end
 
   create_table "items", force: :cascade do |t|
@@ -66,7 +69,7 @@ ActiveRecord::Schema.define(version: 1200) do
     t.float    "qty",                    null: false
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
-    t.index ["order_manufacturing_id"], name: "index_o_m_details_on_order_manufacturing_id"
+    t.index ["order_manufacturing_id"], name: "index_o_m_details_on_order_manufacturing_id", using: :btree
   end
 
   create_table "order_manufacturings", force: :cascade do |t|
@@ -77,18 +80,18 @@ ActiveRecord::Schema.define(version: 1200) do
     t.integer  "counterparty_id"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
-    t.index ["counterparty_id"], name: "index_order_manufacturings_on_counterparty_id"
+    t.index ["counterparty_id"], name: "index_order_manufacturings_on_counterparty_id", using: :btree
   end
 
   create_table "payroll_details", force: :cascade do |t|
     t.integer  "order_manufacturing_detail_id"
-    t.integer  "payroll_id"
+    t.integer  "payrolls_id"
     t.float    "qty",                           null: false
     t.float    "sum",                           null: false
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
-    t.index ["order_manufacturing_detail_id"], name: "index_payroll_details_on_order_manufacturing_detail_id"
-    t.index ["payroll_id"], name: "index_payroll_details_on_payroll_id"
+    t.index ["order_manufacturing_detail_id"], name: "index_payroll_details_on_order_manufacturing_detail_id", using: :btree
+    t.index ["payrolls_id"], name: "index_payroll_details_on_payrolls_id", using: :btree
   end
 
   create_table "payrolls", force: :cascade do |t|
@@ -96,7 +99,7 @@ ActiveRecord::Schema.define(version: 1200) do
     t.string   "date",       null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["worker_id"], name: "index_payrolls_on_worker_id"
+    t.index ["worker_id"], name: "index_payrolls_on_worker_id", using: :btree
   end
 
   create_table "users", force: :cascade do |t|
@@ -112,8 +115,8 @@ ActiveRecord::Schema.define(version: 1200) do
     t.string   "last_sign_in_ip"
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
-    t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
   create_table "workers", force: :cascade do |t|

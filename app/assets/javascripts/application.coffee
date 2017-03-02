@@ -2,8 +2,9 @@
 #= require jquery
 #= require jquery_ujs
 #= require bootstrap.min.js
-#= require_tree .
 #= require dataTables/jquery.dataTables
+
+
 
 window.dataTableJson =
 {
@@ -43,3 +44,7 @@ $ ->
     sAjaxSource: $('#order_manufacturing-table').data('source')
     "language": window.dataTableJson)
 
+  $('#item-table').dataTable(
+    bServerSide: true
+    sAjaxSource: $('#item-table').data('source')
+    "language": window.dataTableJson)

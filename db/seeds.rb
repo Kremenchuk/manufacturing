@@ -12,17 +12,23 @@ User.find_or_initialize_by(email: 'kremenchuk@bk.ru').tap do |f|
   f.save!
 end
 
-c = Counterparty.find_or_initialize_by(name: 'Форстор').tap do |f|
+c1 = Counterparty.find_or_initialize_by(name: 'Форстор').tap do |f|
   f.short_name = 'Ф'
   f.c_type = 0
   f.save!
 end
 
+c2 =Counterparty.find_or_initialize_by(name: 'Складские технологии Харьков').tap do |f|
+  f.short_name = 'СТХ'
+  f.c_type = 0
+  f.save!
+end
+
 100.times do |i|
-  OrderManufacturing.find_or_initialize_by(number: "Ф-#{i}").tap do |f|
+  OrderManufacturing.find_or_initialize_by(number: i.odd? ? "Ф-#{i}" : "СТХ-#{i}").tap do |f|
     f.date = Time.now.strftime('%d.%m.%Y')
     f.invoice = "A-#{i}"
-    f.counterparty = c
+    f.counterparty = i.odd? ? c1 : c2
     f.save!
   end
 end
@@ -34,10 +40,23 @@ w = Worker.find_or_initialize_by(first_name: "Фамилия").tap do |f|
 end
 
 
+# 100.times do |i|
+#   Payroll.create do |f|
+#     f.date = Time.now.strftime('%d.%m.%Y')
+#     f.worker = w
+#     f.save!
+#   end
+# end
+
 100.times do |i|
-  Payroll.create do |f|
-    f.date = Time.now.strftime('%d.%m.%Y')
-    f.worker = w
+  Item.find_or_initialize_by(name: "стеллаж х#{i}х#{i}х#{i}").tap do |f|
+    f.unit = 'Шт.'
+    f.item_type = 1
+    f.area = 120
+    f.price = 2551.05
+    f.volume = 0.02
+    f.weight = 22.5
     f.save!
   end
+
 end
