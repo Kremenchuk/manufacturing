@@ -36,4 +36,36 @@ class MappingModelData
       ]
     end
   end
+
+  def job
+    model_data.map do |model_data_i|
+      [
+          model_data_i.name,
+          model_data_i.price,
+          model_data_i.time,
+          model_data_i.print.present? ? 'Да' : 'Нет'
+      ]
+      end
+  end
+
+  def worker
+    model_data.map do |model_data_i|
+      [
+          model_data_i.first_name,
+          model_data_i.last_name,
+          model_data_i.middle_name,
+          model_data_i.position
+      ]
+    end
+  end
+
+  def counterparty
+    model_data.map do |model_data_i|
+      [
+          model_data_i.name,
+          model_data_i.short_name,
+          model_data_i.c_type
+      ]
+    end
+  end
 end

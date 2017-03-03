@@ -48,3 +48,18 @@ $ ->
     bServerSide: true
     sAjaxSource: $('#item-table').data('source')
     "language": window.dataTableJson)
+
+  $('#job-table').dataTable(
+    bServerSide: true
+    sAjaxSource: $('#job-table').data('source')
+    "language": window.dataTableJson)
+
+  $('#worker-table').dataTable(
+    bServerSide: true
+    sAjaxSource: $('#worker-table').data('source')
+    "language": window.dataTableJson)
+
+  $('#counterparty-table').dataTable(
+    bServerSide: true
+    sAjaxSource: $('#counterparty-table').data('source')
+    "language": window.dataTableJson)

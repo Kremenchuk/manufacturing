@@ -1,5 +1,5 @@
 class Counterparty < ApplicationRecord
-  enum c_type: [:buyer, :provider]
+  enum c_type: ['Покупатель', 'Продавец']
 
   has_many :order_manufacturings
 end

@@ -4,4 +4,7 @@ Rails.application.routes.draw do
   resources :order_manufacturings
   resources :payrolls
   resources :items
+  resources :jobs
+  resources :workers
+  resources :counterparties
 end

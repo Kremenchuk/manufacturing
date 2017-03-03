@@ -58,5 +58,14 @@ end
     f.weight = 22.5
     f.save!
   end
+end
+
+100.times do |i|
+  Job.find_or_initialize_by(name: "Работа №#{i}").tap do |f|
+    f.price = 10.2 + i
+    f.time = 1 + i
+    f.print = true
+    f.save!
+  end
 
 end

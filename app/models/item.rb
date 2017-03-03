@@ -1,5 +1,5 @@
 class Item < ApplicationRecord
-  enum item_type: ['стеллаж', 'материал', 'полуфабрикат']
+  enum item_type: ['Стеллаж', 'Материал', 'Полуфабрикат']
 
   has_many :item_order_manufacturings
   has_many :order_manufacturings, through: :items_order_manufacturings

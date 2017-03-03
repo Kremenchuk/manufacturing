@@ -1,0 +1,13 @@
+= form_for @counterparty do |f|
+  .form-group
+    = f.label :name, 'Наименование'
+    = f.text_field :name, class: 'form-control'
+  .form-group
+    = f.label :short_name, 'Короткое наименование'
+    = f.text_field :short_name, class: 'form-control'
+  .form-group
+    = f.label :c_type, 'Тип контрагента'
+    = f.select :c_type, ['Покупатель', 'Продавец'], {}, {class: 'form-control'}
+  .form-group
+    = f.submit 'Сохранить', class: 'btn btn-success'
+    = link_to 'Отмена', root_path, class: 'btn btn-danger'
