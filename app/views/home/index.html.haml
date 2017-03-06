@@ -1,22 +1,22 @@
 .col-md-2
   .nav-menu
     %ul.nav.nav-pills.nav-stacked
-      %li#order-manufacturing-li.active
+      %li#order-manufacturing-li.tabs-class.active
         =link_to 'Наряды в производство' , '#order-manufacturing', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
-      %li#payroll-li
+      %li#payroll-li.tabs-class
         =link_to 'Зарплатные ведомости' , '#payroll', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
-      %li
+      %li#item-li.tabs-class
         =link_to 'Продукция' , '#item', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
-      %li
+      %li#job-li.tabs-class
         =link_to 'Работы' , '#job', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
-      %li
+      %li#worker-li.tabs-class
         =link_to 'Работники' , '#worker', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
-      %li
+      %li#counterparty-li.tabs-class
         =link_to 'Контрагенты' , '#counterparty', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
 
 
 .tab-content
-  #order-manufacturing.tab-pane.fade.in.active
+  #order-manufacturing.tabs-class.tab-pane.fade.in.active
     .col-md-10
       .add-new-button
         = link_to new_order_manufacturing_path, class: 'btn btn-default' do
@@ -25,7 +25,7 @@
         = render 'order_manufacturings/table'
 
 
-  #payroll.tab-pane.fade.in
+  #payroll.tabs-class.tab-pane.fade.in
     .col-md-10
       .add-new-button
         = link_to '#asd', class: 'btn btn-default' do
@@ -34,7 +34,7 @@
         = render 'payrolls/table'
 
 
-  #item.tab-pane.fade.in
+  #item.tabs-class.tab-pane.fade.in
     .col-md-10
       .add-new-button
         = link_to '#asd', class: 'btn btn-default' do
@@ -43,7 +43,7 @@
         = render 'items/table'
 
 
-  #job.tab-pane.fade.in
+  #job.tabs-class.tab-pane.fade.in
     .col-md-10
       .add-new-button
         = link_to '#asd', class: 'btn btn-default' do
@@ -52,7 +52,7 @@
         = render 'jobs/table'
 
 
-  #worker.tab-pane.fade.in
+  #worker.tabs-class.tab-pane.fade.in
     .col-md-10
       .add-new-button
         = link_to '#asd', class: 'btn btn-default' do
@@ -61,7 +61,7 @@
         = render 'workers/table'
 
 
-  #counterparty.tab-pane.fade.in
+  #counterparty.tabs-class.tab-pane.fade.in
     .col-md-10
       .add-new-button
         = link_to new_counterparty_path, class: 'btn btn-default' do
@@ -76,3 +76,10 @@
 -#  var payrolls_path = "#{escape_javascript(payrolls_path)}"
 
 
+:coffee
+  $ ->
+    active_id = window.location.search.substring(1).split('=')[1]
+    if active_id != undefined
+      $('.tabs-class').removeClass('active')
+      $('#' + active_id).addClass('active')
+      $('#' + active_id + '-li').addClass('active')

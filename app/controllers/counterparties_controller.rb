@@ -1,5 +1,7 @@
 class CounterpartiesController < ApplicationController
 
+  before_action :permit_params, only: [:create, :edit]
+
   def index
     data_hash = {
         view_context: view_context,
@@ -19,7 +21,19 @@ class CounterpartiesController < ApplicationController
     @counterparty = Counterparty.new
   end
 
-  def create
-    a=2
+  def edit
+
   end
+
+  def create
+    Counterparty.create(permit_params)
+    redirect_to root_path(active_tab: 'counterparty')
+  end
+
+  private
+
+  def permit_params
+    params.require(:counterparty).permit(:name, :short_name, :c_type)
+  end
+
 end
