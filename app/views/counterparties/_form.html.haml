@@ -10,4 +10,4 @@
     = f.select :c_type, ['Покупатель', 'Продавец'], {}, {class: 'form-control'}
   .form-group
     = f.submit 'Сохранить', class: 'btn btn-success'
-    = link_to 'Отмена', root_path, class: 'btn btn-danger'
+    = link_to 'Отмена', root_path(active_tab: 'counterparty'), class: 'btn btn-danger'

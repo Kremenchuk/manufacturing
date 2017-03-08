@@ -13,4 +13,24 @@ class WorkersController < ApplicationController
       format.json { render json: DatatableClass.new(data_hash) }
     end
   end
+
+  def new
+    @worker = Worker.new
+  end
+
+  def edit
+
+  end
+
+  def create
+    Worker.create(permit_params)
+    redirect_to root_path(active_tab: 'worker')
+  end
+
+  private
+
+  def permit_params
+    params.require(:worker).permit(:first_name, :middle_name, :last_name, :position)
+  end
+
 end

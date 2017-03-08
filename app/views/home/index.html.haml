@@ -28,7 +28,7 @@
   #payroll.tabs-class.tab-pane.fade.in
     .col-md-10
       .add-new-button
-        = link_to '#asd', class: 'btn btn-default' do
+        = link_to new_payroll_path, class: 'btn btn-default' do
           %i.fa.fa-plus-square
       #payroll-data
         = render 'payrolls/table'
@@ -37,7 +37,7 @@
   #item.tabs-class.tab-pane.fade.in
     .col-md-10
       .add-new-button
-        = link_to '#asd', class: 'btn btn-default' do
+        = link_to new_item_path, class: 'btn btn-default' do
           %i.fa.fa-plus-square
       #item-data
         = render 'items/table'
@@ -46,7 +46,7 @@
   #job.tabs-class.tab-pane.fade.in
     .col-md-10
       .add-new-button
-        = link_to '#asd', class: 'btn btn-default' do
+        = link_to new_job_path, class: 'btn btn-default' do
           %i.fa.fa-plus-square
       #job-data
         = render 'jobs/table'
@@ -55,7 +55,7 @@
   #worker.tabs-class.tab-pane.fade.in
     .col-md-10
       .add-new-button
-        = link_to '#asd', class: 'btn btn-default' do
+        = link_to new_worker_path, class: 'btn btn-default' do
           %i.fa.fa-plus-square
       #worker-data
         = render 'workers/table'

@@ -13,4 +13,25 @@ class ItemsController < ApplicationController
       format.json { render json: DatatableClass.new(data_hash) }
     end
   end
+
+  def new
+    @item = Item.new
+  end
+
+  def edit
+
+  end
+
+  def create
+    Item.create(permit_params)
+    redirect_to root_path(active_tab: 'job')
+  end
+
+  private
+
+  def permit_params
+    params.require(:item).permit(:name, :unit, :item_type, :area, :price, :volume, :weight)
+  end
+
+
 end

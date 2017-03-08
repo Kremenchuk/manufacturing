@@ -1,0 +1,35 @@
+= form_for @item do |f|
+  .col-md-12
+    .col-md-6
+      .col-md-3
+        .form-group
+          = f.label :name, 'Наименование'
+          = f.text_field :name, class: 'form-control'
+        .form-group
+          = f.label :area, 'Площадь'
+          = f.number_field :area, step: 0.01, class: 'form-control'
+      .col-md-3
+        .form-group
+          = f.label :item_type, 'Тип'
+          = f.select :item_type, [['Стеллаж', 0], ['Материал', 1], ['Полуфабрикат', 2]], {}, {class: 'form-control'}
+        .form-group
+          = f.label :volume, 'Объем'
+          = f.number_field :volume, step: 0.001, class: 'form-control'
+      .col-md-3
+        .form-group
+          = f.label :unit, 'Ед. измерения'
+          = f.select :unit, [['шт', 0], ['м/п', 1], ['кг', 2], ['%', 3]], {}, {class: 'form-control'}
+        .form-group
+          = f.label :weight, 'Вес'
+          = f.number_field :weight, step: 0.01, class: 'form-control'
+  .col-md-12
+    .col-md-6
+      .col-md-3
+        .form-group
+          = f.label :price, 'Цена'
+          = f.number_field :price, step: 0.01, class: 'form-control'
+
+  .col-md-12
+    .form-group
+      = f.submit 'Сохранить', class: 'btn btn-success'
+      = link_to 'Отмена', root_path(active_tab: 'job'), class: 'btn btn-danger'
