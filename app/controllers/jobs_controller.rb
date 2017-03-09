@@ -1,5 +1,6 @@
 class JobsController < ApplicationController
 
+  before_action :permit_params, only: [:create, :update]
 
   def index
     data_hash = {
@@ -20,6 +21,10 @@ class JobsController < ApplicationController
   end
 
   def edit
+
+  end
+
+  def update
 
   end
 

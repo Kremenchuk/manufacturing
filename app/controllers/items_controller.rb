@@ -1,5 +1,7 @@
 class ItemsController < ApplicationController
 
+  before_action :permit_params, only: [:create, :update]
+
   def index
     data_hash = {
         view_context: view_context,
@@ -19,6 +21,10 @@ class ItemsController < ApplicationController
   end
 
   def edit
+
+  end
+
+  def update
 
   end
 
