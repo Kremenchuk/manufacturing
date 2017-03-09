@@ -24,13 +24,15 @@
         .form-group
           = f.label :unit, 'Ед. измерения'
           = f.select :unit, [['шт', 0], ['м/п', 1], ['кг', 2], ['%', 3]], {}, {class: 'form-control'}
-
         .form-group
           = f.label :price, 'Цена'
           = f.number_field :price, step: 0.01, class: 'form-control'
-
   .col-md-12
-    %table.table-style{cellspacing: '1', cellpadding: '1', border: '1', width: '100%'}
+    .add-new-button
+      = link_to '', remote: true, class: 'btn btn-default', 'data-toggle': 'modal', 'data-target': '#item-details-modal' do
+        %i.fa.fa-plus-square
+  .col-md-12.table-style
+    %table{cellspacing: '1', cellpadding: '1', border: '1', width: '100%'}
       %thead
         %tr
           %th.table-10 № п/п
@@ -39,17 +41,33 @@
           %th.table-10 Количество
           %th.table-10 Цена
           %th.table-15 Сумма
-      %tbody
-        %tr
-          %td asd1
-          %td asd2
-          %td asd3
-          %td asd4
-          %td asd5
-          %td asd6
-
+      %tbody#item-table-body
+        -if @item_details.present?
+          - @item_details.each do |item_detail|
+            = item_detail
 
   .col-md-12
     .form-group
       = button_tag 'Сохранить', class: 'btn btn-success'
       = link_to 'Отмена', root_path(active_tab: 'item'), class: 'btn btn-danger'
+
+
+#item-details-modal.modal.fade{:role => 'dialog'}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{'data-dismiss': 'modal', type: 'button'} ×
+        %h4.modal-title Добавить
+      .modal-body
+        %table#item-table.display.datatable-table{'data-source': items_url(format: 'json', modal: true)}
+          %thead
+            %th.table-5 V
+            %th.table-40 Наименование
+            %th.table-10 Ед. измерения
+            %th.table-15 Тип
+            %th.table-15 Цена
+            %th.table-15 Вес
+          %tbody
+      .modal-footer
+        = link_to 'Добавить', add_item_detail_path, class: 'btn btn-success', remote: true, 'data-dismiss': 'modal', method: :post
+        %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close

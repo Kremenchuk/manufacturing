@@ -6,6 +6,7 @@ class DatatableClass
     @sort_column = data_hash[:sort_column]
     @model = data_hash[:model]
     @search_query = data_hash[:search_query]
+    @modal_query = data_hash[:modal_query] if data_hash[:modal_query].present?
   end
 
   def as_json(options = {})
@@ -20,7 +21,7 @@ class DatatableClass
   private
 
   def data
-    MappingModelData.new(model_data).send(@model.to_s.tableize.singularize)
+    MappingModelData.new(model_data, (@modal_query if params[:modal].present?)).send(@model.to_s.tableize.singularize)
   end
 
   def model_data

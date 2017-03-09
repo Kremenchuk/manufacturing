@@ -7,4 +7,5 @@ Rails.application.routes.draw do
   resources :jobs
   resources :workers
   resources :counterparties
+  post 'add_item_detail' => 'items#add_item_detail'
 end

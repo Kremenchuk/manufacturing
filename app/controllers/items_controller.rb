@@ -1,6 +1,7 @@
 class ItemsController < ApplicationController
 
   before_action :permit_params, only: [:create, :update]
+  before_action :find_item, only: [:show, :edit]
 
   def index
     data_hash = {
@@ -9,6 +10,10 @@ class ItemsController < ApplicationController
         model: Item,
         search_query: 'UPPER(name) like :search'
     }
+    if params[:modal].present?
+      data_hash[:search_query] = 'UPPER(name) like :search AND item_type != 0'
+      data_hash[:modal_query] = 'item_type != 0'
+    end
 
     respond_to do |format|
       format.html
@@ -18,10 +23,16 @@ class ItemsController < ApplicationController
 
   def new
     @item = Item.new
+    @items = Item.where.not(item_type: 0)
+  end
+
+  def show
+
   end
 
   def edit
-
+    @item = Item.new
+    @items_details = @item.item_details
   end
 
   def update
@@ -33,11 +44,18 @@ class ItemsController < ApplicationController
     redirect_to root_path(active_tab: 'job')
   end
 
+  def add_item_detail
+    a=2
+  end
+
   private
 
   def permit_params
     params.require(:item).permit(:name, :unit, :item_type, :area, :price, :volume, :weight)
   end
 
+  def find_item
+    @item = Item.find(params[:id])
+  end
 
 end

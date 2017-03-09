@@ -1,8 +1,9 @@
 class MappingModelData
-  attr_accessor :model_data
+  attr_accessor :model_data, :modal_query
 
-  def initialize(model_data)
+  def initialize(model_data, modal_query = nil)
     @model_data = model_data
+    @modal_query = modal_query if modal_query.present?
   end
 
   def order_manufacturing
@@ -26,14 +27,27 @@ class MappingModelData
   end
 
   def item
-    model_data.map do |model_data_i|
-      [
-          model_data_i.name,
-          model_data_i.unit,
-          model_data_i.item_type,
-          model_data_i.price,
-          model_data_i.weight,
-      ]
+    if modal_query.present?
+      model_data.where(modal_query).map do |model_data_i|
+        [
+            select_controller_helper(model_data_i.id, model_data_i),
+            model_data_i.name,
+            model_data_i.unit,
+            model_data_i.item_type,
+            model_data_i.price,
+            model_data_i.weight,
+        ]
+      end
+    else
+      model_data.map do |model_data_i|
+        [
+            model_data_i.name,
+            model_data_i.unit,
+            model_data_i.item_type,
+            model_data_i.price,
+            model_data_i.weight,
+        ]
+      end
     end
   end
 
