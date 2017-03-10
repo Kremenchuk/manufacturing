@@ -1,4 +1,5 @@
 class MappingModelData
+  include ApplicationHelper
   attr_accessor :model_data, :modal_query
 
   def initialize(model_data, modal_query = nil)
@@ -30,7 +31,7 @@ class MappingModelData
     if modal_query.present?
       model_data.where(modal_query).map do |model_data_i|
         [
-            select_controller_helper(model_data_i.id, model_data_i),
+            check_box_helper(model_data_i.id, 'item', '[item_details][id][]','datatable-checkbox'),
             model_data_i.name,
             model_data_i.unit,
             model_data_i.item_type,

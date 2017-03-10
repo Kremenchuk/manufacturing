@@ -63,3 +63,9 @@ $ ->
     bServerSide: true
     sAjaxSource: $('#counterparty-table').data('source')
     "language": window.dataTableJson)
+
+
+$ ->
+  $('body').on 'click', '.datatable-checkbox', ->
+    $(this).closest('tr').toggleClass('datatable-checkbox-checked-tr')
+

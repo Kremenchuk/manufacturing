@@ -43,8 +43,9 @@
           %th.table-15 Сумма
       %tbody#item-table-body
         -if @item_details.present?
-          - @item_details.each do |item_detail|
-            = item_detail
+          = render @item_details
+          -#- @item_details.each do |item_detail|
+          -#  = item_detail
 
   .col-md-12
     .form-group
@@ -55,19 +56,21 @@
 #item-details-modal.modal.fade{:role => 'dialog'}
   .modal-dialog
     .modal-content
-      .modal-header
-        %button.close{'data-dismiss': 'modal', type: 'button'} ×
-        %h4.modal-title Добавить
-      .modal-body
-        %table#item-table.display.datatable-table{'data-source': items_url(format: 'json', modal: true)}
-          %thead
-            %th.table-5 V
-            %th.table-40 Наименование
-            %th.table-10 Ед. измерения
-            %th.table-15 Тип
-            %th.table-15 Цена
-            %th.table-15 Вес
-          %tbody
-      .modal-footer
-        = link_to 'Добавить', add_item_detail_path, class: 'btn btn-success', remote: true, 'data-dismiss': 'modal', method: :post
-        %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
+      = form_tag(add_item_detail_path, remote: true, method: :get, id: 'item_details_form') do
+        .modal-header
+          %button.close{'data-dismiss': 'modal', type: 'button'} ×
+          %h4.modal-title Добавить
+        .modal-body
+          %table#item-table.display.datatable-table{'data-source': items_url(format: 'json', modal: true)}
+            %thead
+              %th.table-4 V
+              %th.table-40 Наименование
+              %th.table-10 Ед. измерения
+              %th.table-15 Тип
+              %th.table-15 Цена
+              %th.table-15 Вес
+            %tbody
+        .modal-footer
+          = link_to 'Добавить', '#',class: 'btn btn-success', remote: true, 'data-dismiss': 'modal',
+            onclick: "$('#item_details_form').submit()"
+          %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close

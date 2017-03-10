@@ -1,14 +1,7 @@
 module ApplicationHelper
-
-  def select_controller_helper(name = nil, options = nil, html_options = nil, &block)
-    html_options, options, name = options, name, block if block_given?
-    options ||= {}
-
-    html_options = convert_options_to_data_attributes(options, html_options)
-
-    url = url_for(options)
-    html_options["href".freeze] ||= url
-
-    content_tag("a".freeze, name || url, html_options, &block)
+  def check_box_helper(value, name = nil, field_name = nil,class_name = nil)
+    input_body = (" class='#{class_name}'" if class_name.present?) +
+        (" name='#{name}#{field_name}' id='id_#{name}_#{value}'" if name.present?)
+    "<input value=#{value} type='checkbox' #{input_body}>"
   end
 end

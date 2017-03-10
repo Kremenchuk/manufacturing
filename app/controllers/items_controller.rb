@@ -1,5 +1,6 @@
 class ItemsController < ApplicationController
 
+
   before_action :permit_params, only: [:create, :update]
   before_action :find_item, only: [:show, :edit]
 
@@ -23,7 +24,6 @@ class ItemsController < ApplicationController
 
   def new
     @item = Item.new
-    @items = Item.where.not(item_type: 0)
   end
 
   def show
@@ -32,7 +32,7 @@ class ItemsController < ApplicationController
 
   def edit
     @item = Item.new
-    @items_details = @item.item_details
+    @item_details = @item.item_details
   end
 
   def update
@@ -45,7 +45,13 @@ class ItemsController < ApplicationController
   end
 
   def add_item_detail
-    a=2
+    params.require('item').require('item_details').permit('id': [])
+    @item_details = Item.find(params['item']['item_details']['id'])
+    # respond_to do |format|
+    #   format.html {redirect_to new_item_path}
+    #   format.js {}
+    # end
+    # redirect_to new_item_path
   end
 
   private

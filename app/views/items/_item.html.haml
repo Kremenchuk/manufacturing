@@ -1,0 +1,14 @@
+- index = item_counter + 1
+%tr
+  %td{id: item.id}
+    = index
+  %td
+    = item.name
+  %td
+    = item.unit
+  %td
+    = number_field_tag :qty, nil, step: 0.01
+  %td
+    = item.price
+  %td
+    = number_field_tag :qty, nil, step: 0.01
