@@ -4,6 +4,13 @@
 #= require bootstrap.min.js
 #= require dataTables/jquery.dataTables
 
+@checkboxChecked = (elem, $this) ->
+  if elem.checked == true
+    elem.checked = false
+    $($this).closest('tr').toggleClass('datatable-checkbox-checked-tr')
+  else
+    elem.checked = true
+    $($this).closest('tr').toggleClass('datatable-checkbox-checked-tr')
 
 
 window.dataTableJson =
@@ -66,6 +73,19 @@ $ ->
 
 
 $ ->
+  $('body').on 'click', '.add_new_entity', ->
+    elem = document.getElementsByClassName('datatable-checkbox')
+    i = 0
+    while i < elem.length
+      elem[i].checked = false
+      $(elem[i]).closest('tr').removeClass('datatable-checkbox-checked-tr')
+      i++
+
   $('body').on 'click', '.datatable-checkbox', ->
-    $(this).closest('tr').toggleClass('datatable-checkbox-checked-tr')
+    elem = document.getElementById(this.id)
+    checkboxChecked elem, null
+
+  $('body').on 'click', 'table#item-table tr', ->
+    elem = document.getElementById($(this).find(':checkbox:eq(0)').attr('id'))
+    checkboxChecked elem, this
 

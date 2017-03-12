@@ -27,32 +27,30 @@
         .form-group
           = f.label :price, 'Цена'
           = f.number_field :price, step: 0.01, class: 'form-control'
-  .col-md-12
+  .col-md-12.hidden-element
     .add-new-button
-      = link_to '', remote: true, class: 'btn btn-default', 'data-toggle': 'modal', 'data-target': '#item-details-modal' do
+      = link_to '', remote: true, class: 'btn btn-default add_new_entity', 'data-toggle': 'modal', 'data-target': '#item-details-modal' do
         %i.fa.fa-plus-square
-  .col-md-12.table-style
-    %table{cellspacing: '1', cellpadding: '1', border: '1', width: '100%'}
+  .col-md-12.table-style.hidden-element
+    %table#item-details-table{cellspacing: '1', cellpadding: '1', border: '1', width: '100%'}
       %thead
         %tr
-          %th.table-10 № п/п
           %th.table-45 Наименование
           %th.table-10 ед.изм.
           %th.table-10 Количество
           %th.table-10 Цена
           %th.table-15 Сумма
-      %tbody#item-table-body
+      %tbody#item-details-table-body
         -if @item_details.present?
           = render @item_details
-          -#- @item_details.each do |item_detail|
-          -#  = item_detail
+
 
   .col-md-12
     .form-group
       = button_tag 'Сохранить', class: 'btn btn-success'
       = link_to 'Отмена', root_path(active_tab: 'item'), class: 'btn btn-danger'
 
-
+/модальне вікно для додавання до таблиці продукції
 #item-details-modal.modal.fade{:role => 'dialog'}
   .modal-dialog
     .modal-content
@@ -74,3 +72,30 @@
           = link_to 'Добавить', '#',class: 'btn btn-success', remote: true, 'data-dismiss': 'modal',
             onclick: "$('#item_details_form').submit()"
           %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
+
+
+
+:coffee
+
+  $ ->
+    $('#item_item_type').change ->
+      if $(this).val() == '1'
+        $('.hidden-element').css('display': 'none')
+      else
+        if $('#item_unit').val() != '3'
+          $('.hidden-element').css('display': 'block')
+
+
+    $('#item_unit').change ->
+      if $(this).val() == '3'
+        $('.hidden-element').css('display': 'none')
+      else
+        if $('#item_item_type').val() != '1'
+          $('.hidden-element').css('display': 'block')
+
+
+    $('form').on 'keypress', (e) ->
+      if e.keyCode == 13
+        return false
+
+

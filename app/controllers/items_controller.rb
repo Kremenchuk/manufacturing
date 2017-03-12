@@ -41,17 +41,13 @@ class ItemsController < ApplicationController
 
   def create
     Item.create(permit_params)
+
     redirect_to root_path(active_tab: 'job')
   end
 
   def add_item_detail
     params.require('item').require('item_details').permit('id': [])
     @item_details = Item.find(params['item']['item_details']['id'])
-    # respond_to do |format|
-    #   format.html {redirect_to new_item_path}
-    #   format.js {}
-    # end
-    # redirect_to new_item_path
   end
 
   private

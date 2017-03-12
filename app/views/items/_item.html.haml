@@ -1,14 +1,30 @@
-- index = item_counter + 1
 %tr
-  %td{id: item.id}
-    = index
+  %td{style: 'display: none'}
+    = text_field_tag "item[id][]", item.id, id: "item_id_#{item.id}"
   %td
     = item.name
   %td
     = item.unit
   %td
-    = number_field_tag :qty, nil, step: 0.01
-  %td
+    = number_field_tag 'item[qty][]', nil, step: 0.01, class: 'form-control calculated_field', id: "qty_#{item.id}", 'data-id': item.id, 'data-count': item_counter
+  %td{id: "price_#{item.id}"}
     = item.price
-  %td
-    = number_field_tag :qty, nil, step: 0.01
+  %td{id: "sum_#{item.id}"}
+
+
+:coffee
+  $ ->
+    qty_input = document.getElementsByClassName('calculated_field')
+    $("input.calculated_field[data-id='" + index + "']")
+
+    $('.calculated_field').on 'keyup', (e) ->
+      id = $(this).data('id')
+      qty = $('#qty_' + id).val()
+      price = $('#price_' + id).html()
+      $('#sum_' + id).html((qty * price).toFixed(2))
+
+      if e.keyCode == 13
+        console.log $(this).data('count') + 1
+        index =  $(this).data('count') + 1
+        $("input.calculated_field[data-count='" + index + "']").select()
+

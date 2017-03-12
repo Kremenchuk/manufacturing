@@ -9,10 +9,11 @@
         =link_to 'Продукция' , '#item', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
       %li#job-li.tabs-class
         =link_to 'Работы' , '#job', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
-      %li#worker-li.tabs-class
-        =link_to 'Работники' , '#worker', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
-      %li#counterparty-li.tabs-class
-        =link_to 'Контрагенты' , '#counterparty', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+      -if can? :manage, Worker, Counterparty
+        %li#worker-li.tabs-class
+          =link_to 'Работники' , '#worker', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+        %li#counterparty-li.tabs-class
+          =link_to 'Контрагенты' , '#counterparty', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
 
 
 .tab-content

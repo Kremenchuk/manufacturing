@@ -9,6 +9,7 @@ gem 'kaminari'
 gem 'will_paginate'
 gem 'bootstrap-kaminari-views'
 gem 'jquery-datatables-rails'
+gem 'cancancan'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.0', '>= 5.0.0.1'

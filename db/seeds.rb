@@ -6,9 +6,19 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
+adm = Role.find_or_initialize_by(name: :admin)
+user = Role.find_or_initialize_by(name: :manager)
+
 
 User.find_or_initialize_by(email: 'kremenchuk@bk.ru').tap do |f|
   f.password = '1440518'
+  f.role = adm
+  f.save!
+end
+
+User.find_or_initialize_by(email: 'kremenchuk1@bk.ru').tap do |f|
+  f.password = '1440518'
+  f.role = user
   f.save!
 end
 
@@ -40,13 +50,13 @@ w = Worker.find_or_initialize_by(first_name: "Фамилия").tap do |f|
 end
 
 
-# 100.times do |i|
-#   Payroll.create do |f|
-#     f.date = Time.now.strftime('%d.%m.%Y')
-#     f.worker = w
-#     f.save!
-#   end
-# end
+100.times do |i|
+  Payroll.create do |f|
+    f.date = Time.now.strftime('%d.%m.%Y')
+    f.worker = w
+    f.save!
+  end
+end
 
 100.times do |i|
   Item.find_or_initialize_by(name: "стеллаж х#{i}х#{i}х#{i}").tap do |f|
