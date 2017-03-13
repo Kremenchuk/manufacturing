@@ -85,7 +85,7 @@ $ ->
     elem = document.getElementById(this.id)
     checkboxChecked elem, null
 
-  $('body').on 'click', 'table#item-table tr', ->
+  $('body').on 'click', 'table#item-details-datatable tr', ->
     elem = document.getElementById($(this).find(':checkbox:eq(0)').attr('id'))
     checkboxChecked elem, this
 

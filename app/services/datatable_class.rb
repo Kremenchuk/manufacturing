@@ -21,7 +21,7 @@ class DatatableClass
   private
 
   def data
-    MappingModelData.new(model_data, (@modal_query if params[:modal].present?)).send(@model.to_s.tableize.singularize)
+    MappingModelData.new(model_data, (@modal_query if @modal_query.present?)).send(@model.to_s.tableize.singularize)
   end
 
   def model_data
@@ -33,6 +33,8 @@ class DatatableClass
     model_data_var = model_data_var.page(page).per_page(per_page)
     if params[:sSearch].present?
       model_data_var = model_data_var.where(@search_query, search: "%#{params[:sSearch].mb_chars.upcase.to_s}%")
+    elsif params[:search].present?
+      model_data_var = model_data_var.where(@search_query, search: "%#{params[:search][:value].mb_chars.upcase.to_s}%")
     end
     model_data_var
   end

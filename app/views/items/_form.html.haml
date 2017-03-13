@@ -26,10 +26,10 @@
           = f.select :unit, [['шт', 0], ['м/п', 1], ['кг', 2], ['%', 3]], {}, {class: 'form-control'}
         .form-group
           = f.label :price, 'Цена'
-          = f.number_field :price, step: 0.01, class: 'form-control'
+          = f.number_field :price, step: 0.01, class: 'form-control', value: 0
   .col-md-12.hidden-element
     .add-new-button
-      = link_to '', remote: true, class: 'btn btn-default add_new_entity', 'data-toggle': 'modal', 'data-target': '#item-details-modal' do
+      = link_to '', id: 'add-item-details-to-item', remote: true, class: 'btn btn-default add_new_entity', 'data-toggle': 'modal', 'data-target': '#item-details-modal' do
         %i.fa.fa-plus-square
   .col-md-12.table-style.hidden-element
     %table#item-details-table{cellspacing: '1', cellpadding: '1', border: '1', width: '100%'}
@@ -40,7 +40,8 @@
           %th.table-10 Количество
           %th.table-10 Цена
           %th.table-15 Сумма
-      %tbody#item-details-table-body
+          %th.table-5 Удалить
+      %tbody#item-details-table-body{'data-ids': []}
         -if @item_details.present?
           = render @item_details
 
@@ -59,7 +60,7 @@
           %button.close{'data-dismiss': 'modal', type: 'button'} ×
           %h4.modal-title Добавить
         .modal-body
-          %table#item-table.display.datatable-table{'data-source': items_url(format: 'json', modal: true)}
+          %table#item-details-datatable.display.datatable-table{'data-source': item_details_datatable_url(format: 'json')}
             %thead
               %th.table-4 V
               %th.table-40 Наименование
@@ -76,8 +77,24 @@
 
 
 :coffee
-
   $ ->
+    window.itemDetailsTable = $('#item-details-datatable').DataTable
+      bServerSide: true
+      "language": window.dataTableJson
+      ajax:
+        url: $('#item-details-datatable').data('source')
+        dataType: 'json'
+        cache: false
+        type: 'GET'
+        data: (d) ->
+          myData = {ids: $('#item-details-table-body').data('ids')}
+          if myData
+            $.extend d, myData
+          return
+
+    $('#add-item-details-to-item').click ->
+      window.itemDetailsTable.ajax.reload()
+
     $('#item_item_type').change ->
       if $(this).val() == '1'
         $('.hidden-element').css('display': 'none')

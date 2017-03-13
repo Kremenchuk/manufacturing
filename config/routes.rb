@@ -8,4 +8,5 @@ Rails.application.routes.draw do
   resources :workers
   resources :counterparties
   get 'add_item_detail' => 'items#add_item_detail'
+  get 'item_details_datatable' => 'items#item_details_datatable'
 end
