@@ -12,5 +12,10 @@
           = current_user.email
           |
           =link_to 'Выход', destroy_user_session_path, method: :delete
+      .messages-section
+        - if flash[:messages].present?
+          .flash-messages
+            .div{class: "#{flash[:class]}"}
+              = flash[:messages]
       .wrapper-yield
         = yield

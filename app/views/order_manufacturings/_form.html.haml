@@ -1,0 +1,167 @@
+.col-md-12
+  .col-md-2
+    - if @o_m.id.present?
+      = link_to copy_o_m_path(@o_m.id), class: 'btn btn-default', title: 'Копировать' do
+        %i.fa.fa-clone
+      = link_to order_manufacturing_path(@o_m.id), method: :delete, class: 'btn btn-danger', title: 'Удалить', data: {confirm: 'Точно удалить?'} do
+        %i.fa.fa-trash
+      = link_to o_m_print_path(@o_m.id), class: 'btn btn-default', title: 'Печать' do
+        %i.fa.fa-print
+
+= form_for @o_m do |f|
+  .col-md-12
+    .col-md-6
+      .form-group
+        = f.label :counterparty, 'Контрагент'
+        = link_to '', id: 'add_counterparty_detail', remote: true, class: 'add_new_entity', 'data-toggle': 'modal', 'data-target': '#counterparties-modal' do
+          = text_field_tag :counterparty, @o_m.counterparty.present? ? @o_m.counterparty.name : nil, class: 'form-control validate-field', name: 'order_manufacturing[counterparty]', id: 'counterparty'
+  .col-md-12
+    .col-md-6{style: 'margin-left: -15px; padding-right: 0;'}
+      .col-md-3
+        .form-group
+          = f.label :number, 'Номер'
+          = f.text_field :number, class: 'form-control validate-field'
+      .col-md-3
+        .form-group
+          = f.label :date, 'Дата'
+          = f.text_field :date, value: (@o_m.date.present? ? @o_m.date : Time.now.strftime('%d.%m.%Y')), class: 'form-control validate-field'
+      .col-md-3
+        .form-group
+          = f.label :invoice, 'Счет'
+          = f.number_field :invoice, step: 1, class: 'form-control'
+      .col-md-3{style: 'padding-right: 0;'}
+        .form-group
+          = f.label :price, 'Стоимость заказа'
+          = f.text_field :price, class: 'form-control', readonly: true
+  .col-md-12
+    .col-md-6{style: 'margin-left: -15px; padding-right: 0;'}
+      .col-md-3
+        .form-group
+          = f.label :weight, 'Вес'
+          = f.text_field :weight, class: 'form-control'
+      .col-md-3
+        .form-group
+          = f.label :volume, 'Объем'
+          = f.text_field :volume, class: 'form-control'
+  .col-md-12
+    .col-md-6
+      .form-group
+        = f.label :note, 'Примечание'
+        = f.text_area :note, class: 'form-control'
+  .col-md-12
+    .add-new-button
+      = link_to '', id: 'add_o_m_detail', remote: true, class: 'btn btn-default add_new_entity', 'data-toggle': 'modal', 'data-target': '#o_m-details-modal' do
+        %i.fa.fa-plus-square
+          Добавить изделия
+  .col-md-12.table-style.hidden-element
+    %table#item-details-table{cellspacing: '1', cellpadding: '1', border: '1', width: '100%'}
+      %thead
+        %tr
+          %th.table-45 Наименование
+          %th.table-10 ед.изм.
+          %th.table-10 Количество
+          %th.table-5 Удалить
+      %tbody#o_m-details-table-body
+        -if @o_m_details.present?
+          = render partial: 'o_m_detail'
+          -#, locals: {item: @o_m_details}
+
+
+  .form-group
+    = f.submit 'Сохранить', class: 'btn btn-success'
+    = link_to 'Отмена', root_path(active_tab: 'order_manufacturing'), class: 'btn btn-danger'
+
+/модальне вікно для додавання до таблиці продукції
+#o_m-details-modal.modal.fade{:role => 'dialog'}
+  .modal-dialog
+    .modal-content
+      = form_tag(add_o_m_detail_path, remote: true, method: :get, id: 'o_m_details_form') do
+        .modal-header
+          %button.close{'data-dismiss': 'modal', type: 'button'} ×
+          %h4.modal-title Добавить
+        .modal-body
+          %table#o_m-details-datatable.display.datatable-table{'data-source': o_m_details_datatable_url(format: 'json')}
+            %thead
+              %th.table-4 V
+              %th.table-40 Наименование
+              %th.table-10 Ед. измерения
+              %th.table-15 Тип
+              %th.table-15 Цена
+              %th.table-15 Вес
+            %tbody
+        .modal-footer
+          = link_to 'Добавить', '#',class: 'btn btn-success', remote: true, 'data-dismiss': 'modal',
+            onclick: "$('#o_m_details_form').submit()"
+          %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
+
+/модальне вікно для додавання до таблиці продукції
+#counterparties-modal.modal.fade{:role => 'dialog'}
+  .modal-dialog
+    .modal-content
+      = form_tag(add_counterparty_path, remote: true, method: :get, id: 'o_m_counterparty_form') do
+        .modal-header
+          %button.close{'data-dismiss': 'modal', type: 'button'} ×
+          %h4.modal-title Добавить
+        .modal-body
+          %table#counterparties-o_m-datatable.display.datatable-table{'data-source': o_m_counterparty_datatable_url(format: 'json')}
+            %thead
+              %th.table-10 V
+              %th.table-45 Наименование
+              %th.table-45 Короткое наименование
+              %th.table-10 Тип
+            %tbody
+        .modal-footer
+          %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
+
+:coffee
+  @itemDetailsIds = () ->
+    return $('.item_id_class').map(-> $(this).val()).get()
+
+  $('body').on 'click', 'table#counterparties-o_m-datatable tr', (event) ->
+    event.stopPropagation()
+    elem = document.getElementById($(this).find(':radio:eq(0)').attr('id'))
+    elem.click()
+
+  $ ->
+    $('#order_manufacturing_date').datepicker({dateFormat: 'dd.mm.yy'})
+
+    $('body').on 'click', '.datatable-radio', (event) ->
+      event.stopPropagation()
+      elem = document.getElementById(this.id)
+      $('#o_m_counterparty_form').submit()
+
+    window.OMDetailsTable = $('#o_m-details-datatable').DataTable
+        bServerSide: true
+        "language": window.dataTableJson
+        ajax:
+          url: $('#o_m-details-datatable').data('source')
+          dataType: 'json'
+          cache: false
+          type: 'GET'
+          data: (d) ->
+            myData = {ids: itemDetailsIds()}
+            if myData
+              $.extend d, myData
+            return
+
+    $('#counterparties-o_m-datatable').DataTable
+      bServerSide: true
+      "language": window.dataTableJson
+      ajax:
+        url: $('#counterparties-o_m-datatable').data('source')
+        dataType: 'json'
+        cache: false
+        type: 'GET'
+        data: (d) ->
+          myData = {ids: itemDetailsIds()}
+          if myData
+            $.extend d, myData
+          return
+
+    # Перезавантаження даних до таблиць details для item
+    $('#add_o_m_detail').click ->
+      window.OMDetailsTable.ajax.reload()
+
+    $('form').on 'keypress', (e) ->
+      if e.keyCode == 13
+        return false

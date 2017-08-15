@@ -1,6 +1,6 @@
 $ ->
   i = document.getElementsByClassName('item_details_line').length
-  $('#item-details-table-body').append('<%= j (raw render partial: 'item_detail') %>')
+  $('#semi_finished-details-table-body').append('<%= j (raw render partial: 'semi_finished_detail') %>')
 
   table_element = document.getElementsByClassName('item_details_line')
   while i < table_element.length

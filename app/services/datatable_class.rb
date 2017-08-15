@@ -1,3 +1,5 @@
+# Серверна обробка даних для datatable таблиць
+
 class DatatableClass
   delegate :params, :link_to, :number_to_currency, to: :@view
 
@@ -7,6 +9,7 @@ class DatatableClass
     @model = data_hash[:model]
     @search_query = data_hash[:search_query]
     @modal_query = data_hash[:modal_query] if data_hash[:modal_query].present?
+    @check_element = data_hash[:check_element] if data_hash[:check_element].present?
   end
 
   def as_json(options = {})
@@ -21,7 +24,7 @@ class DatatableClass
   private
 
   def data
-    MappingModelData.new(model_data, (@modal_query if @modal_query.present?)).send(@model.to_s.tableize.singularize)
+    MappingModelData.new(model_data, (@modal_query if @modal_query.present?), (@check_element if @check_element.present?)).send(@model.to_s.tableize.singularize)
   end
 
   def model_data

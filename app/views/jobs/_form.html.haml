@@ -1,3 +1,11 @@
+.col-md-12
+  .col-md-2
+    - if @job.id.present?
+      = link_to copy_job_path(@job.id), class: 'btn btn-default', title: 'Копировать' do
+        %i.fa.fa-clone
+      = link_to job_path(@job.id), method: :delete, class: 'btn btn-default', title: 'Удалить', data: {confirm: 'Точно удалить?'} do
+        %i.fa.fa-trash
+
 = form_for @job do |f|
   .form-group
     = f.label :name, 'Наименование'

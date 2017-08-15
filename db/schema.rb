@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 1300) do
+ActiveRecord::Schema.define(version: 1200) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,53 +23,42 @@ ActiveRecord::Schema.define(version: 1300) do
     t.datetime "updated_at",             null: false
   end
 
-  create_table "item_details", force: :cascade do |t|
-    t.integer  "item_id"
-    t.integer  "item_detailable_id"
-    t.string   "item_detailable_type"
-    t.float    "qty",                  null: false
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
-    t.index ["item_id"], name: "index_item_details_on_item_id", using: :btree
-  end
-
-  create_table "item_order_manufacturings", force: :cascade do |t|
-    t.integer "item_id"
-    t.integer "order_manufacturings_id"
-    t.float   "qty",                     null: false
-    t.index ["item_id"], name: "index_item_order_manufacturings_on_item_id", using: :btree
-    t.index ["order_manufacturings_id"], name: "index_item_order_manufacturings_on_order_manufacturings_id", using: :btree
-  end
-
   create_table "items", force: :cascade do |t|
-    t.string   "name",                   null: false
-    t.string   "unit",                   null: false
-    t.integer  "item_type",  default: 1
-    t.float    "area"
-    t.float    "price",                  null: false
-    t.float    "volume"
-    t.float    "weight",                 null: false
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.string   "name",                      null: false
+    t.integer  "unit",       default: 0,    null: false
+    t.boolean  "for_sale",   default: true
+    t.float    "size_l"
+    t.float    "size_a"
+    t.float    "size_b"
+    t.json     "details",    default: {}
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.index ["name"], name: "index_items_on_name", unique: true, using: :btree
   end
 
   create_table "jobs", force: :cascade do |t|
-    t.string   "name",                      null: false
-    t.float    "price",                     null: false
-    t.integer  "time",                      null: false
-    t.boolean  "print",      default: true
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+    t.string   "name",                          null: false
+    t.string   "name_for_print",                null: false
+    t.float    "price",                         null: false
+    t.integer  "time",                          null: false
+    t.boolean  "print",          default: true
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
   end
 
-  create_table "o_m_details", force: :cascade do |t|
-    t.integer  "order_manufacturing_id"
-    t.integer  "o_m_detailable_id"
-    t.string   "o_m_detailable_type"
-    t.float    "qty",                    null: false
+  create_table "materials", force: :cascade do |t|
+    t.string   "name",                   null: false
+    t.integer  "unit",       default: 0, null: false
+    t.float    "price",                  null: false
+    t.float    "weight",                 null: false
+    t.float    "area"
+    t.float    "volume"
+    t.integer  "size_l"
+    t.integer  "size_a"
+    t.integer  "size_b"
+    t.text     "note"
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
-    t.index ["order_manufacturing_id"], name: "index_o_m_details_on_order_manufacturing_id", using: :btree
   end
 
   create_table "order_manufacturings", force: :cascade do |t|
@@ -81,6 +70,14 @@ ActiveRecord::Schema.define(version: 1300) do
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
     t.index ["counterparty_id"], name: "index_order_manufacturings_on_counterparty_id", using: :btree
+  end
+
+  create_table "order_manufacturings_details", force: :cascade do |t|
+    t.integer "order_manufacturing_id"
+    t.integer "order_manufacturings_detailable_id"
+    t.string  "order_manufacturings_detailable_type"
+    t.float   "qty",                                  null: false
+    t.index ["order_manufacturing_id"], name: "index_order_manufacturings_details_on_order_manufacturing_id", using: :btree
   end
 
   create_table "payroll_details", force: :cascade do |t|

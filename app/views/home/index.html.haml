@@ -1,86 +1,132 @@
-.col-md-2
-  .nav-menu
-    %ul.nav.nav-pills.nav-stacked
-      %li#order-manufacturing-li.tabs-class.active
-        =link_to 'Наряды в производство' , '#order-manufacturing', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
-      %li#payroll-li.tabs-class
-        =link_to 'Зарплатные ведомости' , '#payroll', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
-      %li#item-li.tabs-class
-        =link_to 'Продукция' , '#item', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
-      %li#job-li.tabs-class
-        =link_to 'Работы' , '#job', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
-      -if can? :manage, Worker, Counterparty
-        %li#worker-li.tabs-class
-          =link_to 'Работники' , '#worker', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
-        %li#counterparty-li.tabs-class
-          =link_to 'Контрагенты' , '#counterparty', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+.home-page
+  .col-md-2
+    .nav-menu
+      %ul.nav.nav-pills.nav-stacked
+        %li#order_manufacturing-li.tabs-class.active
+          =link_to 'Наряды в производство' , '#order_manufacturing', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+        %li#payroll-li.tabs-class
+          =link_to 'Зарплатные ведомости' , '#payroll', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+        %li#item-li.tabs-class
+          =link_to 'Продукция' , '#item', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+        %li#material-li.tabs-class
+          =link_to 'Материалы' , '#material', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+        %li#job-li.tabs-class
+          =link_to 'Работы' , '#job', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+        -if can? :manage, Worker, Counterparty
+          %li#worker-li.tabs-class
+            =link_to 'Работники' , '#worker', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+          %li#counterparty-li.tabs-class
+            =link_to 'Контрагенты' , '#counterparty', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
 
 
-.tab-content
-  #order-manufacturing.tabs-class.tab-pane.fade.in.active
-    .col-md-10
-      .add-new-button
-        = link_to new_order_manufacturing_path, class: 'btn btn-default' do
-          %i.fa.fa-plus-square
-      #order-manufacturing-data
-        = render 'order_manufacturings/table'
+  .tab-content
+    #order_manufacturing.tabs-class.tab-pane.fade.in.active
+      .col-md-10
+        .add-new-button
+          = link_to new_order_manufacturing_path, class: 'btn btn-default' do
+            %i.fa.fa-plus-square
+        #order_manufacturing-data
+          = render 'order_manufacturings/table'
 
 
-  #payroll.tabs-class.tab-pane.fade.in
-    .col-md-10
-      .add-new-button
-        = link_to new_payroll_path, class: 'btn btn-default' do
-          %i.fa.fa-plus-square
-      #payroll-data
-        = render 'payrolls/table'
+    #payroll.tabs-class.tab-pane.fade.in
+      .col-md-10
+        .add-new-button
+          = link_to new_payroll_path, class: 'btn btn-default' do
+            %i.fa.fa-plus-square
+        #payroll-data
+          = render 'payrolls/table'
 
 
-  #item.tabs-class.tab-pane.fade.in
-    .col-md-10
-      .add-new-button
-        = link_to new_item_path, class: 'btn btn-default' do
-          %i.fa.fa-plus-square
-      #item-data
-        = render 'items/table'
+    #item.tabs-class.tab-pane.fade.in
+      .col-md-10
+        .add-new-button
+          = link_to new_item_path, class: 'btn btn-default' do
+            %i.fa.fa-plus-square
+        #item-data
+          = render 'items/table'
 
 
-  #job.tabs-class.tab-pane.fade.in
-    .col-md-10
-      .add-new-button
-        = link_to new_job_path, class: 'btn btn-default' do
-          %i.fa.fa-plus-square
-      #job-data
-        = render 'jobs/table'
+    #material.tabs-class.tab-pane.fade.in
+      .col-md-10
+        .add-new-button
+          = link_to new_material_path, class: 'btn btn-default' do
+            %i.fa.fa-plus-square
+        #material-data
+          = render 'materials/table'
 
 
-  #worker.tabs-class.tab-pane.fade.in
-    .col-md-10
-      .add-new-button
-        = link_to new_worker_path, class: 'btn btn-default' do
-          %i.fa.fa-plus-square
-      #worker-data
-        = render 'workers/table'
+    #job.tabs-class.tab-pane.fade.in
+      .col-md-10
+        .add-new-button
+          = link_to new_job_path, class: 'btn btn-default' do
+            %i.fa.fa-plus-square
+        #job-data
+          = render 'jobs/table'
 
 
-  #counterparty.tabs-class.tab-pane.fade.in
-    .col-md-10
-      .add-new-button
-        = link_to new_counterparty_path, class: 'btn btn-default' do
-          %i.fa.fa-plus-square
-      #counterparty-data
-        = render 'counterparties/table'
+    #worker.tabs-class.tab-pane.fade.in
+      .col-md-10
+        .add-new-button
+          = link_to new_worker_path, class: 'btn btn-default' do
+            %i.fa.fa-plus-square
+        #worker-data
+          = render 'workers/table'
+
+
+    #counterparty.tabs-class.tab-pane.fade.in
+      .col-md-10
+        .add-new-button
+          = link_to new_counterparty_path, class: 'btn btn-default' do
+            %i.fa.fa-plus-square
+        #counterparty-data
+          = render 'counterparties/table'
 
 -#:javascript
 -#  var order_manufacturings_path = "#{escape_javascript(order_manufacturings_path)}"
 -#
 -#:javascript
 -#  var payrolls_path = "#{escape_javascript(payrolls_path)}"
+:javascript
+  var edit_order_manufacturing_path = "#{escape_javascript(edit_order_manufacturing_path(0))}"
 
+:javascript
+  var edit_payroll_path = "#{escape_javascript(edit_payroll_path(0))}"
+
+:javascript
+  var edit_item_path = "#{escape_javascript(edit_item_path(0))}"
+
+:javascript
+  var edit_job_path = "#{escape_javascript(edit_job_path(0))}"
+
+:javascript
+  var edit_worker_path = "#{escape_javascript(edit_worker_path(0))}"
+
+:javascript
+  var edit_counterparty_path = "#{escape_javascript(edit_counterparty_path(0))}"
+
+:javascript
+  var edit_material_path = "#{escape_javascript(edit_material_path(0))}"
+
+-#:javascript
+-#  var edit_semi_finished_path = "#{escape_javascript(edit_semi_finished_path(0))}"
+
+-#:javascript
+-#  var edit_material_path = "#{escape_javascript(edit_material_path(0))}"
 
 :coffee
   $ ->
+    # Перехід до вкладки яка була активна до внесення змін (з бекенду)
     active_id = window.location.search.substring(1).split('=')[1]
     if active_id != undefined
       $('.tabs-class').removeClass('active')
       $('#' + active_id).addClass('active')
       $('#' + active_id + '-li').addClass('active')
+
+
+    $('body').on 'click', 'tr',(e) ->
+      tableId = $(this).closest('table').attr('id').split('-')[0]
+      if tableId
+        url = window['edit_' + tableId + '_path'].replace(0, this.id)
+      if this.id
+        window.location = url

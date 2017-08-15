@@ -1,0 +1,1 @@
+$('#o_m-details-table-body').append('<%= j render partial: 'o_m_detail', locals: {items: @o_m_details} %>')

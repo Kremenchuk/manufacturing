@@ -1,20 +1,22 @@
 class MappingModelData
   include ApplicationHelper
-  attr_accessor :model_data, :modal_query
+  attr_accessor :model_data, :modal_query, :check_element
 
-  def initialize(model_data, modal_query = nil)
+  def initialize(model_data, modal_query = nil, check_element = nil)
     @model_data = model_data
     @modal_query = modal_query if modal_query.present?
+    @check_element = check_element if check_element.present?
   end
 
   def order_manufacturing
     model_data.map do |model_data_i|
-      [
-          model_data_i.date,
-          model_data_i.number,
-          model_data_i.counterparty.name,
-          model_data_i.invoice,
-      ]
+      {
+          DT_RowId:          model_data_i.id,
+          date:              model_data_i.date,
+          number:            model_data_i.number,
+          counterparty_name: model_data_i.counterparty.name,
+          invoice:           model_data_i.invoice,
+      }
     end
   end
 
@@ -29,38 +31,53 @@ class MappingModelData
 
   def item
     if modal_query.present?
-      model_data.where(modal_query).map do |model_data_i|
+      model_data.where(modal_query != 'nil' ? modal_query : nil).map do |model_data_i|
         [
             check_box_helper(model_data_i.id, 'item', '[item_details][id][]','datatable-checkbox'),
+            #radio_helper(model_data_i.id, 'counterparty', '[id]','datatable-radio', 'data-dismiss="modal"'),
             model_data_i.name,
             model_data_i.unit,
-            model_data_i.item_type,
-            model_data_i.price,
-            model_data_i.weight,
+            #model_data_i.item_type,
+            #Float(model_data_i.price),
+            #model_data_i.weight.present? ? Float(model_data_i.weight) : 0
         ]
       end
     else
       model_data.map do |model_data_i|
-        [
-            model_data_i.name,
-            model_data_i.unit,
-            model_data_i.item_type,
-            model_data_i.price,
-            model_data_i.weight,
-        ]
+        {
+            DT_RowId:  model_data_i.id,
+            name:      model_data_i.name,
+            unit:      model_data_i.unit,
+            # item_type: model_data_i.item_type,
+            price:     0,#Float(model_data_i.price),
+            weight:    0#model_data_i.weight.present? ? Float(model_data_i.weight) : 0
+        }
       end
     end
   end
 
   def job
-    model_data.map do |model_data_i|
-      [
-          model_data_i.name,
-          model_data_i.price,
-          model_data_i.time,
-          model_data_i.print.present? ? 'Да' : 'Нет'
-      ]
+    if modal_query.present?
+      model_data.where(modal_query != 'nil' ? modal_query : nil).map do |model_data_i|
+        [
+            check_box_helper(model_data_i.id, 'job', '[job_details][id][]','datatable-checkbox'),
+            model_data_i.name,
+            Float(model_data_i.price),
+            model_data_i.time,
+            model_data_i.print.present? ? 'Да' : 'Нет'
+        ]
       end
+    else
+      model_data.map do |model_data_i|
+        {
+            DT_RowId:  model_data_i.id,
+            name:      model_data_i.name,
+            price:     Float(model_data_i.price),
+            time:      model_data_i.time,
+            print:     model_data_i.print.present? ? 'Да' : 'Нет'
+        }
+      end
+    end
   end
 
   def worker
@@ -75,12 +92,70 @@ class MappingModelData
   end
 
   def counterparty
-    model_data.map do |model_data_i|
-      [
-          model_data_i.name,
-          model_data_i.short_name,
-          model_data_i.c_type
-      ]
+    if modal_query.present?
+      model_data.where(modal_query != 'nil' ? modal_query : nil).map do |model_data_i|
+        [
+            radio_helper(model_data_i.id, 'counterparty', '[id]','datatable-radio', 'data-dismiss="modal"'),
+            model_data_i.name,
+            model_data_i.short_name,
+            model_data_i.c_type
+        ]
+      end
+    else
+      model_data.map do |model_data_i|
+        {
+            DT_RowId:  model_data_i.id,
+            name: model_data_i.name,
+            short_name: model_data_i.short_name,
+            c_type: model_data_i.c_type
+        }
+      end
+    end
+  end
+
+  def material
+    if modal_query.present?
+      model_data.where(modal_query != 'nil' ? modal_query : nil).map do |model_data_i|
+        [
+            radio_helper(model_data_i.id, 'material', '[id]','datatable-radio', ''), #data-dismiss="modal"
+            model_data_i.name,
+            model_data_i.unit
+        ]
+      end
+    else
+      model_data.map do |model_data_i|
+        {
+            DT_RowId:  model_data_i.id,
+            name: model_data_i.name,
+            unit: model_data_i.unit
+        }
+      end
+    end
+  end
+
+  def semi_finished
+    if modal_query.present?
+      model_data.where(modal_query != 'nil' ? modal_query : nil).map do |model_data_i|
+        [
+            radio_helper(model_data_i.id, 'semi_finished', '[id]','datatable-radio', ''), #data-dismiss="modal"
+            model_data_i.name,
+            model_data_i.unit,
+            model_data_i.size_l,
+            model_data_i.size_a,
+            model_data_i.size_b
+        ]
+      end
+    else
+      model_data.map do |model_data_i|
+        {
+            DT_RowId:  model_data_i.id,
+            name: model_data_i.name,
+            unit: model_data_i.unit,
+            size_l: model_data_i.size_l,
+            size_a: model_data_i.size_a,
+            size_b: model_data_i.size_b
+        }
+      end
     end
   end
 end
