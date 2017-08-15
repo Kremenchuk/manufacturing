@@ -11,13 +11,13 @@ user = Role.find_or_initialize_by(name: :manager)
 
 
 User.find_or_initialize_by(email: 'kremenchuk@bk.ru').tap do |f|
-  f.password = '144'
+  f.password = '123456'
   f.role = adm
   f.save!
 end
 
 User.find_or_initialize_by(email: 'kremenchuk1@bk.ru').tap do |f|
-  f.password = '1440518'
+  f.password = '123456'
   f.role = user
   f.save!
 end
