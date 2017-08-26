@@ -24,10 +24,10 @@
           = f.number_field :weight, step: 0.01, class: "form-control validate-field #{flash[:class_element]}"
         .form-group
           = f.label :area, 'Площадь'
-          = f.number_field :area, step: 0.01, class: 'form-control'
+          = f.number_field :area, step: 0.001, class: 'form-control'
         .form-group
           = f.label :volume, 'Объем'
-          = f.number_field :volume, step: 0.01, class: 'form-control'
+          = f.number_field :volume, step: 0.00000001, class: 'form-control'
         .form-group
           = f.label :size_l, 'L'
           = f.number_field :size_l, step: 1, class: 'form-control'

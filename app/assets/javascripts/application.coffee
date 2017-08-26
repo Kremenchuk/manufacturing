@@ -9,7 +9,11 @@
   return $('.material_id_class').map(-> $(this).val()).get()
 
 @itemDetailsIds = () ->
-  return $('.item_id_class').map(-> $(this).val()).get()
+  ids = $('.item_id_class').map(-> $(this).val()).get()
+  if $('#item_id').val()
+    ids.push $('#item_id').val()
+  console.log ids
+  return ids
 
 @jobDetailsIds = () ->
   return $('.job_id_class').map(-> $(this).val()).get()

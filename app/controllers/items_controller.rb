@@ -18,13 +18,6 @@ class ItemsController < ApplicationController
 
   def item_details_datatable
     data_hash = {
-        # view_context: view_context,
-        # # sort_column: %w[name unit item_type price weight],
-        # sort_column: %w[name unit],
-        # model: Item,
-        # # check_element: 'check_box_helper',
-        # search_query: 'UPPER(name) like :search',
-        # modal_query: 'nil'
         view_context: view_context,
         sort_column: %w[name unit],
         model: Item,
@@ -71,13 +64,9 @@ class ItemsController < ApplicationController
   end
 
   def new
-    # session.delete(:item)
     @item = Item.new
     if session[:item].present?
       @item.attributes = session[:item].as_json
-      # if @item.item_type == "Коробчатый"
-      #   @item_details = @item.item_details_list
-      # end
       session.delete(:item)
     end
   end
@@ -150,7 +139,8 @@ class ItemsController < ApplicationController
   end
 
   def permit_params
-    params.require(:item).permit(:name, :unit, :area, :weight, :volume, :size_l, :size_a, :size_b)
+    params.require(:item).permit(:name, :unit, :size_l, :size_a, :size_b)
+    # :area, :weight, :volume,
   end
 
   def permit_type_id_qty
