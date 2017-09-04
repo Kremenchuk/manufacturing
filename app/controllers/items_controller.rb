@@ -67,18 +67,15 @@ class ItemsController < ApplicationController
     @item = Item.new
     if session[:item].present?
       @item.attributes = session[:item].as_json
+      find_item_details(session[:item_details])
+
       session.delete(:item)
+      session.delete(:item_details)
     end
   end
 
   def edit
-    @item_details = Array.new
-    @item.details.each do |el|
-      detail = Array.new
-      detail << el[1].constantize.find(el[0])
-      detail << el[2]
-      @item_details << detail
-    end
+    find_item_details(@item.details)
   end
 
   def update
@@ -102,6 +99,7 @@ class ItemsController < ApplicationController
     @item.name = 'Новая продукция'
     @item.id = nil
     session[:item] = @item.attributes
+    session[:item_details] = @item.details
     redirect_to new_item_path(item_type: params[:item_type])
   end
 
@@ -133,9 +131,14 @@ class ItemsController < ApplicationController
     end
   end
 
-  def find_item_details(item_id)
-    @item = Item.find(item_id)
-    @item_details = @item.item_details_list
+  def find_item_details(item_details = nil)
+    @item_details = Array.new
+    item_details.each do |el|
+      detail = Array.new
+      detail << el[1].constantize.find(el[0])
+      detail << el[2]
+      @item_details << detail
+    end
   end
 
   def permit_params

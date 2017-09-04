@@ -62,6 +62,7 @@ class MappingModelData
         [
             check_box_helper(model_data_i.id, 'job', '[job_details][id][]','datatable-checkbox'),
             model_data_i.name,
+            model_data_i.name_for_print,
             Float(model_data_i.price),
             model_data_i.time,
             model_data_i.print.present? ? 'Да' : 'Нет'
@@ -70,24 +71,37 @@ class MappingModelData
     else
       model_data.map do |model_data_i|
         {
-            DT_RowId:  model_data_i.id,
-            name:      model_data_i.name,
-            price:     Float(model_data_i.price),
-            time:      model_data_i.time,
-            print:     model_data_i.print.present? ? 'Да' : 'Нет'
+            DT_RowId:         model_data_i.id,
+            name:             model_data_i.name,
+            name_for_print:   model_data_i.name_for_print,
+            price:            Float(model_data_i.price),
+            time:             model_data_i.time,
+            print:            model_data_i.print.present? ? 'Да' : 'Нет'
         }
       end
     end
   end
 
   def worker
-    model_data.map do |model_data_i|
+    if modal_query.present?
+      model_data.where(modal_query != 'nil' ? modal_query : nil).map do |model_data_i|
       [
           model_data_i.first_name,
           model_data_i.last_name,
           model_data_i.middle_name,
           model_data_i.position
       ]
+      end
+    else
+      model_data.map do |model_data_i|
+        {
+            DT_RowId:       model_data_i.id,
+            first_name:     model_data_i.first_name,
+            last_name:      model_data_i.last_name,
+            middle_name:    model_data_i.middle_name,
+            position:       model_data_i.position,
+        }
+      end
     end
   end
 

@@ -1,24 +1,29 @@
-.col-md-12
-  .col-md-2
+.col-xs-12
+  .col-xs-2
     - if @job.id.present?
       = link_to copy_job_path(@job.id), class: 'btn btn-default', title: 'Копировать' do
         %i.fa.fa-clone
       = link_to job_path(@job.id), method: :delete, class: 'btn btn-default', title: 'Удалить', data: {confirm: 'Точно удалить?'} do
         %i.fa.fa-trash
 
-= form_for @job do |f|
-  .form-group
-    = f.label :name, 'Наименование'
-    = f.text_field :name, class: 'form-control'
-  .form-group
-    = f.label :price, 'Цена'
-    = f.number_field :price, step: 0.01,class: 'form-control'
-  .form-group
-    = f.label :time, 'Время'
-    = f.number_field :time, step: 1, class: 'form-control'
-  .form-group
-    = f.label :print, 'Печатать'
-    = f.check_box :print, class: 'form-control'
-  .form-group
-    = f.submit 'Сохранить', class: 'btn btn-success'
-    = link_to 'Отмена', root_path(active_tab: 'job'), class: 'btn btn-danger'
+= form_for @job, html: {class: 'submit-form'} do |f|
+  .col-xs-12
+    .col-xs-6
+      .form-group
+        = f.label :name, 'Наименование'
+        = f.text_field :name, class: 'form-control validate-field'
+      .form-group
+        = f.label :name_for_print, 'Наименование для печати в наряде'
+        = f.text_field :name_for_print, class: 'form-control validate-field'
+      .form-group
+        = f.label :price, 'Цена'
+        = f.number_field :price, step: 0.01,class: 'form-control validate-field'
+      .form-group
+        = f.label :time, 'Время'
+        = f.number_field :time, step: 1, class: 'form-control validate-field'
+      .form-group
+        = f.label :print, 'Печатать'
+        = f.check_box :print, class: 'form-control'
+      .form-group
+        = f.submit 'Сохранить', class: 'btn btn-success'
+        = link_to 'Отмена', root_path(active_tab: 'job'), class: 'btn btn-danger'

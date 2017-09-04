@@ -163,15 +163,26 @@ $ ->
       type: 'GET'
     columns: [
       { "data": "name" },
+      { "data": "name_for_print" },
       { "data": "price" },
       { "data": "time" },
       { "data": "print" }
     ]
 
-  $('#worker-table').dataTable(
+  $('#worker-table').DataTable
     bServerSide: true
-    sAjaxSource: $('#worker-table').data('source')
-    "language": window.dataTableJson)
+    "language": window.dataTableJson
+    ajax:
+      url: $('#worker-table').data('source')
+      dataType: 'json'
+      cache: false
+      type: 'GET'
+    columns: [
+      { "data": "first_name" },
+      { "data": "last_name" },
+      { "data": "middle_name" },
+      { "data": "position" }
+    ]
 
   $('#counterparty-table').DataTable
     bServerSide: true

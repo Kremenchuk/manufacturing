@@ -1,16 +1,16 @@
 = form_for @worker do |f|
   .form-group
     = f.label :first_name, 'Фамилия'
-    = f.text_field :first_name, class: 'form-control'
+    = f.text_field :first_name, class: 'form-control validate-field'
   .form-group
     = f.label :last_name, 'Имя'
-    = f.text_field :last_name, class: 'form-control'
+    = f.text_field :last_name, class: 'form-control validate-field'
   .form-group
     = f.label :middle_name, 'Отчество'
     = f.text_field :middle_name, class: 'form-control'
   .form-group
     = f.label :position, 'Должность'
-    = f.text_field :position, class: 'form-control'
+    = f.text_field :position, class: 'form-control validate-field'
   .form-group
     = f.submit 'Сохранить', class: 'btn btn-success'
     = link_to 'Отмена', root_path(active_tab: 'worker'), class: 'btn btn-danger'

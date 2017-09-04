@@ -1,6 +1,6 @@
 class WorkersController < ApplicationController
 
-  before_action :permit_params, only: [:create, :update]
+  before_action :find_worker, only: [:edit, :update]
 
   def index
     data_hash = {
@@ -21,11 +21,12 @@ class WorkersController < ApplicationController
   end
 
   def edit
-
   end
 
   def update
-
+    @worker.attributes = permit_params
+    @worker.save!
+    redirect_to root_path(active_tab: 'worker')
   end
 
   def create
@@ -34,6 +35,10 @@ class WorkersController < ApplicationController
   end
 
   private
+
+  def find_worker
+    @worker = Worker.find(params[:id])
+  end
 
   def permit_params
     params.require(:worker).permit(:first_name, :middle_name, :last_name, :position)

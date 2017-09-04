@@ -8,7 +8,7 @@
       = link_to o_m_print_path(@o_m.id), class: 'btn btn-default', title: 'Печать' do
         %i.fa.fa-print
 
-= form_for @o_m do |f|
+= form_for @o_m, html: {class: 'submit-form'} do |f|
   .col-md-12
     .col-md-6
       .form-group

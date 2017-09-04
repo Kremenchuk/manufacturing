@@ -1,6 +1,7 @@
 class CounterpartiesController < ApplicationController
 
   before_action :permit_params, only: [:create, :update]
+  before_action :find_counterparty, only: [:edit, :update]
 
   def index
     data_hash = {
@@ -22,11 +23,12 @@ class CounterpartiesController < ApplicationController
   end
 
   def edit
-
   end
 
   def update
-
+    @counterparty.attributes = permit_params
+    @counterparty.save!
+    redirect_to root_path(active_tab: 'counterparty')
   end
 
   def create
@@ -35,6 +37,11 @@ class CounterpartiesController < ApplicationController
   end
 
   private
+
+
+  def find_counterparty
+    @counterparty = Counterparty.find(params[:id])
+  end
 
   def permit_params
     params.require(:counterparty).permit(:name, :short_name, :c_type)

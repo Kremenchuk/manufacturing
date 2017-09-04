@@ -6,7 +6,7 @@ class JobsController < ApplicationController
   def index
     data_hash = {
         view_context: view_context,
-        sort_column: %w[name price time print],
+        sort_column: %w[name name_for_print price time print],
         model: Job,
         search_query: 'UPPER(name) like :search'
     }
@@ -20,7 +20,7 @@ class JobsController < ApplicationController
   def job_details_datatable
     data_hash = {
         view_context: view_context,
-        sort_column: %w[name price time print],
+        sort_column: %w[name name_for_print price time print],
         model: Job,
         search_query: 'UPPER(name) like :search',
         modal_query: 'nil'
@@ -90,7 +90,7 @@ class JobsController < ApplicationController
   end
 
   def permit_params
-    params.require(:job).permit(:name, :price, :time, :print)
+    params.require(:job).permit(:name, :name_for_print,:price, :time, :print)
   end
 
   def find_job
