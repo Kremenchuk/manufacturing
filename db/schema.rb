@@ -74,9 +74,9 @@ ActiveRecord::Schema.define(version: 1200) do
 
   create_table "order_manufacturings_details", force: :cascade do |t|
     t.integer "order_manufacturing_id"
-    t.integer "order_manufacturings_detailable_id"
-    t.string  "order_manufacturings_detailable_type"
-    t.float   "qty",                                  null: false
+    t.integer "item_id"
+    t.float   "qty",                    null: false
+    t.index ["item_id"], name: "index_order_manufacturings_details_on_item_id", using: :btree
     t.index ["order_manufacturing_id"], name: "index_order_manufacturings_details_on_order_manufacturing_id", using: :btree
   end
 

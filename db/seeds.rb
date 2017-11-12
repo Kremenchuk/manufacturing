@@ -35,7 +35,7 @@ c2 =Counterparty.find_or_initialize_by(name: 'Складские техноло�
 end
 
 c3 =Counterparty.find_or_initialize_by(name: 'Иприс профиль').tap do |f|
-  f.short_name = ''
+  f.short_name = 'ИПРИС'
   f.c_type = 1
   f.save!
 end
@@ -107,5 +107,14 @@ Job.find_or_initialize_by(name: 'Сверловка укосов').tap do |f|
   f.price = 25.2
   f.time = 25
   f.print = false
+  f.save!
+end
+
+Item.find_or_initialize_by(name: 'Стеллаж').tap do |f|
+  f.name_for_print = 'Сверловка укосов'
+  f.size_l = 25.2
+  f.size_a = 21.2
+  f.size_b = 12.1
+  f.details = [[2, "Job", 23.0], [1, "Material", 3.0], [3, "job", 54.0], [1, "job", 1.0]]
   f.save!
 end

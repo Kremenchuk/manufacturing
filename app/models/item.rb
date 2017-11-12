@@ -8,7 +8,8 @@ class Item < ApplicationRecord
   enum unit: ['шт', 'м/п', 'кг', '%']
   enum for_sale: ['Не для продажи', 'Для продажи']
 
-  has_many :order_manufacturings_details, as: :order_manufacturings_detailable
+  has_many :order_manufacturings_details
+  has_many :order_manufacturings, through: :order_manufacturings_details
 
 
   validates :name, :unit,

@@ -28,7 +28,7 @@
       .col-md-3
         .form-group
           = f.label :invoice, 'Счет'
-          = f.number_field :invoice, step: 1, class: 'form-control'
+          = f.text_field :invoice, class: 'form-control'
       .col-md-3{style: 'padding-right: 0;'}
         .form-group
           = f.label :price, 'Стоимость заказа'
@@ -60,14 +60,16 @@
           %th.table-45 Наименование
           %th.table-10 ед.изм.
           %th.table-10 Количество
+          %th.table-10 Цена
+          %th.table-10 Сумма
           %th.table-5 Удалить
       %tbody#o_m-details-table-body
         -if @o_m_details.present?
           = render partial: 'o_m_detail'
-          -#, locals: {item: @o_m_details}
 
 
   .form-group
+    = f.submit 'Сохранить и выйти', class: 'btn btn-success'
     = f.submit 'Сохранить', class: 'btn btn-success'
     = link_to 'Отмена', root_path(active_tab: 'order_manufacturing'), class: 'btn btn-danger'
 
@@ -85,9 +87,6 @@
               %th.table-4 V
               %th.table-40 Наименование
               %th.table-10 Ед. измерения
-              %th.table-15 Тип
-              %th.table-15 Цена
-              %th.table-15 Вес
             %tbody
         .modal-footer
           = link_to 'Добавить', '#',class: 'btn btn-success', remote: true, 'data-dismiss': 'modal',
@@ -114,13 +113,35 @@
           %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
 
 :coffee
-  @itemDetailsIds = () ->
-    return $('.item_id_class').map(-> $(this).val()).get()
-
   $('body').on 'click', 'table#counterparties-o_m-datatable tr', (event) ->
     event.stopPropagation()
     elem = document.getElementById($(this).find(':radio:eq(0)').attr('id'))
     elem.click()
+
+  # Вираховування загальної суми та ваги по item
+  @sumWeight = (sum_field, weight_field) ->
+    i = 0
+    result = 0
+    weight_result = 0
+    while i < sum_field.length
+      id = $(sum_field[i]).data('counter')
+      unit = $.trim($('#unit_' + id).text())
+      if $('#qty_' + $(weight_field[i]).data('counter')).val()
+        weight_result = weight_result + parseFloat($(weight_field[i]).val()) * parseFloat($('#qty_' + $(weight_field[i]).data('counter')).val())
+        result = result + parseFloat($(sum_field[i]).html())
+      i++
+    # Підрахунок процентних нарахувань з сумою по кожній позиції
+    console.log(weight_result)
+    console.log(result)
+    $('#order_manufacturing_weight').val(weight_result.toFixed(2))
+    $('#order_manufacturing_price').val(result.toFixed(2))
+
+  sum_field = document.getElementsByClassName('sum_field')
+  weight_field = document.getElementsByClassName('weight_class')
+  sumWeight(sum_field, weight_field)
+
+  @itemDetailsIds = () ->
+    return $('.item_id_class').map(-> $(this).val()).get()
 
   $ ->
     $('#order_manufacturing_date').datepicker({dateFormat: 'dd.mm.yy'})
@@ -130,7 +151,7 @@
       elem = document.getElementById(this.id)
       $('#o_m_counterparty_form').submit()
 
-    window.OMDetailsTable = $('#o_m-details-datatable').DataTable
+    window.omDetailsTable = $('#o_m-details-datatable').DataTable
         bServerSide: true
         "language": window.dataTableJson
         ajax:
@@ -143,6 +164,7 @@
             if myData
               $.extend d, myData
             return
+
 
     $('#counterparties-o_m-datatable').DataTable
       bServerSide: true
@@ -160,8 +182,35 @@
 
     # Перезавантаження даних до таблиць details для item
     $('#add_o_m_detail').click ->
-      window.OMDetailsTable.ajax.reload()
+      window.omDetailsTable.ajax.reload()
+
 
     $('form').on 'keypress', (e) ->
       if e.keyCode == 13
         return false
+
+
+
+    $('.calculated_field').on 'click', (e) ->
+      $(this).select()
+
+    # видалення строки з details таблиці
+    $('.remove_row').on 'click', (e) ->
+      id = $(this).data('counter')
+      $(this).closest('tr').remove()
+      sumWeight(sum_field, weight_field)
+
+    # внесено зміни до поля кількості
+    $('.calculated_field').on 'keyup', (e) ->
+      re = /[а-яА-Яa-zA-Z]/
+      if re.test($(this).val()) == false
+        # Вираховування суми позиції в якій змінено кількість
+        id = $(this).data('counter')
+        qty = $('#qty_' + id).val()
+        price = $('#price_' + id).html()
+        $('#sum_' + id).html((qty * price).toFixed(2))
+        sumWeight(sum_field, weight_field)
+
+        if e.keyCode == 13
+          index = $(this).data('counter') + 1
+          $("input.calculated_field[data-counter='" + index + "']").select()

@@ -21,13 +21,13 @@ class OrderManufacturingsController < ApplicationController
   def o_m_details_datatable
     data_hash = {
         view_context: view_context,
-        sort_column: %w[name unit item_type price weight],
+        sort_column: %w[name unit],
         model: Item,
         search_query: 'UPPER(name) like :search',
-        modal_query: 'item_type != 1'
+        modal_query: 'nil'
     }
     if params[:ids].present?
-      data_hash[:modal_query] = "item_type != 1 AND id NOT IN (#{params[:ids].join(',')})"
+      data_hash[:modal_query] = "id NOT IN (#{params[:ids].join(',')})"
     end
 
     respond_to do |format|
@@ -69,10 +69,13 @@ class OrderManufacturingsController < ApplicationController
 
   def update
     @o_m.attributes = permit_params
-    create_update_action(@o_m)
+    create_update_action(@o_m, params.permit(:commit)[:commit])
   end
 
   def destroy
+    @o_m.order_manufacturings_details.each do |o_m_detail|
+      o_m_detail.destroy!
+    end
     @o_m.destroy!
     flash[:messages] = "'#{@o_m.number}' удалено"
     flash[:class] = 'flash-success'
@@ -80,7 +83,7 @@ class OrderManufacturingsController < ApplicationController
   end
 
   def create
-    create_update_action(OrderManufacturing.new(permit_params))
+    create_update_action(OrderManufacturing.new(permit_params), params.permit(:commit)[:commit])
   end
 
   def copy_o_m
@@ -98,13 +101,24 @@ class OrderManufacturingsController < ApplicationController
   end
 
   def o_m_print
+    excel_file = WorkWithExcel.new("1.xlsx")
+    excel_file.cell(0, 0, 'Тестовая надпись',
+                    {:font_size => 50, :row_height => 100, :border => [[:top, 'thick'], [:bottom, 'thick']]
+                    }
+    )
 
-    redirect_to root_path(active_tab: 'order_manufacturing')
+
+
+
+    excel_file.save
+
+
+    redirect_to edit_order_manufacturing_path(params[:id])
   end
 
   private
 
-  def create_update_action(o_m)
+  def create_update_action(o_m, commit)
       o_m.counterparty = Counterparty.find_by(name: params[:order_manufacturing][:counterparty])
       if o_m.save
         if permit_type_id_qty.present?
@@ -124,7 +138,11 @@ class OrderManufacturingsController < ApplicationController
         redirect_to new_order_manufacturing_path(copy: true)
         return
       end
-      redirect_to root_path(active_tab: 'order_manufacturing')
+      if commit == 'Сохранить и выйти'
+        redirect_to root_path(active_tab: 'order_manufacturing')
+      else
+        redirect_to edit_order_manufacturing_path(o_m.id)
+      end
   end
 
   def permit_params
