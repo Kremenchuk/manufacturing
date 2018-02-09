@@ -102,10 +102,15 @@ class OrderManufacturingsController < ApplicationController
 
   def o_m_print
     excel_file = WorkWithExcel.new("1.xlsx")
-    excel_file.cell(0, 0, 'Тестовая надпись',
-                    {:font_size => 50, :row_height => 100, :border => [[:top, 'thick'], [:bottom, 'thick']]
-                    }
-    )
+    # {:font_size => 50, :row_height => 100, :border => [[:top, 'thick'], [:bottom, 'thick']],
+    #     :merge_cells => [0, 1]}
+    excel_file.cell(0, 0, 'Тестовая надпись1111',
+                    {
+                        :font_size => 50,
+                        :row_height => 100,
+                        :border => [[:top, 'thick'], [:bottom, 'thick']],
+                        :merge_cells => [0, 0]
+                    })
 
 
 

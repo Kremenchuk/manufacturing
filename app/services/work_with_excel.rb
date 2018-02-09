@@ -13,9 +13,10 @@ class WorkWithExcel
   def cell(row, col, value, options = {})
     @sheet.add_cell(row, col, value)
 
-    options[:font_size].present?  ? @sheet[row][col].change_font_size(options[:font_size]) : nil
-    options[:row_height].present? ? @sheet.change_row_height(row, options[:row_height])    : nil
-    options[:border].present?     ? border(row, col, options[:border])                     : nil
+    options[:font_size].present?    ? @sheet[row][col].change_font_size(options[:font_size])                    : nil
+    options[:row_height].present?   ? @sheet.change_row_height(row, options[:row_height])                       : nil
+    options[:border].present?       ? border(row, col, options[:border])                                        : nil
+    options[:merge_cells].present?  ? merge_cells(row, col, options[:merge_cells][0], options[:merge_cells][1]) : nil
   end
 
   def save(file_path = nil)
@@ -34,6 +35,9 @@ class WorkWithExcel
     end
   end
 
+  def merge_cells(a1, a2, b1, b2)
+    @sheet.merge_cells(a1, a2, b1, b2)
+  end
 
 end
 
