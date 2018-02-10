@@ -101,23 +101,8 @@ class OrderManufacturingsController < ApplicationController
   end
 
   def o_m_print
-    excel_file = WorkWithExcel.new("1.xlsx")
-    # {:font_size => 50, :row_height => 100, :border => [[:top, 'thick'], [:bottom, 'thick']],
-    #     :merge_cells => [0, 1]}
-    excel_file.cell(0, 0, 'Тестовая надпись1111',
-                    {
-                        :font_size => 50,
-                        :row_height => 100,
-                        :border => [[:top, 'thick'], [:bottom, 'thick']],
-                        :merge_cells => [0, 0]
-                    })
-
-
-
-
-    excel_file.save
-
-
+    excel_file = OrderManufacturingPrint.new(params[:id])
+    excel_file.print
     redirect_to edit_order_manufacturing_path(params[:id])
   end
 

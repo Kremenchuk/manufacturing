@@ -23,7 +23,7 @@
           = f.text_field :number, class: 'form-control validate-field'
       .col-md-3
         .form-group
-          = f.label :date, 'Дата'
+          = f.label :date, 'Дата выполнения'
           = f.text_field :date, value: (@o_m.date.present? ? @o_m.date : Time.now.strftime('%d.%m.%Y')), class: 'form-control validate-field'
       .col-md-3
         .form-group
