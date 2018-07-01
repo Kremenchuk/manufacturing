@@ -22,8 +22,5 @@
         = f.label :time, 'Время'
         = f.number_field :time, step: 1, class: 'form-control validate-field'
       .form-group
-        = f.label :print, 'Печатать'
-        = f.check_box :print, class: 'form-control'
-      .form-group
         = f.submit 'Сохранить', class: 'btn btn-success'
         = link_to 'Отмена', root_path(active_tab: 'job'), class: 'btn btn-danger'

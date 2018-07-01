@@ -107,6 +107,11 @@ body, html {
   text-align: center;
 }
 
+.table-0 {
+  width: 0.1% !important;
+  text-align: center;
+}
+
 .table-4 {
   width: 4% !important;
   text-align: center;
@@ -125,6 +130,11 @@ body, html {
   height: 25px;
   width: 25px;
   margin: 4px -4px 0 0 !important;
+}
+
+input[type = 'checkbox'] {
+  height: 25px;
+  width: 25px;
 }
 
 .datatable-radio {

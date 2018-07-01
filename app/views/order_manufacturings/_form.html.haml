@@ -5,7 +5,8 @@
         %i.fa.fa-clone
       = link_to order_manufacturing_path(@o_m.id), method: :delete, class: 'btn btn-danger', title: 'Удалить', data: {confirm: 'Точно удалить?'} do
         %i.fa.fa-trash
-      = link_to o_m_print_path(@o_m.id), class: 'btn btn-default', title: 'Печать' do
+      = link_to '', id: 'o_m_details_pre_print', class: 'btn btn-default', title: 'Печать', remote: true, 'data-toggle': 'modal',
+        'data-target': '#o_m_details_pre_print-modal', 'data-id': @o_m.id do
         %i.fa.fa-print
 
 = form_for @o_m, html: {class: 'submit-form'} do |f|
@@ -112,6 +113,31 @@
         .modal-footer
           %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
 
+- if @o_m.id.present?
+  /модальне вікно для вибору об'єднання однакових виробів пуд час друку
+  #o_m_details_pre_print-modal.modal.fade{:role => 'dialog'}
+    .modal-dialog
+      .modal-content
+        = form_tag(o_m_print_path(@o_m.id), remote: true, method: :get, id: 'o_m_details_print_form') do
+          .modal-header
+            %button.close{'data-dismiss': 'modal', type: 'button'} ×
+            %h4.modal-title Сортировать
+          .modal-body
+            %table#o_m_details_pre_print_form-datatable.display.datatable-table{'data-source': o_m_details_pre_print_datatable_url(@o_m.present? ? @o_m.id : nil ,format: 'json')}
+              %thead
+                %th.table-4 V
+                %th.table-40 Наименование
+                %th.table-10 Ед. измерения
+                %th.table-10 Количество
+                %th.table-0
+                %th.table-0
+              %tbody
+          .modal-footer
+            = link_to 'Добавить', '#',class: 'btn btn-success', remote: true, 'data-dismiss': 'modal',
+              onclick: "$('#o_m_details_print_form').submit()"
+            %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
+
+
 :coffee
   $('body').on 'click', 'table#counterparties-o_m-datatable tr', (event) ->
     event.stopPropagation()
@@ -146,24 +172,54 @@
   $ ->
     $('#order_manufacturing_date').datepicker({dateFormat: 'dd.mm.yy'})
 
+
     $('body').on 'click', '.datatable-radio', (event) ->
       event.stopPropagation()
       elem = document.getElementById(this.id)
       $('#o_m_counterparty_form').submit()
 
+  # Замена значение в скрытых полях
+    $('body').on 'click', ':checkbox', (event) ->
+      event.stopPropagation()
+      id = $(this).data('class') + '_' + $(this).data('index')
+      if $(this).is(':checked') == true
+        $('#id_hidden_' + id).val($(this).data('index'))
+
+      else
+        $('#id_hidden_' + id).val('')
+
+      console.log 'id_check_' + $(this).data('class') + '_' + $(this).data('index')
+      console.log 'id_hidden_' + $(this).data('class') + '_' + $(this).data('index')
+      console.log $(this).is(':checked')
+      console.log $('#id_hidden_' + id).val()
+      console.log  $('#id_hidden_class_' + id).val()
+      return
+
     window.omDetailsTable = $('#o_m-details-datatable').DataTable
-        bServerSide: true
-        "language": window.dataTableJson
-        ajax:
-          url: $('#o_m-details-datatable').data('source')
-          dataType: 'json'
-          cache: false
-          type: 'GET'
-          data: (d) ->
-            myData = {ids: itemDetailsIds()}
-            if myData
-              $.extend d, myData
-            return
+      bServerSide: true
+      "language": window.dataTableJson
+      ajax:
+        url: $('#o_m-details-datatable').data('source')
+        dataType: 'json'
+        cache: false
+        type: 'GET'
+        data: (d) ->
+          myData = {ids: itemDetailsIds()}
+          if myData
+            $.extend d, myData
+          return
+
+    window.omPrePrintDetailsTable = $('#o_m_details_pre_print_form-datatable').DataTable
+      bServerSide: true
+      "language": window.dataTableJson
+      searching: false
+      ajax:
+        url: $('#o_m_details_pre_print_form-datatable').data('source')
+        dataType: 'json'
+        cache: false
+        type: 'GET'
+        data: (d) ->
+          myData = $('#o_m_details_pre_print').data('id')
 
 
     $('#counterparties-o_m-datatable').DataTable
@@ -180,10 +236,14 @@
             $.extend d, myData
           return
 
+
+
     # Перезавантаження даних до таблиць details для item
     $('#add_o_m_detail').click ->
-      window.omDetailsTable.ajax.reload()
+      window.omPrePrintDetailsTable.ajax.reload()
 
+    $('#o_m_details_pre_print').click ->
+      window.omDetailsTable.ajax.reload()
 
     $('form').on 'keypress', (e) ->
       if e.keyCode == 13

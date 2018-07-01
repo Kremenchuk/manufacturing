@@ -59,6 +59,7 @@
           %th.table-10 Количество
           %th.table-10 Цена
           %th.table-15 Сумма
+          %th.table-2 Печатать
           %th.table-5 Удалить
       %tbody#item-details-table-body
         -if @item_details.present?
@@ -90,7 +91,7 @@
             onclick: "$('#item_details_form').submit()"
           %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
 
-/модальне вікно для додавання продукції до таблиці продукції
+/модальне вікно для додавання матеріалів до таблиці продукції
 #materials-modal.modal.fade{:role => 'dialog'}
   .modal-dialog
     .modal-content

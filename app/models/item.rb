@@ -1,6 +1,5 @@
 class Item < ApplicationRecord
 
-  after_destroy :delete_from_item_details
 
   default_scope { order(created_at: :desc) }
 

@@ -33,7 +33,8 @@ class MappingModelData
     if modal_query.present?
       model_data.where(modal_query != 'nil' ? modal_query : nil).map do |model_data_i|
         [
-            check_box_helper(model_data_i.id, 'item', '[item_details][id][]','datatable-checkbox'),
+            check_box_helper({value: model_data_i.id, name: 'item', field_name: '[item_details][id][]', class_name: 'datatable-checkbox'}),
+                # model_data_i.id, 'item', '[item_details][id][]','datatable-checkbox'),
             #radio_helper(model_data_i.id, 'counterparty', '[id]','datatable-radio', 'data-dismiss="modal"'),
             model_data_i.name,
             model_data_i.unit,
@@ -60,12 +61,12 @@ class MappingModelData
     if modal_query.present?
       model_data.where(modal_query != 'nil' ? modal_query : nil).map do |model_data_i|
         [
-            check_box_helper(model_data_i.id, 'job', '[job_details][id][]','datatable-checkbox'),
+            check_box_helper({value: model_data_i.id, name: 'job', field_name:'[job_details][id][]', class_name: 'datatable-checkbox'}),
+                # model_data_i.id, 'job', '[job_details][id][]','datatable-checkbox'),
             model_data_i.name,
             model_data_i.name_for_print,
             Float(model_data_i.price),
             model_data_i.time,
-            model_data_i.print.present? ? 'Да' : 'Нет'
         ]
       end
     else
@@ -76,7 +77,6 @@ class MappingModelData
             name_for_print:   model_data_i.name_for_print,
             price:            Float(model_data_i.price),
             time:             model_data_i.time,
-            print:            model_data_i.print.present? ? 'Да' : 'Нет'
         }
       end
     end
@@ -170,6 +170,47 @@ class MappingModelData
             size_b: model_data_i.size_b
         }
       end
+    end
+  end
+
+  def o_m_pre_print
+    old_id = nil
+    model_data.map.with_index do |model_data_i, index|
+      [
+          # if old_id.nil?
+          #   old_id = model_data_i[0].id
+          #   set_value = true
+          #   check_box_helper({ value: model_data_i[0].id, field_name: '[o_m_details_pre_print][id][]',
+          #             checked: true, data: "data-class = '#{model_data_i[0].class.to_s}' data-index = '#{index}'",
+          #             id: "check_#{model_data_i[0].class.to_s}_#{index}"})
+          # else
+          #   if old_id == model_data_i[0].id
+          #     set_value = false
+          #     check_box_helper({ value: model_data_i[0].id, field_name: '[o_m_details_pre_print][id][]',
+          #                        data: "data-class = '#{model_data_i[0].class.to_s}' data-index = '#{index}'",
+          #                        id: "check_#{model_data_i[0].class.to_s}_#{index}"})
+          #   else
+          #     old_id = model_data_i[0].id
+          #     set_value = true
+          #     check_box_helper({ value: model_data_i[0].id, field_name: '[o_m_details_pre_print][id][]',
+          #                        checked: true, data: "data-class = '#{model_data_i[0].class.to_s}' data-index = '#{index}'",
+          #                        id: "check_#{model_data_i[0].class.to_s}_#{index}"})
+          #
+          #   end
+          # end,
+          check_box_helper({ value: model_data_i[0].id, field_name: '[o_m_details_pre_print][id][]',
+                             data: "data-class = '#{model_data_i[0].class.to_s}' data-index = '#{index}'",
+                             id: "check_#{model_data_i[0].class.to_s}_#{index}"}),
+          model_data_i[0].name,
+          model_data_i[0].is_a?(Item) ? model_data_i[0].unit : '',
+          Float(model_data_i[1]),
+          # text_helper({value: set_value.present? ? index : '', field_name: '[o_m_details_pre_print][index][]', visible: false,
+          #              id: "hidden_#{model_data_i[0].class.to_s}_#{index}"}),
+          text_helper({value: '', field_name: '[o_m_details_pre_print][index][]', visible: false,
+          id: "hidden_#{model_data_i[0].class.to_s}_#{index}"}),
+          text_helper({value: model_data_i[0].class.to_s, field_name: '[o_m_details_pre_print][class][]', visible: false,
+                       id: "hidden_class_#{model_data_i[0].class.to_s}_#{index}"})
+      ]
     end
   end
 end

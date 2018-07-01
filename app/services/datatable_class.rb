@@ -21,6 +21,15 @@ class DatatableClass
     }
   end
 
+  def with_out_model(data = [])
+    {
+        sEcho: params[:sEcho].to_i,
+        iTotalRecords: data.count,
+        iTotalDisplayRecords: data.count,
+        aaData: MappingModelData.new(data).send(@model.to_s.tableize.singularize)
+    }
+  end
+
   private
 
   def data

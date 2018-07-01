@@ -2,7 +2,7 @@ class OrderManufacturingsController < ApplicationController
 
   # o_m -> order_manufacturing
 
-  before_action :find_o_m, only: [:edit, :update, :destroy, :copy_o_m]
+  before_action :find_o_m, only: [:edit, :update, :destroy, :copy_o_m, :o_m_pre_print]
 
   def index
     data_hash = {
@@ -48,6 +48,21 @@ class OrderManufacturingsController < ApplicationController
     respond_to do |format|
       format.html
       format.json { render json: DatatableClass.new(data_hash) }
+    end
+  end
+
+  def o_m_details_pre_print_datatable
+    data_hash = {
+        view_context: view_context,
+        sort_column: %w[name unit qty],
+        model: 'o_m_pre_print',
+        search_query: 'nil',
+        modal_query: 'nil'
+    }
+    as = DatatableClass.new(data_hash).with_out_model(o_m_pre_print(params[:id]))
+    respond_to do |format|
+      format.html
+      format.json { render json: as }
     end
   end
 
@@ -100,17 +115,73 @@ class OrderManufacturingsController < ApplicationController
     @counterparty = Counterparty.find(params[:counterparty][:id])
   end
 
+
+
   def o_m_print
+    print_array = Array.new
+    print_hash = permit_pre_print
+    pre_print_array = o_m_pre_print(params[:id])
+    print_index = 0
+    print_hash['index'].each_with_index do |i, index|
+      if i.present?
+        if index == 0
+          print_array << pre_print_array[index]
+          next
+        end
+        if pre_print_array[index][0].id == pre_print_array[index - 1][0].id and pre_print_array[index][0].class == pre_print_array[index - 1][0].class
+          print_array[print_index][1] = print_array[print_index][1] + pre_print_array[index][1]
+        else
+          print_array << pre_print_array[index]
+          print_index +=1
+        end
+      else
+        print_array << pre_print_array[index]
+        print_index +=1
+        next
+      end
+
+    end
+
     excel_file = OrderManufacturingPrint.new(params[:id])
-    excel_file.print
-    redirect_to edit_order_manufacturing_path(params[:id])
+    @print_details = excel_file.prepare_print
+    # redirect_to edit_order_manufacturing_path(params[:id])
+    respond_to do |format|
+      format.html
+      format.js
+    end
+    # sort_a = Array.new
+    # if a.is_a? Array
+    #   a.each_with_index do |elem, index|
+    #     sort_a << elem
+    #     a.each_with_index do |elem2, index2|
+    #       if index2 <= index
+    #         next
+    #       end
+    #       if elem[0] == elem2[0] and elem[1] == elem2[1]
+    #         sort_a << elem2
+    #         a.delete_at(index2)
+    #       end
+    #     end
+    #   end
+    # end
+    # return sort_a
+
+
+
   end
 
   private
 
+  def o_m_pre_print(id)
+    OrderManufacturingPrePrint.new(id).prepare_print
+  end
+
   def create_update_action(o_m, commit)
       o_m.counterparty = Counterparty.find_by(name: params[:order_manufacturing][:counterparty])
       if o_m.save
+        o_m.order_manufacturings_details.each do |order_manufacturings_detail|
+          order_manufacturings_detail.destroy!
+        end
         if permit_type_id_qty.present?
           permit_type_id_qty[:id].each_with_index do |item_id, index|
             OrderManufacturingsDetail.find_or_initialize_by(order_manufacturing: o_m, item_id: item_id).tap do |f|
@@ -141,6 +212,10 @@ class OrderManufacturingsController < ApplicationController
 
   def permit_type_id_qty
     params.require('details').permit(id: [], qty: [])
+  end
+
+  def permit_pre_print
+    params.require('o_m_details_pre_print').permit(id: [], index: [], class: [])
   end
 
   def find_o_m

@@ -5,7 +5,7 @@ class OrderManufacturingPrint
     @o_m = OrderManufacturing.find(o_m_id)
   end
 
-  def print
+  def print(data)
 
     # ++ Шапка
       @book.cell(0, 0, @o_m.number,
@@ -26,7 +26,7 @@ class OrderManufacturingPrint
       @book.cell(0, 12, '',{:border => [[:right, 'thick']]})
     # -- Шапка
 
-      o_m_details = search_same
+
     # ++ Основное тело
       @book.cell(2, 0, @o_m.date,
                  {
@@ -40,19 +40,4 @@ class OrderManufacturingPrint
 
     @book.save
   end
-
-  private
-
-  def search_same(item_id = nil, s_kol = nil)
-    items = Array.new
-    if item_id.nil?
-      @o_m.order_manufacturings_details.each do |stillage|
-        s_kol = stillage.qty
-        s_details = stillage.details
-
-      end
-    end
-    return items
-  end
-
 end

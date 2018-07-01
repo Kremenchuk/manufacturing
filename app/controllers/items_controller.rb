@@ -89,10 +89,14 @@ class ItemsController < ApplicationController
   end
 
   def destroy
-    @item.destroy!
-    flash[:messages] = "'#{@item.name}' удалено"
-    flash[:class] = 'flash-success'
-    redirect_to root_path(active_tab: 'item')
+    if @item.destroy!
+      flash[:messages] = "'#{@item.name}' удалено"
+      flash[:class] = 'flash-success'
+      redirect_to root_path(active_tab: 'item')
+    else
+      flash[:messages] = "'#{@item.name}' не удалено #{@item.errors}"
+      flash[:class] = 'flash-error'
+    end
   end
 
   def copy_item
@@ -116,6 +120,11 @@ class ItemsController < ApplicationController
           details_el << el.to_i
           details_el << param_details[:details_type][index]
           details_el << param_details[:qty][index].to_f
+          if param_details[:print].present?
+            details_el << param_details[:print].include?(el) ? true : false
+          else
+            details_el << false
+          end
           details << details_el
         end
       end
@@ -137,6 +146,7 @@ class ItemsController < ApplicationController
       detail = Array.new
       detail << el[1].constantize.find(el[0])
       detail << el[2]
+      detail << el[3]
       @item_details << detail
     end
   end
@@ -147,7 +157,7 @@ class ItemsController < ApplicationController
   end
 
   def permit_type_id_qty
-    params.require('details').permit(details_type: [], id: [], qty: [])
+    params.require('details').permit(details_type: [], id: [], qty: [], print: [])
   end
 
   def find_item

@@ -37,13 +37,12 @@ ActiveRecord::Schema.define(version: 1200) do
   end
 
   create_table "jobs", force: :cascade do |t|
-    t.string   "name",                          null: false
-    t.string   "name_for_print",                null: false
-    t.float    "price",                         null: false
-    t.integer  "time",                          null: false
-    t.boolean  "print",          default: true
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+    t.string   "name",           null: false
+    t.string   "name_for_print", null: false
+    t.float    "price",          null: false
+    t.integer  "time",           null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
   end
 
   create_table "materials", force: :cascade do |t|

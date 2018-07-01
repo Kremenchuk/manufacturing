@@ -90,7 +90,7 @@ class JobsController < ApplicationController
   end
 
   def permit_params
-    params.require(:job).permit(:name, :name_for_print,:price, :time, :print)
+    params.require(:job).permit(:name, :name_for_print,:price, :time)
   end
 
   def find_job

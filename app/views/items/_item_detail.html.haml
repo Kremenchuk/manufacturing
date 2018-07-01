@@ -35,5 +35,7 @@
       = item[0].price
     %td.sum_field{id: "sum_#{item_counter}", 'data-counter': item_counter}
       = item_sum
+    %td.table-4
+      = check_box_tag 'details[print][]', item[0].id, item[2].present? ? true : false, {id: "print_#{item_counter}"}
     %td.remove_row{id: "remove_#{item_counter}", 'data-counter': item_counter}
 

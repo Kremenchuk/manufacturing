@@ -5,11 +5,13 @@ Rails.application.routes.draw do
   #order_manufacturings
     resources :order_manufacturings
     get 'o_m_details_datatable' => 'order_manufacturings#o_m_details_datatable'
+    get 'o_m_details_pre_print_datatable/:id' => 'order_manufacturings#o_m_details_pre_print_datatable', as: 'o_m_details_pre_print_datatable'
     get 'copy_o_m/:id' => 'order_manufacturings#copy_o_m', as: 'copy_o_m'
     get 'add_o_m_detail' => 'order_manufacturings#add_o_m_detail'
     get 'add_counterparty' => 'order_manufacturings#add_counterparty'
     get 'o_m_counterparty_datatable' => 'order_manufacturings#o_m_counterparty_datatable'
     get 'o_m_print/:id' => 'order_manufacturings#o_m_print', as: 'o_m_print'
+    # get 'o_m_pre_print/:id' => 'order_manufacturings#o_m_pre_print', as: 'o_m_pre_print'
   #---order_manufacturings---
 
   #payrolls

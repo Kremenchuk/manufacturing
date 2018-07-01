@@ -165,8 +165,7 @@ $ ->
       { "data": "name" },
       { "data": "name_for_print" },
       { "data": "price" },
-      { "data": "time" },
-      { "data": "print" }
+      { "data": "time" }
     ]
 
   $('#worker-table').DataTable
