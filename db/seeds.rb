@@ -73,8 +73,8 @@ end
 
 workers.each do |i|
   Worker.find_or_initialize_by(first_name: i[0]).tap do |f|
-    f.middle_name = i[1]
-    f.last_name   = i[2]
+    f.last_name   = i[1]
+    f.middle_name = i[2]
     f.position    = i[3]
     f.save!
   end
