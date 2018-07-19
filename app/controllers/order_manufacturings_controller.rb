@@ -119,29 +119,20 @@ class OrderManufacturingsController < ApplicationController
 
   def o_m_print
     print_array = Array.new
-    print_hash = permit_pre_print
-    pre_print_array = o_m_pre_print(params[:id])
-    print_index = 0
-    print_hash['index'].each_with_index do |i, index|
-      if i.present?
-        if index == 0
-          print_array << pre_print_array[index]
-          next
-        end
-        if pre_print_array[index][0].id == pre_print_array[index - 1][0].id and pre_print_array[index][0].class == pre_print_array[index - 1][0].class
-          print_array[print_index][1] = print_array[print_index][1] + pre_print_array[index][1]
-        else
-          print_array << pre_print_array[index]
-          print_index +=1
-        end
-      else
-        print_array << pre_print_array[index]
-        print_index +=1
-        next
+    print_string = params[:item_arr_to_print]
+
+     i = 0
+    print_array_cycle = Array.new
+    print_string.split(',').each do |el|
+      print_array_cycle << el
+      i = i + 1
+      if i == 3
+        print_array << print_array_cycle
+        print_array_cycle = []
+        i = 0
       end
 
     end
-
     excel_file = OrderManufacturingPrint.new(params[:id])
     @print_details = excel_file.prepare_print
     # redirect_to edit_order_manufacturing_path(params[:id])
@@ -149,25 +140,6 @@ class OrderManufacturingsController < ApplicationController
       format.html
       format.js
     end
-    # sort_a = Array.new
-    # if a.is_a? Array
-    #   a.each_with_index do |elem, index|
-    #     sort_a << elem
-    #     a.each_with_index do |elem2, index2|
-    #       if index2 <= index
-    #         next
-    #       end
-    #       if elem[0] == elem2[0] and elem[1] == elem2[1]
-    #         sort_a << elem2
-    #         a.delete_at(index2)
-    #       end
-    #     end
-    #   end
-    # end
-    # return sort_a
-
-
-
   end
 
   private
@@ -212,10 +184,6 @@ class OrderManufacturingsController < ApplicationController
 
   def permit_type_id_qty
     params.require('details').permit(id: [], qty: [])
-  end
-
-  def permit_pre_print
-    params.require('o_m_details_pre_print').permit(id: [], index: [], class: [])
   end
 
   def find_o_m

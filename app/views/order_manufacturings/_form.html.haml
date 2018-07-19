@@ -119,6 +119,7 @@
     .modal-dialog
       .modal-content
         = form_tag(o_m_print_path(@o_m.id), remote: true, method: :get, id: 'o_m_details_print_form') do
+          = text_area_tag('item_arr_to_print', '', {hidden: true})
           .modal-header
             %button.close{'data-dismiss': 'modal', type: 'button'} ×
             %h4.modal-title Сортировать
@@ -129,8 +130,6 @@
                 %th.table-40 Наименование
                 %th.table-10 Ед. измерения
                 %th.table-10 Количество
-                %th.table-0
-                %th.table-0
               %tbody
           .modal-footer
             = link_to 'Добавить', '#',class: 'btn btn-success', remote: true, 'data-dismiss': 'modal',
@@ -170,6 +169,9 @@
     return $('.item_id_class').map(-> $(this).val()).get()
 
   $ ->
+    # Масив усіх елементів для об'єднання
+
+
     $('#order_manufacturing_date').datepicker({dateFormat: 'dd.mm.yy'})
 
 
@@ -181,20 +183,51 @@
   # Замена значение в скрытых полях
     $('body').on 'click', ':checkbox', (event) ->
       event.stopPropagation()
-      id = $(this).data('class') + '_' + $(this).data('index')
-      if $(this).is(':checked') == true
-        $('#id_hidden_' + id).val($(this).data('index'))
+      cycleToFor = $('.o_m_details_pre_print-class').length
+      printArray = []
+      checkedArray = []
+      i = 0
 
-      else
-        $('#id_hidden_' + id).val('')
+      # створення масиву даних з об'єднаними виробами для друку
+      while i < cycleToFor
+        if $('#id_check_' + i.toString()).is(':checked') == true
+          checkedArray.push [$('#id_check_' + i.toString()).data('id'), $('#id_check_' + i.toString()).data('class'), $('#id_check_' + i.toString()).data('qty')]
+        else
+          printArray.push [$('#id_check_' + i.toString()).data('id'), $('#id_check_' + i.toString()).data('class'), $('#id_check_' + i.toString()).data('qty')]
+        j = i + 1
 
-      console.log 'id_check_' + $(this).data('class') + '_' + $(this).data('index')
-      console.log 'id_hidden_' + $(this).data('class') + '_' + $(this).data('index')
-      console.log $(this).is(':checked')
-      console.log $('#id_hidden_' + id).val()
-      console.log  $('#id_hidden_class_' + id).val()
+        loop
+          if $('#id_check_' + i.toString()).data("class") == $('#id_check_' + j.toString()).data('class')
+            if $('#id_check_' + i.toString()).data("id") == $('#id_check_' + j.toString()).data('id')
+              if $('#id_check_' + j.toString()).is(':checked') == true
+                if checkedArray.length > 0
+                  checkedArray[0][2] = parseFloat(checkedArray[0][2]) + parseFloat($('#id_check_' + j.toString()).data('qty'))
+                else
+                  checkedArray.push [$('#id_check_' + j.toString()).data('id'), $('#id_check_' + j.toString()).data('class'), $('#id_check_' + j.toString()).data('qty')]
+              else
+                printArray.push [$('#id_check_' + j.toString()).data('id'), $('#id_check_' + j.toString()).data('class'), $('#id_check_' + j.toString()).data('qty')]
+            else
+              i = j - 1
+              j = cycleToFor
+              if checkedArray.length > 0
+                printArray.push checkedArray[0]
+              checkedArray = []
+          else
+            i = j - 1
+            j = cycleToFor
+            if checkedArray.length > 0
+              printArray.push checkedArray[0]
+            checkedArray = []
+
+          j++
+          unless j < cycleToFor
+            break
+        i++
+
+      $('#item_arr_to_print').val(printArray)
       return
 
+    # Ініціалізація datatable
     window.omDetailsTable = $('#o_m-details-datatable').DataTable
       bServerSide: true
       "language": window.dataTableJson
@@ -209,6 +242,7 @@
             $.extend d, myData
           return
 
+    # Ініціалізація datatable
     window.omPrePrintDetailsTable = $('#o_m_details_pre_print_form-datatable').DataTable
       bServerSide: true
       "language": window.dataTableJson

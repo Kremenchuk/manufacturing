@@ -22,7 +22,7 @@ Rails.application.routes.draw do
     resources :items
     get 'add_item_detail' => 'items#add_item_detail'
     # для заповнення модального вікна при виборі виробів для details
-      get 'item_details_datatable' => 'items#item_details_datatable'
+    get 'item_details_datatable' => 'items#item_details_datatable'
     get 'copy_item/:id' => 'items#copy_item', as: 'copy_item'
 
   #---items---
@@ -30,7 +30,7 @@ Rails.application.routes.draw do
   #jobs
     resources :jobs
     # для заповнення модального вікна при виборі робіт для details
-      get 'job_details_datatable' => 'jobs#job_details_datatable'
+    get 'job_details_datatable' => 'jobs#job_details_datatable'
     get 'copy_job/:id' => 'jobs#copy_job', as: 'copy_job'
     get 'add_job_detail' => 'jobs#add_job_detail'
   #---jobs---
