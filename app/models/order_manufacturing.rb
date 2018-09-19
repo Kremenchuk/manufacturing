@@ -5,6 +5,7 @@ class OrderManufacturing < ApplicationRecord
   has_many :order_manufacturings_details, dependent: :destroy
   has_many :items, through: :order_manufacturings_details
   belongs_to :counterparty
+  belongs_to :user
 
   validates :number, :date,
             presence: true

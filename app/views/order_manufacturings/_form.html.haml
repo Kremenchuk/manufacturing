@@ -5,9 +5,13 @@
         %i.fa.fa-clone
       = link_to order_manufacturing_path(@o_m.id), method: :delete, class: 'btn btn-danger', title: 'Удалить', data: {confirm: 'Точно удалить?'} do
         %i.fa.fa-trash
-      = link_to '', id: 'o_m_details_pre_print', class: 'btn btn-default', title: 'Печать', remote: true, 'data-toggle': 'modal',
+      = link_to '', id: 'o_m_details_pre_print', class: 'btn btn-default', title: 'Печать с РУЧНЫМ объединением', remote: true, 'data-toggle': 'modal',
         'data-target': '#o_m_details_pre_print-modal', 'data-id': @o_m.id do
         %i.fa.fa-print
+        %i.fa.fa-hand-paper
+      = link_to o_m_details_print_path(@o_m.id), id: 'o_m_details_print', class: 'btn btn-default', remote: true, title: 'Печать с АВТОМАТИЧЕСКИМ объединением' do
+        %i.fa.fa-print
+        %i.fa.fa-laptop
 
 = form_for @o_m, html: {class: 'submit-form'} do |f|
   .col-md-12
@@ -124,6 +128,8 @@
             %button.close{'data-dismiss': 'modal', type: 'button'} ×
             %h4.modal-title Сортировать
           .modal-body
+            = check_box_tag('check_all_check_box', 1, false, {class: 'o_m_details_pre_print-class'})
+            = label_tag('check_box_label', 'Выбрать все', class: 'checkbox-inline')
             %table#o_m_details_pre_print_form-datatable.display.datatable-table{'data-source': o_m_details_pre_print_datatable_url(@o_m.present? ? @o_m.id : nil ,format: 'json')}
               %thead
                 %th.table-4 V
@@ -132,17 +138,12 @@
                 %th.table-10 Количество
               %tbody
           .modal-footer
-            = link_to 'Добавить', '#',class: 'btn btn-success', remote: true, 'data-dismiss': 'modal',
+            = link_to 'Печать', '#',class: 'btn btn-success', remote: true, 'data-dismiss': 'modal',
               onclick: "$('#o_m_details_print_form').submit()"
             %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
 
 
 :coffee
-  $('body').on 'click', 'table#counterparties-o_m-datatable tr', (event) ->
-    event.stopPropagation()
-    elem = document.getElementById($(this).find(':radio:eq(0)').attr('id'))
-    elem.click()
-
   # Вираховування загальної суми та ваги по item
   @sumWeight = (sum_field, weight_field) ->
     i = 0
@@ -168,9 +169,60 @@
   @itemDetailsIds = () ->
     return $('.item_id_class').map(-> $(this).val()).get()
 
+
+  #Підготовка даних до друку в Excel
+  @arrayToPrint = () ->
+    cycleToFor = $('.o_m_details_pre_print-class').length
+    printArray = []
+    checkedArray = []
+    i = 0
+
+    # створення масиву даних з об'єднаними виробами для друку
+    while i < cycleToFor
+      if $('#id_check_' + i.toString()).is(':checked') == true
+        checkedArray.push [$('#id_check_' + i.toString()).data('id'), $('#id_check_' + i.toString()).data('class'), $('#id_check_' + i.toString()).data('qty')]
+      else
+        printArray.push [$('#id_check_' + i.toString()).data('id'), $('#id_check_' + i.toString()).data('class'), $('#id_check_' + i.toString()).data('qty')]
+      j = i + 1
+
+      loop
+        if $('#id_check_' + i.toString()).data("class") == $('#id_check_' + j.toString()).data('class')
+          if $('#id_check_' + i.toString()).data("id") == $('#id_check_' + j.toString()).data('id')
+            if $('#id_check_' + j.toString()).is(':checked') == true
+              if checkedArray.length > 0
+                checkedArray[0][2] = parseFloat(checkedArray[0][2]) + parseFloat($('#id_check_' + j.toString()).data('qty'))
+              else
+                checkedArray.push [$('#id_check_' + j.toString()).data('id'), $('#id_check_' + j.toString()).data('class'), $('#id_check_' + j.toString()).data('qty')]
+            else
+              printArray.push [$('#id_check_' + j.toString()).data('id'), $('#id_check_' + j.toString()).data('class'), $('#id_check_' + j.toString()).data('qty')]
+          else
+            i = j - 1
+            j = cycleToFor
+            if checkedArray.length > 0
+              printArray.push checkedArray[0]
+            checkedArray = []
+        else
+          i = j - 1
+          j = cycleToFor
+          if checkedArray.length > 0
+            printArray.push checkedArray[0]
+          checkedArray = []
+
+        j++
+        unless j < cycleToFor
+          break
+      i++
+
+    $('#item_arr_to_print').val(printArray)
+    return
+
   $ ->
     # Масив усіх елементів для об'єднання
 
+    $('body').on 'click', 'table#counterparties-o_m-datatable tr', (event) ->
+      event.stopPropagation()
+      elem = document.getElementById($(this).find(':radio:eq(0)').attr('id'))
+      elem.click()
 
     $('#order_manufacturing_date').datepicker({dateFormat: 'dd.mm.yy'})
 
@@ -180,52 +232,14 @@
       elem = document.getElementById(this.id)
       $('#o_m_counterparty_form').submit()
 
-  # Замена значение в скрытых полях
+
+    # створення масиву даних з об'єднаними виробами для друку
     $('body').on 'click', ':checkbox', (event) ->
       event.stopPropagation()
-      cycleToFor = $('.o_m_details_pre_print-class').length
-      printArray = []
-      checkedArray = []
-      i = 0
+      arrayToPrint()
 
-      # створення масиву даних з об'єднаними виробами для друку
-      while i < cycleToFor
-        if $('#id_check_' + i.toString()).is(':checked') == true
-          checkedArray.push [$('#id_check_' + i.toString()).data('id'), $('#id_check_' + i.toString()).data('class'), $('#id_check_' + i.toString()).data('qty')]
-        else
-          printArray.push [$('#id_check_' + i.toString()).data('id'), $('#id_check_' + i.toString()).data('class'), $('#id_check_' + i.toString()).data('qty')]
-        j = i + 1
-
-        loop
-          if $('#id_check_' + i.toString()).data("class") == $('#id_check_' + j.toString()).data('class')
-            if $('#id_check_' + i.toString()).data("id") == $('#id_check_' + j.toString()).data('id')
-              if $('#id_check_' + j.toString()).is(':checked') == true
-                if checkedArray.length > 0
-                  checkedArray[0][2] = parseFloat(checkedArray[0][2]) + parseFloat($('#id_check_' + j.toString()).data('qty'))
-                else
-                  checkedArray.push [$('#id_check_' + j.toString()).data('id'), $('#id_check_' + j.toString()).data('class'), $('#id_check_' + j.toString()).data('qty')]
-              else
-                printArray.push [$('#id_check_' + j.toString()).data('id'), $('#id_check_' + j.toString()).data('class'), $('#id_check_' + j.toString()).data('qty')]
-            else
-              i = j - 1
-              j = cycleToFor
-              if checkedArray.length > 0
-                printArray.push checkedArray[0]
-              checkedArray = []
-          else
-            i = j - 1
-            j = cycleToFor
-            if checkedArray.length > 0
-              printArray.push checkedArray[0]
-            checkedArray = []
-
-          j++
-          unless j < cycleToFor
-            break
-        i++
-
-      $('#item_arr_to_print').val(printArray)
-      return
+    $('body').on 'submit', '#o_m_details_print_form', (event) ->
+      arrayToPrint()
 
     # Ініціалізація datatable
     window.omDetailsTable = $('#o_m-details-datatable').DataTable
@@ -283,7 +297,10 @@
       if e.keyCode == 13
         return false
 
-
+    #Відмітити всі check_box на сторінці
+    $('#check_all_check_box').click ->
+      # $('#o_m_details_print_form')
+      $('.o_m_details_pre_print-class').prop('checked', this.checked)
 
     $('.calculated_field').on 'click', (e) ->
       $(this).select()

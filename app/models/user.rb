@@ -6,5 +6,6 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable, :timeoutable
 
   belongs_to :role
+  has_many :order_manufacturings
 
 end

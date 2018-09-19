@@ -174,42 +174,14 @@ class MappingModelData
   end
 
   def o_m_pre_print
-    old_id = nil
     model_data.map.with_index do |model_data_i, index|
       [
-          # if old_id.nil?
-          #   old_id = model_data_i[0].id
-          #   set_value = true
-          #   check_box_helper({ value: model_data_i[0].id, field_name: '[o_m_details_pre_print][id][]',
-          #             checked: true, data: "data-class = '#{model_data_i[0].class.to_s}' data-index = '#{index}'",
-          #             id: "check_#{model_data_i[0].class.to_s}_#{index}"})
-          # else
-          #   if old_id == model_data_i[0].id
-          #     set_value = false
-          #     check_box_helper({ value: model_data_i[0].id, field_name: '[o_m_details_pre_print][id][]',
-          #                        data: "data-class = '#{model_data_i[0].class.to_s}' data-index = '#{index}'",
-          #                        id: "check_#{model_data_i[0].class.to_s}_#{index}"})
-          #   else
-          #     old_id = model_data_i[0].id
-          #     set_value = true
-          #     check_box_helper({ value: model_data_i[0].id, field_name: '[o_m_details_pre_print][id][]',
-          #                        checked: true, data: "data-class = '#{model_data_i[0].class.to_s}' data-index = '#{index}'",
-          #                        id: "check_#{model_data_i[0].class.to_s}_#{index}"})
-          #
-          #   end
-          # end,
           check_box_helper({ class_name: 'o_m_details_pre_print-class',
                              data: "data-id = '#{model_data_i[0].id}' data-class = '#{model_data_i[0].class.to_s}' data-index = '#{index}' data-qty = '#{Float(model_data_i[1])}'",
                              id: "check_#{index}"}),
           model_data_i[0].name,
           model_data_i[0].is_a?(Item) ? model_data_i[0].unit : '',
-          Float(model_data_i[1]),
-          # text_helper({value: set_value.present? ? index : '', field_name: '[o_m_details_pre_print][index][]', visible: false,
-          #              id: "hidden_#{model_data_i[0].class.to_s}_#{index}"}),
-      #     text_helper({value: '', field_name: '[o_m_details_pre_print][index][]', visible: false,
-      #     id: "hidden_#{model_data_i[0].class.to_s}_#{index}"}),
-      #     text_helper({value: model_data_i[0].class.to_s, field_name: '[o_m_details_pre_print][class][]', visible: false,
-      #                  id: "hidden_class_#{model_data_i[0].class.to_s}_#{index}"})
+          Float(model_data_i[1])
       ]
     end
   end

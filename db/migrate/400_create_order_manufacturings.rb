@@ -5,7 +5,8 @@ class CreateOrderManufacturings < ActiveRecord::Migration[5.0]
       t.string	:date,      null: false
       t.string	:invoice
       t.text	  :note
-      t.belongs_to	:counterparty
+      t.belongs_to :counterparty
+      t.belongs_to :user
 
       t.timestamps
     end

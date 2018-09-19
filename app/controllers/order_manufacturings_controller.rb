@@ -134,7 +134,17 @@ class OrderManufacturingsController < ApplicationController
 
     end
     excel_file = OrderManufacturingPrint.new(params[:id])
-    @print_details = excel_file.prepare_print
+    @print_details = excel_file.print(print_array)
+    # redirect_to edit_order_manufacturing_path(params[:id])
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  end
+
+  def o_m_details_print
+    excel_file = OrderManufacturingPrint.new(params[:id])
+    @print_details = excel_file.print(OrderManufacturingPrePrint.new(params[:id]).prepare_print(true))
     # redirect_to edit_order_manufacturing_path(params[:id])
     respond_to do |format|
       format.html
@@ -150,6 +160,7 @@ class OrderManufacturingsController < ApplicationController
 
   def create_update_action(o_m, commit)
       o_m.counterparty = Counterparty.find_by(name: params[:order_manufacturing][:counterparty])
+      o_m.user = current_user
       if o_m.save
         o_m.order_manufacturings_details.each do |order_manufacturings_detail|
           order_manufacturings_detail.destroy!
