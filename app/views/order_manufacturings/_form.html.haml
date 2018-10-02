@@ -59,9 +59,10 @@
         %i.fa.fa-plus-square
           Добавить изделия
   .col-md-12.table-style.hidden-element
-    %table#item-details-table{cellspacing: '1', cellpadding: '1', border: '1', width: '100%'}
+    %table#o_m-details-table{cellspacing: '1', cellpadding: '1', border: '1', width: '100%'}
       %thead
         %tr
+          %th.table-2 №
           %th.table-45 Наименование
           %th.table-10 ед.изм.
           %th.table-10 Количество
@@ -304,12 +305,6 @@
 
     $('.calculated_field').on 'click', (e) ->
       $(this).select()
-
-    # видалення строки з details таблиці
-    $('.remove_row').on 'click', (e) ->
-      id = $(this).data('counter')
-      $(this).closest('tr').remove()
-      sumWeight(sum_field, weight_field)
 
     # внесено зміни до поля кількості
     $('.calculated_field').on 'keyup', (e) ->

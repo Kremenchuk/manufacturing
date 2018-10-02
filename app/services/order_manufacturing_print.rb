@@ -10,6 +10,7 @@ class OrderManufacturingPrint
     # o_m_items = [id, Class, qty, print?]
     o_m_items = Array.new
     @o_m.order_manufacturings_details.each do |stillage|
+      o_m_items << [stillage.item_id, stillage.item.class.to_s, stillage.qty, true]
       stillage.item.details.each do |stillage_details|
         if stillage_details[3]
           stillage_details[2] = stillage_details[2] * stillage.qty
@@ -27,8 +28,18 @@ class OrderManufacturingPrint
   end
 
 
-  def print(data)
-    data = find_all_print_element(data)
+  def print(raw_data)
+    a = Array.new
+    data = Array.new
+    find_all_print_element(raw_data).flatten.each_with_index do |elem, index|
+      if (index % 3) == 0 and index != 0
+        data << a
+        a = []
+        a << elem
+      else
+        a << elem
+      end
+    end
 
     # ++ Шапка
       @book.cell(0, 0, @o_m.number,{
@@ -194,18 +205,29 @@ class OrderManufacturingPrint
 
   def find_all_print_element(data, first_space = 0)
     full_data = Array.new
+    element_data = nil
     data.each do |first|
-      full_data << (first << first_space)
+      if first_space == 0
+        full_data << (first << first_space)
+      end
       if first[0].is_a? Item
         first[0].details.each do |sec|
           if sec[1] == 'Item' and sec[3]
-            full_data << find_all_print_element(find_db_element(sec), first_space + 5)
+            element_data = find_all_print_element([find_db_element(sec)], first_space + 5)
           elsif sec[3]
             element = (find_db_element(sec) << first_space + 5)
             element[1] = element[1] * first[1].to_f
-            full_data << element
+            element_data = element
+          end
+          if element_data.nil?
+            next
+          else
+            full_data << element_data
+            element_data = nil
           end
         end
+      else
+        full_data << (first << first_space)
       end
     end
     return full_data

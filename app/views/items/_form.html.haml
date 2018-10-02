@@ -275,26 +275,8 @@
       if e.keyCode == 13
         return false
 
-    # Випадаюче меню для зміни position
-    $(document).on 'mouseenter', '.position', ->
-      hoverPositionLabel(this)
-    # Випадаюче меню для зміни position
-    $(document).on 'mouseleave', '.position', ->
-     hoverPositionLabel(this)
-
     $('.calculated_field').on 'click', (e) ->
       $(this).select()
-
-    #Видалення позиції
-    $('.remove_row').on 'click', (e) ->
-      id = $(this).data('counter')
-      $(this).closest('tr').remove()
-      i = 0
-      table_element = document.getElementsByClassName('item_details_line')
-      while i < table_element.length
-        $(table_element[i]).attr("data-position", (i + 1));
-        $(table_element[i].querySelector('.position-label')).html((i + 1))
-        i++
 
     # внесено зміни до поля кількості
     $('.calculated_field').on 'keyup', (e) ->

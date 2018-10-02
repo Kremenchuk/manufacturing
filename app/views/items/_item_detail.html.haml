@@ -2,7 +2,7 @@
   - item_qty = item[1]
   - position = item_counter + 1
   - item_sum = Float(item[0].price) * Float(item_qty)
-  %tr{class: 'item_details_line', 'data-position': position}
+  %tr{class: 'position_details_line', 'data-position': position}
     %td{style: 'display: none'}
       = text_field_tag 'details[id][]', item[0].id, id: "item_id_#{item_counter}", class: "#{item[0].class.to_s.downcase}_id_class"
     %td{style: 'display: none'}
@@ -16,10 +16,10 @@
       = label_tag 'position', position, class: 'position-label'
       .position-menu
         .link-menu
-          = link_to '', class: 'up_item_details', onclick: 'moveTrItemDetails(event, this, -1);' do
+          = link_to '', class: 'up_item_details', onclick: 'moveTrPositionDetails(event, this, -1);' do
             %i.fa.fa-arrow-up
         .link-menu
-          = link_to '', class: 'down_item_details', onclick: 'moveTrItemDetails(event, this, 1);' do
+          = link_to '', class: 'down_item_details', onclick: 'moveTrPositionDetails(event, this, 1);' do
             %i.fa.fa-arrow-down
     %td
       = item[0].name
@@ -30,7 +30,7 @@
       %td.unit-field{'data-counter': item_counter, id: "unit_#{item_counter}"}
         шт
     %td
-      = number_field_tag 'details[qty][]', item_qty, step: 0.01, class: 'form-control calculated_field', id: "qty_#{item_counter}", 'data-counter': item_counter
+      = number_field_tag 'details[qty][]', item_qty, step: 0.000001, class: 'form-control calculated_field', id: "qty_#{item_counter}", 'data-counter': item_counter
     %td{id: "price_#{item_counter}"}
       = item[0].price
     %td.sum_field{id: "sum_#{item_counter}", 'data-counter': item_counter}

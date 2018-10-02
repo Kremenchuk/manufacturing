@@ -27,12 +27,12 @@
     $($this).closest('tr').toggleClass('datatable-checkbox-checked-tr')
 
 #Функція переміщення елементів таблиці по позиціях
-@moveTrItemDetails = (e, $this, i) ->
+@moveTrPositionDetails = (e, $this, i) ->
   e.preventDefault()
   element = $($this).closest('tr')
   position = parseInt($(element).attr("data-position"))
   new_position = position + i
-  if new_position > document.getElementsByClassName('item_details_line').length
+  if new_position > document.getElementsByClassName('position_details_line').length
     return
   else
     if new_position < 1
@@ -47,7 +47,7 @@
         element.insertBefore(element.prev())
 
       i = 0
-      table_element = document.getElementsByClassName('item_details_line')
+      table_element = document.getElementsByClassName('position_details_line')
       while i < table_element.length
         $(table_element[i].querySelector('.position-label')).html((i + 1))
         i++
@@ -250,3 +250,20 @@ $ ->
   $('.form-control').on 'change', (e) ->
     $(this).removeClass('error-class')
 
+  # Випадаюче меню для зміни position
+  $(document).on 'mouseenter', '.position', ->
+    hoverPositionLabel(this)
+  # Випадаюче меню для зміни position
+  $(document).on 'mouseleave', '.position', ->
+    hoverPositionLabel(this)
+
+  #Видалення позиції
+  $('.remove_row').on 'click', (e) ->
+    id = $(this).data('counter')
+    $(this).closest('tr').remove()
+    i = 0
+    table_element = document.getElementsByClassName('position_details_line')
+    while i < table_element.length
+      $(table_element[i]).attr("data-position", (i + 1));
+      $(table_element[i].querySelector('.position-label')).html((i + 1))
+      i++

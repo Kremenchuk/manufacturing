@@ -1,15 +1,18 @@
 - @o_m_details.each_with_index do |item, item_counter|
+  - position = item_counter + 1
   - if @o_m.present?
     - item_qty = @o_m.order_manufacturings_details.present? ? @o_m.order_manufacturings_details.find_by(item_id: item.id).qty : 0
     - item_sum = Float(item.price) * Float(item_qty)
   -else
     - item_qty = 0
     - item_sum = 0
-  %tr
+  %tr{class: 'position_details_line', 'data-position': position}
     %td{style: 'display: none'}
       = text_field_tag "details[id][]", item.id, id: "item_id_#{item_counter}", class: 'item_id_class'
     %td{style: 'display: none'}
       = text_field_tag "item_weight", item.weight.present? ? item.weight : 0, id: "item_weight_#{item_counter}", class: 'weight_class', 'data-counter': item_counter
+    %td.position{style: 'text-align: center;'}
+      = label_tag 'position', position, class: 'position-label'
     %td
       = item.name
     %td.unit-field{'data-counter': item_counter, id: "unit_#{item_counter}"}

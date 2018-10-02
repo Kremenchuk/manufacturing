@@ -41,22 +41,22 @@ class DatatableClass
   end
 
   def fetch_model_data
-    model_data_var = @model.order("#{sort_column} #{sort_direction}")
-    model_data_var = model_data_var.page(page).per_page(per_page)
+    model_data = @model.order("#{sort_column} #{sort_direction}")
+    model_data = model_data.page(page).per_page(per_page)
     if params[:sSearch].present?
-      model_data_var = model_data_var.where(@search_query, search: "%#{params[:sSearch].mb_chars.upcase.to_s}%")
+      model_data = model_data.where(@search_query, search: "%#{params[:sSearch].mb_chars.upcase.to_s}%")
     elsif params[:search].present?
-      model_data_var = model_data_var.where(@search_query, search: "%#{params[:search][:value].mb_chars.upcase.to_s}%")
+      model_data = model_data.where(@search_query, search: "%#{params[:search][:value].mb_chars.upcase.to_s}%")
     end
-    model_data_var
+    model_data
   end
 
   def page
-    params[:iDisplayStart].to_i/per_page + 1
+    params[:start].to_i/per_page + 1
   end
 
   def per_page
-    params[:iDisplayLength].to_i > 0 ? params[:iDisplayLength].to_i : 10
+    params[:length].to_i > 0 ? params[:length].to_i : 10
   end
 
   def sort_column
