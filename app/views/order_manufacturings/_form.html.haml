@@ -9,7 +9,7 @@
         'data-target': '#o_m_details_pre_print-modal', 'data-id': @o_m.id do
         %i.fa.fa-print
         %i.fa.fa-hand-paper
-      = link_to o_m_details_print_path(@o_m.id), id: 'o_m_details_print', class: 'btn btn-default', remote: true, title: 'Печать с АВТОМАТИЧЕСКИМ объединением' do
+      = link_to o_m_automatic_print_path(@o_m.id), id: 'o_m_automatic_print', class: 'btn btn-default', remote: true, title: 'Печать с АВТОМАТИЧЕСКИМ объединением' do
         %i.fa.fa-print
         %i.fa.fa-laptop
 
@@ -122,7 +122,7 @@
   #o_m_details_pre_print-modal.modal.fade{:role => 'dialog'}
     .modal-dialog
       .modal-content
-        = form_tag(o_m_print_path(@o_m.id), remote: true, method: :get, id: 'o_m_details_print_form') do
+        = form_tag(o_m_hand_print_path(@o_m.id), remote: true, method: :get, id: 'o_m_details_pre_print_form') do
           = text_area_tag('item_arr_to_print', '', {hidden: true})
           .modal-header
             %button.close{'data-dismiss': 'modal', type: 'button'} ×
@@ -139,7 +139,7 @@
               %tbody
           .modal-footer
             = link_to 'Печать', '#',class: 'btn btn-success', remote: true, 'data-dismiss': 'modal',
-              onclick: "$('#o_m_details_print_form').submit()"
+              onclick: "$('#o_m_details_pre_print_form').submit()"
             %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
 
 
@@ -238,7 +238,7 @@
       event.stopPropagation()
       arrayToPrint()
 
-    $('body').on 'submit', '#o_m_details_print_form', (event) ->
+    $('body').on 'submit', '#o_m_automatic_print_form', (event) ->
       arrayToPrint()
 
     # Ініціалізація datatable
@@ -299,7 +299,7 @@
 
     #Відмітити всі check_box на сторінці
     $('#check_all_check_box').click ->
-      # $('#o_m_details_print_form')
+      # $('#o_m_automatic_print_form')
       $('.o_m_details_pre_print-class').prop('checked', this.checked)
 
     $('.calculated_field').on 'click', (e) ->

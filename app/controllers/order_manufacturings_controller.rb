@@ -117,7 +117,7 @@ class OrderManufacturingsController < ApplicationController
 
 
 
-  def o_m_print
+  def o_m_hand_print
     print_array = Array.new
     print_string = params[:item_arr_to_print]
 
@@ -134,7 +134,7 @@ class OrderManufacturingsController < ApplicationController
 
     end
     excel_file = OrderManufacturingPrint.new(params[:id])
-    @print_details = excel_file.print(print_array)
+    @print_details = excel_file.print(excel_file.find_db_element(print_array))
     # redirect_to edit_order_manufacturing_path(params[:id])
     respond_to do |format|
       format.html
@@ -142,9 +142,9 @@ class OrderManufacturingsController < ApplicationController
     end
   end
 
-  def o_m_details_print
+  def o_m_automatic_print
     excel_file = OrderManufacturingPrint.new(params[:id])
-    @print_details = excel_file.print(OrderManufacturingPrePrint.new(params[:id]).prepare_print(true))
+    @print_details = excel_file.print(OrderManufacturingPrint.new(params[:id]).prepare_print(true))
     # redirect_to edit_order_manufacturing_path(params[:id])
     respond_to do |format|
       format.html
@@ -155,7 +155,7 @@ class OrderManufacturingsController < ApplicationController
   private
 
   def o_m_pre_print(id)
-    OrderManufacturingPrePrint.new(id).prepare_print
+    OrderManufacturingPrint.new(id).prepare_print
   end
 
   def create_update_action(o_m, commit)
