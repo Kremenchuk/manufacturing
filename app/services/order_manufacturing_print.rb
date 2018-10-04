@@ -28,17 +28,9 @@ class OrderManufacturingPrint
   end
 
 
-  def print(raw_data)
-    a = Array.new
-    data = Array.new
-    find_all_print_element(raw_data).flatten.each_with_index do |elem, index|
-      if (index % 3) == 0 and index != 0
-        data << a
-        a = []
-        a << elem
-      else
-        a << elem
-      end
+  def print(data, automatic = true)
+    if automatic
+      data = find_all_print_element(data)
     end
 
     # ++ Шапка
@@ -203,7 +195,52 @@ class OrderManufacturingPrint
 
   private
 
-  def find_all_print_element(data, first_space = 0)
+  # a = Array.new
+  # data = Array.new
+  # find_all_print_element(raw_data).flatten.each_with_index do |elem, index|
+  #   if (index % 3) == 0 and index != 0
+  #     data << a
+  #     a = []
+  #     a << elem
+  #   else
+  #     a << elem
+  #   end
+  # end
+
+
+
+  def find_all_print_element(data)
+    first_space = 0
+    full_data = Array.new
+    element_data = nil
+    data.each do |first|
+      full_data << (first << first_space)
+
+      if first[0].is_a? Item
+        first[0].details.each do |sec|
+          if sec[1] == 'Item' and sec[3]
+            element_data = find_all_print_element([find_db_element_low(sec)], first_space + 5)
+          elsif sec[3]
+            element = (find_db_element(sec) << first_space + 5)
+            element[1] = element[1] * first[1].to_f
+            element_data = element
+          end
+          if element_data.nil?
+            next
+          else
+            full_data << element_data
+            element_data = nil
+          end
+        end
+      else
+        full_data << (first << first_space)
+      end
+    end
+    return full_data
+  end
+
+
+  def find_all_print_element_low(data, first_space = 0)
     full_data = Array.new
     element_data = nil
     data.each do |first|
@@ -232,6 +269,8 @@ class OrderManufacturingPrint
     end
     return full_data
   end
+
+
 
   # підготовка для ручного об"єднання item перед друком
   def array_down_job(o_m_items_array)

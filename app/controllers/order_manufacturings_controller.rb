@@ -116,7 +116,6 @@ class OrderManufacturingsController < ApplicationController
   end
 
 
-
   def o_m_hand_print
     print_array = Array.new
     print_string = params[:item_arr_to_print]
