@@ -21,14 +21,14 @@ class OrderManufacturingPrint
       end
     end
     if sort_auto
-      find_db_element(array_down_job(sort_array(o_m_items)))
+      find_db_element(array_down_job(joining_array(o_m_items)))
     else
       find_db_element(array_down_job(o_m_items))
     end
   end
 
 
-  def print(data, automatic = true)
+  def print(data)
     if automatic
       data = find_all_print_element(data)
     end
@@ -287,7 +287,7 @@ class OrderManufacturingPrint
   end
 
   # Автоматичне об"єднання item перед друком
-  def sort_array(array_to_sort)
+  def joining_array(array_to_sort)
     sort_a = Array.new
     if array_to_sort.is_a? Array
       i = 0
