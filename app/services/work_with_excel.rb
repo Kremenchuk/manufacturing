@@ -6,6 +6,10 @@ class WorkWithExcel
     @sheet = @book[0]
   end
 
+  def file_name
+    @file_path
+  end
+
   def sheet(number = 0)
     @sheet = @book[number]
   end
@@ -21,7 +25,7 @@ class WorkWithExcel
     options[:vertical_alignment].present?     ? vertical_alignment(row, col, options[:vertical_alignment])      : nil #bottom, center, distributed, top
     options[:border].present?                 ? border(row, col, options[:border])                              : nil #top, bottom, left, right, diagonal (hairline, thin, medium, thick)
     options[:merge_cells].present?            ? merge_cells(row, col, options[:merge_cells])                    : nil
-    options[:fill_color].present?             ? @sheet[row][col].change_fill(options[:fill_color])               : nil
+    options[:fill_color].present?             ? @sheet[row][col].change_fill(options[:fill_color])              : nil
   end
 
   def save(file_path = nil)

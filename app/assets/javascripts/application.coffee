@@ -87,11 +87,25 @@ window.dataTableJson =
 
 # Ініціалізація jquery datatable
 $ ->
-  $('#payroll-table').dataTable(
-    bServerSide: true
-    sAjaxSource: $('#payroll-table').data('source')
-    "language": window.dataTableJson)
+#  $('#payroll-table').dataTable(
+#    bServerSide: true
+#    sAjaxSource: $('#payroll-table').data('source')
+#    "language": window.dataTableJson)
 
+  $('#payroll-table').DataTable
+    bServerSide: true
+    #sAjaxSource: $('#order_manufacturing-table').data('source')
+    "language": window.dataTableJson
+    ajax:
+      url: $('#payroll-table-table').data('source')
+      dataType: 'json'
+      cache: false
+      type: 'GET'
+    columns: [
+      { "data": "number" },
+      { "data": "date" },
+      { "data": "worker_fio" }
+    ]
 
   $('#order_manufacturing-table').DataTable
     bServerSide: true
@@ -177,9 +191,7 @@ $ ->
       cache: false
       type: 'GET'
     columns: [
-      { "data": "first_name" },
-      { "data": "last_name" },
-      { "data": "middle_name" },
+      { "data": "fio" },
       { "data": "position" }
     ]
 

@@ -1,22 +1,11 @@
-.col-md-12
-  .col-md-12
-    - if @o_m.id.present?
-      = link_to copy_o_m_path(@o_m.id), class: 'btn btn-default', title: 'Копировать' do
-        %i.fa.fa-clone
-      = link_to order_manufacturing_path(@o_m.id), method: :delete, class: 'btn btn-danger', title: 'Удалить', data: {confirm: 'Точно удалить?'} do
-        %i.fa.fa-trash
-      = link_to o_m_automatic_print_path(@o_m.id), id: 'o_m_automatic_print', class: 'btn btn-default',  title: 'Печать с АВТОМАТИЧЕСКИМ объединением' do
-        %i.fa.fa-print
-        %i.fa.fa-laptop
-      = link_to 'Используемые материалы и работы', o_m_used_material_jobs_path(@o_m.id), class: 'btn btn-default', 'data-toggle': 'modal', 'data-target': '#used-material-jobs-modal', remote: true
 
-= form_for @o_m, html: {class: 'submit-form'} do |f|
+= form_for @payroll, html: {class: 'submit-form'} do |f|
   .col-md-12
     .col-md-6
       .form-group
-        = f.label :counterparty, 'Контрагент'
-        = link_to '', id: 'add_counterparty_detail', remote: true, class: 'add_new_entity', 'data-toggle': 'modal', 'data-target': '#counterparties-modal' do
-          = text_field_tag :counterparty, @o_m.counterparty.present? ? @o_m.counterparty.name : nil, class: 'form-control validate-field', name: 'order_manufacturing[counterparty]', id: 'counterparty'
+        = f.label :name, 'ФИО'
+        = link_to '', id: 'add_name', remote: true, class: 'add_new_entity', 'data-toggle': 'modal', 'data-target': '#worker-modal' do
+          = text_field_tag :name, @payroll.worker.present? ? @payroll.worker.fio : nil, class: 'form-control validate-field', name: 'payroll[worker', id: 'worker'
   .col-md-12
     .col-md-6{style: 'margin-left: -15px; padding-right: 0;'}
       .col-md-3

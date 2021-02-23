@@ -5,9 +5,9 @@ class WorkersController < ApplicationController
   def index
     data_hash = {
         view_context: view_context,
-        sort_column: %w[first_name last_name middle_name position],
+        sort_column: %w[fio position],
         model: Worker,
-        search_query: 'UPPER(first_name) like :search or UPPER(middle_name) like :search or UPPER(last_name) like :search or UPPER(position) like :search'
+        search_query: 'UPPER(fio) like :search or UPPER(position) like :search'
     }
 
     respond_to do |format|
@@ -41,7 +41,7 @@ class WorkersController < ApplicationController
   end
 
   def permit_params
-    params.require(:worker).permit(:first_name, :middle_name, :last_name, :position)
+    params.require(:worker).permit(:fio, :position)
   end
 
 end

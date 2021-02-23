@@ -38,6 +38,10 @@
         .form-group
           = f.label :size_b, 'Размер Б'
           = f.text_field :size_b, class: 'form-control'
+        .form-group
+          = f.label :item_group, 'Группа изделия'
+          = link_to '', id: 'add_item_group_detail', remote: true, class: 'add_new_entity', 'data-toggle': 'modal', 'data-target': '#items_group-modal' do
+            = text_field_tag :item_group, @item.item_group.present? ? @item.item_group.name : nil, class: 'form-control validate-field', name: 'item[item_group]', id: 'item_group'
   .col-md-12.hidden-element
     .add-new-button
       = link_to '', id: 'add-material-details-to-item', remote: true, class: 'btn btn-default add_new_entity', 'data-toggle': 'modal', 'data-target': '#materials-modal' do
@@ -133,6 +137,23 @@
             onclick: "$('#job_details_form').submit()"
           %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
 
+/модальне вікно для додавання групи виробу
+#items_group-modal.modal.fade{:role => 'dialog'}
+  .modal-dialog
+    .modal-content
+      = form_tag(add_item_group_path, remote: true, method: :get, id: 'item_item_group_form') do
+        .modal-header
+          %button.close{'data-dismiss': 'modal', type: 'button'} ×
+          %h4.modal-title Добавить
+        .modal-body
+          %table#items_item_group_datatable.display.datatable-table{'data-source': item_item_group_datatable_url(format: 'json')}
+            %thead
+              %th.table-10 V
+              %th.table-45 Наименование
+              %th.table-45 Ранг
+            %tbody
+        .modal-footer
+          %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
 
 :coffee
   $('body').on 'click', 'table#material-details-datatable tr', (event) ->
@@ -231,7 +252,28 @@
           $.extend d, myData
         return
 
+
+  window.itemItemGroupTable = $('#items_item_group_datatable').DataTable
+    bServerSide: true
+    "language": window.dataTableJson
+    ajax:
+      url: $('#items_item_group_datatable').data('source')
+      dataType: 'json'
+      cache: false
+      type: 'GET'
+      data: (d) ->
+        myData = {ids: jobDetailsIds()}
+        if myData
+          $.extend d, myData
+        return
+
+
+
   $ ->
+    $('body').on 'click', '.datatable-radio', (event) ->
+      event.stopPropagation()
+      elem = document.getElementById(this.id)
+      $('#item_item_group_form').submit()
     #При натисканні на радіобатон при виборі матеріала сабмітим форму
     #    $('body').on 'click', '.datatable-radio', (event) ->
     #      event.stopPropagation()

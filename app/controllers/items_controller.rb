@@ -34,6 +34,26 @@ class ItemsController < ApplicationController
     end
   end
 
+  def item_item_group_datatable
+    data_hash = {
+        view_context: view_context,
+        sort_column: %w[name range],
+        model: ItemGroup,
+        search_query: 'UPPER(name) like :search',
+        modal_query: 'nil'
+    }
+
+    respond_to do |format|
+      format.html
+      format.json { render json: DatatableClass.new(data_hash) }
+    end
+
+  end
+
+  def add_item_group
+    @item_group = ItemGroup.find(params[:item_group][:id])
+  end
+
   def add_item_detail
     @item_details = Array.new
     params.permit('entity')
@@ -112,6 +132,7 @@ class ItemsController < ApplicationController
 
   def create_update_action(item)
     begin
+      item.item_group = ItemGroup.find_by(name: params[:item][:item_group])
       details = Array.new
       if item.present? && params['details'].present?
         param_details = permit_type_id_qty
@@ -143,16 +164,20 @@ class ItemsController < ApplicationController
   def find_item_details(item_details = nil)
     @item_details = Array.new
     item_details.each do |el|
-      detail = Array.new
-      detail << el[1].constantize.find(el[0])
-      detail << el[2]
-      detail << el[3]
-      @item_details << detail
+      begin
+        detail = Array.new
+        detail << el[1].constantize.find(el[0])
+        detail << el[2]
+        detail << el[3]
+        @item_details << detail
+      rescue => e
+        next
+      end
     end
   end
 
   def permit_params
-    params.require(:item).permit(:name, :unit, :size_l, :size_a, :size_b)
+    params.require(:item).permit(:name, :unit, :size_l, :size_a, :size_b, :area, :volume)
     # :area, :weight, :volume,
   end
 

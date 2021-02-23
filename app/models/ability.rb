@@ -2,12 +2,22 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
-    if user.role.name == 'admin'
-      can :manage, :all
-    else
-      can :read, :all
-    end
 
+    if user.role.available_classes == 'all'
+      available_classes = :all
+    else
+      available_classes = user.role.available_classes.split(",").collect(&:strip).map {|elem| elem.to_s.classify.constantize }
+    end
+    can :manage, available_classes
+
+
+    # if user.role.name == 'admin'
+    #   can :manage, :all
+    # end
+    #
+    # if user.role.name == 'manager'
+    #   can :manage, Role.available_classes.split(",").collect(&:strip).map {|elem| elem.to_s.classify.constantize }
+    # end
 
     # Define abilities for the passed in user here. For example:
     #

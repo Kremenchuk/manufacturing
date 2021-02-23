@@ -22,11 +22,24 @@ class MappingModelData
 
   def payroll
     model_data.map do |model_data_i|
-      [
-          model_data_i.date,
-          "#{model_data_i.worker.first_name} #{model_data_i.worker.last_name} #{model_data_i.worker.middle_name}"
-      ]
-    end
+      {
+          DT_RowId:   model_data_i.id,
+          number:     model_data_i.number,
+          date:       model_data_i.date,
+          worker_fio: model_data_i.worker.fio
+      }
+  end
+
+
+
+
+    # model_data.map do |model_data_i|
+    #   [
+    #       model_data_i.number,
+    #       model_data_i.date,
+    #       "#{model_data_i.worker.fio}"
+    #   ]
+    # end
   end
 
   def item
@@ -86,9 +99,7 @@ class MappingModelData
     if modal_query.present?
       model_data.where(modal_query != 'nil' ? modal_query : nil).map do |model_data_i|
       [
-          model_data_i.first_name,
-          model_data_i.last_name,
-          model_data_i.middle_name,
+          model_data_i.fio,
           model_data_i.position
       ]
       end
@@ -96,9 +107,7 @@ class MappingModelData
       model_data.map do |model_data_i|
         {
             DT_RowId:       model_data_i.id,
-            first_name:     model_data_i.first_name,
-            last_name:      model_data_i.last_name,
-            middle_name:    model_data_i.middle_name,
+            fio:            model_data_i.fio,
             position:       model_data_i.position,
         }
       end
@@ -126,6 +135,27 @@ class MappingModelData
       end
     end
   end
+
+  def item_group
+    if modal_query.present?
+      model_data.where(modal_query != 'nil' ? modal_query : nil).map do |model_data_i|
+        [
+            radio_helper(model_data_i.id, 'item_group', '[id]','datatable-radio', 'data-dismiss="modal"'),
+            model_data_i.name,
+            model_data_i.range,
+        ]
+      end
+    else
+      model_data.map do |model_data_i|
+        {
+            DT_RowId:  model_data_i.id,
+            name: model_data_i.name,
+            short_name: model_data_i.range,
+        }
+      end
+    end
+  end
+
 
   def material
     if modal_query.present?

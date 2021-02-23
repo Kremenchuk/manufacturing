@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 1200) do
+ActiveRecord::Schema.define(version: 1300) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,16 +23,27 @@ ActiveRecord::Schema.define(version: 1200) do
     t.datetime "updated_at",             null: false
   end
 
+  create_table "item_groups", force: :cascade do |t|
+    t.string   "name",                   null: false
+    t.integer  "range",      default: 0
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
   create_table "items", force: :cascade do |t|
-    t.string   "name",                      null: false
-    t.integer  "unit",       default: 0,    null: false
-    t.boolean  "for_sale",   default: true
+    t.string   "name",                         null: false
+    t.integer  "unit",          default: 0,    null: false
+    t.boolean  "for_sale",      default: true
     t.float    "size_l"
     t.float    "size_a"
     t.float    "size_b"
-    t.json     "details",    default: {}
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+    t.json     "details",       default: {}
+    t.integer  "item_group_id"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.float    "area"
+    t.float    "volume"
+    t.index ["item_group_id"], name: "index_items_on_item_group_id", using: :btree
     t.index ["name"], name: "index_items_on_name", unique: true, using: :btree
   end
 
@@ -82,18 +93,21 @@ ActiveRecord::Schema.define(version: 1200) do
   end
 
   create_table "payroll_details", force: :cascade do |t|
-    t.integer  "order_manufacturing_detail_id"
-    t.integer  "payrolls_id"
-    t.float    "qty",                           null: false
-    t.float    "sum",                           null: false
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
-    t.index ["order_manufacturing_detail_id"], name: "index_payroll_details_on_order_manufacturing_detail_id", using: :btree
-    t.index ["payrolls_id"], name: "index_payroll_details_on_payrolls_id", using: :btree
+    t.integer  "order_manufacturing_id"
+    t.integer  "payroll_id"
+    t.integer  "job_id"
+    t.float    "qty",                    null: false
+    t.float    "sum",                    null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.index ["job_id"], name: "index_payroll_details_on_job_id", using: :btree
+    t.index ["order_manufacturing_id"], name: "index_payroll_details_on_order_manufacturing_id", using: :btree
+    t.index ["payroll_id"], name: "index_payroll_details_on_payroll_id", using: :btree
   end
 
   create_table "payrolls", force: :cascade do |t|
     t.integer  "worker_id"
+    t.integer  "number"
     t.string   "date",       null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -102,8 +116,9 @@ ActiveRecord::Schema.define(version: 1200) do
 
   create_table "roles", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string   "available_classes"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
   end
 
   create_table "users", force: :cascade do |t|
@@ -126,12 +141,10 @@ ActiveRecord::Schema.define(version: 1200) do
   end
 
   create_table "workers", force: :cascade do |t|
-    t.string   "first_name",  null: false
-    t.string   "middle_name"
-    t.string   "last_name",   null: false
-    t.string   "position",    null: false
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.string   "fio",        null: false
+    t.string   "position",   null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end

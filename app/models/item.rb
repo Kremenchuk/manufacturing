@@ -10,8 +10,10 @@ class Item < ApplicationRecord
   has_many :order_manufacturings_details
   has_many :order_manufacturings, through: :order_manufacturings_details
 
+  belongs_to :item_group
 
-  validates :name, :unit,
+
+  validates :name, :unit, :item_group,
             presence: true
 
   validates :name,
@@ -26,13 +28,13 @@ class Item < ApplicationRecord
     eval_field(self, 'weight')
   end
 
-  def area
-    eval_field(self, 'area')
-  end
-
-  def volume
-    eval_field(self, 'volume')
-  end
+  # def area
+  #   eval_field(self, 'area')
+  # end
+  #
+  # def volume
+  #   eval_field(self, 'volume')
+  # end
 
   def eval_field(item, field_name)
     item_field = 0

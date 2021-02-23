@@ -2,21 +2,31 @@
   .col-md-2
     .nav-menu
       %ul.nav.nav-pills.nav-stacked
-        %li#order_manufacturing-li.tabs-class.active
-          =link_to 'Наряды в производство' , '#order_manufacturing', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
-        %li#payroll-li.tabs-class
-          =link_to 'Зарплатные ведомости' , '#payroll', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
-        %li#item-li.tabs-class
-          =link_to 'Продукция' , '#item', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
-        %li#material-li.tabs-class
-          =link_to 'Материалы' , '#material', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
-        %li#job-li.tabs-class
-          =link_to 'Работы' , '#job', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
-        -if can? :manage, Worker, Counterparty
+        -if can? :manage, OrderManufacturing
+          %li#order_manufacturing-li.tabs-class.active
+            =link_to 'Наряды в производство' , '#order_manufacturing', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+        -if can? :manage, Payroll
+          %li#payroll-li.tabs-class
+            =link_to 'Зарплатные ведомости' , '#payroll', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+        -if can? :manage, Item
+          %li#item-li.tabs-class
+            =link_to 'Продукция' , '#item', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+        -if can? :manage, Material
+          %li#material-li.tabs-class
+            =link_to 'Материалы' , '#material', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+        -if can? :manage, Job
+          %li#job-li.tabs-class
+            =link_to 'Работы' , '#job', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+        -if can? :manage, Worker
           %li#worker-li.tabs-class
             =link_to 'Работники' , '#worker', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+        -if can? :manage, Counterparty
           %li#counterparty-li.tabs-class
             =link_to 'Контрагенты' , '#counterparty', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+        -if can? :manage, :all
+          %li#administration-li.tabs-class
+            =link_to 'Администрирование' , '#administration', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+
 
 
   .tab-content
@@ -81,6 +91,11 @@
             %i.fa.fa-plus-square
         #counterparty-data
           = render 'counterparties/table'
+
+    #administration.tabs-class.tab-pane.fade.in
+      .col-md-10
+        #administration-data
+          = render 'administration/index'
 
 -#:javascript
 -#  var order_manufacturings_path = "#{escape_javascript(order_manufacturings_path)}"

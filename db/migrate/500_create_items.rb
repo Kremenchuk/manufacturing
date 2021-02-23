@@ -8,6 +8,7 @@ class CreateItems < ActiveRecord::Migration[5.0]
       t.float   :size_a
       t.float   :size_b
       t.json :details, default: {}
+      t.belongs_to	:item_group
       t.timestamps
     end
     add_index :items, :name, :unique => true

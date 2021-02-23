@@ -82,7 +82,17 @@ body, html {
   text-align: center;
 }
 
+.table-70{
+  width: 70% !important;
+  text-align: center;
+}
+
 .table-40 {
+  width: 45% !important;
+  text-align: center;
+}
+
+.table-30 {
   width: 45% !important;
   text-align: center;
 }
@@ -121,6 +131,33 @@ body, html {
   width: 2% !important;
   text-align: center;
 }
+
+
+.table-70-left{
+  width: 70% !important;
+  text-align: left;
+}
+
+.table-40-left {
+  width: 45% !important;
+  text-align: left;
+}
+
+.table-15-left {
+  width: 15% !important;
+  text-align: left;
+}
+
+.table-20-left {
+  width: 20% !important;
+  text-align: left;
+}
+
+.table-10-left {
+  width: 10% !important;
+  text-align: left;
+}
+
 
 .modal-dialog {
   width: 90vw;

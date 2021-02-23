@@ -2,7 +2,7 @@ class OrderManufacturingsController < ApplicationController
 
   # o_m -> order_manufacturing
 
-  before_action :find_o_m, only: [:edit, :update, :destroy, :copy_o_m, :o_m_pre_print]
+  before_action :find_o_m, only: [:edit, :update, :destroy, :copy_o_m, :o_m_pre_print, :o_m_used_material_jobs]
 
   def index
     data_hash = {
@@ -116,46 +116,45 @@ class OrderManufacturingsController < ApplicationController
   end
 
 
-  def o_m_hand_print
-    print_array = Array.new
-    print_string = params[:item_arr_to_print]
-
-     i = 0
-    print_array_cycle = Array.new
-    print_string.split(',').each do |el|
-      print_array_cycle << el
-      i = i + 1
-      if i == 3
-        print_array << print_array_cycle
-        print_array_cycle = []
-        i = 0
-      end
-
-    end
-    excel_file = OrderManufacturingPrint.new(params[:id])
-    @print_details = excel_file.print(excel_file.find_db_element(print_array))
-    # redirect_to edit_order_manufacturing_path(params[:id])
-    respond_to do |format|
-      format.html
-      format.js
-    end
-  end
+  # def o_m_hand_print
+  #   print_array = Array.new
+  #   print_string = params[:item_arr_to_print]
+  #
+  #   i = 0
+  #   print_array_cycle = Array.new
+  #   print_string.split(',').each do |el|
+  #     print_array_cycle << el
+  #     i = i + 1
+  #     if i == 3
+  #       print_array << print_array_cycle
+  #       print_array_cycle = []
+  #       i = 0
+  #     end
+  #
+  #   end
+  #   excel_file = OrderManufacturingPrint.new(params[:id])
+  #   excel_file.print(excel_file.find_db_element(print_array))
+  #   # redirect_to edit_order_manufacturing_path(params[:id])
+  #   send_file excel_file.file_name
+  # end
 
   def o_m_automatic_print
     excel_file = OrderManufacturingPrint.new(params[:id])
-    @print_details = excel_file.print(OrderManufacturingPrint.new(params[:id]).prepare_print(true))
+    excel_file.print
     # redirect_to edit_order_manufacturing_path(params[:id])
-    respond_to do |format|
-      format.html
-      format.js
-    end
+    send_file excel_file.file_name
+  end
+
+  def o_m_used_material_jobs
+    @used_materials = @o_m.used_materials
+    @used_jobs = @o_m.used_jobs
   end
 
   private
 
-  def o_m_pre_print(id)
-    OrderManufacturingPrint.new(id).prepare_print
-  end
+  # def o_m_pre_print(id)
+  #   OrderManufacturingPrint.new(id).prepare_print
+  # end
 
   def create_update_action(o_m, commit)
       o_m.counterparty = Counterparty.find_by(name: params[:order_manufacturing][:counterparty])
