@@ -119,7 +119,9 @@ class ItemsController < ApplicationController
   def update
     item_files_in_item = @item.item_files
     @item.attributes = permit_params
-    item_files_in_item += permit_params[:item_files]
+    if permit_params[:item_files].present?
+      item_files_in_item += permit_params[:item_files]
+    end
     @item.item_files = item_files_in_item
     create_update_action(@item, params.permit(:commit)[:commit])
   end

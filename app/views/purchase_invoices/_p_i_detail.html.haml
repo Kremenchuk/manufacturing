@@ -24,7 +24,7 @@
     - position = p_i_counter + 1
     %tr{class: 'position_details_line', 'data-position': position}
       %td{style: 'display: none'}
-        = text_field_tag 'details[id][]', p_i_detail.id, id: "p_i_id_#{p_i_counter}", class: "#{p_i_detail.class.to_s.downcase}_id_class"
+        = text_field_tag 'details[id][]', p_i_detail.material.id, id: "p_i_id_#{p_i_counter}", class: "#{p_i_detail.material.class.to_s.downcase}_id_class"
       %td{style: 'text-align: center;'}
         = position
       %td

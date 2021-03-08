@@ -137,37 +137,28 @@ class PurchaseInvoicesController < ApplicationController
 
   def create_update_action(p_i, commit)
     p_i.counterparty = Counterparty.find_by(name: params[:purchase_invoice][:counterparty])
-    begin
-      if p_i.save
-        p_i.purchase_invoices_details.each do |purchase_invoices_detail|
-          purchase_invoices_detail.destroy!
-        end
-        if permit_details_params.present?
-          permit_details_params[:id].each_with_index do |material_id, index|
-            PurchaseInvoicesDetail.find_or_initialize_by(purchase_invoice: p_i, material_id: material_id).tap do |f|
-              f.qty = permit_details_params[:qty][index]
-              f.price = permit_details_params[:price][index]
-              f.save!
-            end
+    if p_i.save
+      p_i.purchase_invoices_details.each do |purchase_invoices_detail|
+        purchase_invoices_detail.destroy!
+      end
+      if permit_details_params.present?
+        permit_details_params[:id].each_with_index do |material_id, index|
+          PurchaseInvoicesDetail.find_or_initialize_by(purchase_invoice: p_i, material_id: material_id).tap do |f|
+            f.qty = permit_details_params[:qty][index]
+            f.price = permit_details_params[:price][index]
+            f.save!
           end
         end
-      else
-        flash[:messages] = "Error: #{p_i.errors.to_json}"
-        flash[:class] = 'flash-error'
-        flash[:class_element] = 'error-class'
-        redirect_to new_purchase_invoice_path
-        return
       end
-
-    rescue => e
-      flash[:messages] = "'#{p_i.number}' наименование не уникально. Error: #{e}"
+    else
+      flash[:messages] = "Error: #{p_i.errors.to_json}"
       flash[:class] = 'flash-error'
       flash[:class_element] = 'error-class'
       redirect_to new_purchase_invoice_path
       return
     end
     if commit == 'Сохранить и выйти'
-      redirect_to root_path(active_tab: 'p_i')
+      redirect_to root_path(active_tab: 'purchase_invoice')
       return
     else
       redirect_to edit_purchase_invoice_path(p_i.id)

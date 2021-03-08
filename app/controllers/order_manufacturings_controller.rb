@@ -87,7 +87,9 @@ class OrderManufacturingsController < ApplicationController
   def update
     o_m_files_in_o_m = @o_m.o_m_files
     @o_m.attributes = permit_params
-    o_m_files_in_o_m += permit_params[:o_m_files]
+    if permit_params[:o_m_files].present?
+      o_m_files_in_o_m += permit_params[:o_m_files]
+    end
     @o_m.o_m_files = o_m_files_in_o_m
     create_update_action(@o_m, params.permit(:commit)[:commit])
   end
