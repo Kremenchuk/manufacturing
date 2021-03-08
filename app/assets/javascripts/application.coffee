@@ -8,6 +8,9 @@
 @materialDetailsIds = () ->
   return $('.material_id_class').map(-> $(this).val()).get()
 
+@piDetailsIds = () ->
+  return $('.p_i_id_class').map(-> $(this).val()).get()
+
 @itemDetailsIds = () ->
   ids = $('.item_id_class').map(-> $(this).val()).get()
   if $('#item_id').val()
@@ -86,18 +89,13 @@ window.dataTableJson =
 }
 
 # Ініціалізація jquery datatable
-$ ->
-#  $('#payroll-table').dataTable(
-#    bServerSide: true
-#    sAjaxSource: $('#payroll-table').data('source')
-#    "language": window.dataTableJson)
+$(document).ready ->
 
   $('#payroll-table').DataTable
     bServerSide: true
-    #sAjaxSource: $('#order_manufacturing-table').data('source')
     "language": window.dataTableJson
     ajax:
-      url: $('#payroll-table-table').data('source')
+      url: $('#payroll-table').data('source')
       dataType: 'json'
       cache: false
       type: 'GET'
@@ -106,6 +104,10 @@ $ ->
       { "data": "date" },
       { "data": "worker_fio" }
     ]
+
+  #    'fnRowCallback': (nRow, aData, iDisplayIndex, iDisplayIndexFull) ->
+  #      if aData[4] == '2'
+  #        $('td', nRow).addClass '.in-work-status'
 
   $('#order_manufacturing-table').DataTable
     bServerSide: true
@@ -117,11 +119,52 @@ $ ->
       cache: false
       type: 'GET'
     columns: [
-      { "data": "date" },
+      { "data": "start_date" },
+      { "data": "finish_date" },
       { "data": "number" },
       { "data": "counterparty_name" },
       { "data": "invoice" }
+      { "data": "o_m_status" }
     ]
+    'fnRowCallback': (nRow, aData, iDisplayIndex) ->
+      switch aData['o_m_status']
+        when 0
+          $('td', nRow).addClass 'no-status'
+          $('td:eq(5)', nRow).html('Без статуса')
+        when 1
+          $('td', nRow).addClass 'in-work-status'
+          $('td:eq(5)', nRow).html('В работе')
+        when 2
+          $('td', nRow).addClass 'finished-status'
+          $('td:eq(5)', nRow).html('Изготовлен')
+        when 3
+          $('td', nRow).addClass 'shipped-status'
+          $('td:eq(5)', nRow).html('Отгружен')
+
+
+  $('#purchase_invoice-table').DataTable
+    bServerSide: true
+    "language": window.dataTableJson
+    ajax:
+      url: $('#purchase_invoice-table').data('source')
+      dataType: 'json'
+      cache: false
+      type: 'GET'
+    columns: [
+      { "data": "number" },
+      { "data": "date" },
+      { "data": "counterparty_name" },
+      { "data": "p_i_status" },
+    ]
+    'fnRowCallback': (nRow, aData, iDisplayIndex) ->
+      switch aData['p_i_status']
+        when 0
+          $('td', nRow).addClass 'no-status'
+          $('td:eq(3)', nRow).html('Без статуса')
+        when 1
+          $('td', nRow).addClass 'shipped-status'
+          $('td:eq(3)', nRow).html('ОПРИХОДОВАНО НА СКЛАД')
+
 
   $('#item-table').DataTable
     bServerSide: true
@@ -148,7 +191,9 @@ $ ->
       type: 'GET'
     columns: [
       { "data": "name" },
-      { "data": "unit" }
+      { "data": "unit" },
+      { "data": "qty" },
+      { "data": "price" }
     ]
 
   $('#semi_finished-table').DataTable

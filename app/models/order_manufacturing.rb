@@ -1,5 +1,5 @@
 class OrderManufacturing < ApplicationRecord
-
+  require 'carrierwave/orm/activerecord'
   default_scope { order(created_at: :desc) }
 
   has_many :order_manufacturings_details, dependent: :destroy
@@ -7,11 +7,13 @@ class OrderManufacturing < ApplicationRecord
   belongs_to :counterparty
   belongs_to :user
 
-  validates :number, :date,
+  validates :number, :start_date, :finish_date,
             presence: true
 
   validates :number,
       uniqueness: true
+
+  mount_uploaders :o_m_files, OmUploader
 
   def price
     order_manufacturing_price = 0.0

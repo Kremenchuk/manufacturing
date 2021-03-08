@@ -1,0 +1,43 @@
+- @p_i_details.each_with_index do |p_i_detail, p_i_counter|
+  - if p_i_detail.is_a? Material
+    - position = p_i_counter + 1
+    %tr{class: 'position_details_line', 'data-position': position}
+      %td{style: 'display: none'}
+        = text_field_tag 'details[id][]', p_i_detail.id, id: "p_i_id_#{p_i_counter}", class: "#{p_i_detail.class.to_s.downcase}_id_class"
+      %td{style: 'text-align: center;'}
+        = position
+      %td
+        = p_i_detail.name
+
+      %td.unit-field{'data-counter': p_i_counter, id: "unit_#{p_i_counter}"}
+        = p_i_detail.unit
+
+      %td
+        = number_field_tag 'details[qty][]', nil, step: 0.01, class: 'form-control validate-field', id: "qty_#{p_i_counter}", 'data-counter': p_i_counter
+
+      %td
+        = number_field_tag 'details[price][]', nil, step: 0.01, class: 'form-control validate-field', id: "price_#{p_i_counter}", 'data-counter': p_i_counter
+
+      %td.remove_row{id: "remove_#{p_i_counter}", 'data-counter': p_i_counter}
+
+  - if p_i_detail.is_a? PurchaseInvoicesDetail
+    - position = p_i_counter + 1
+    %tr{class: 'position_details_line', 'data-position': position}
+      %td{style: 'display: none'}
+        = text_field_tag 'details[id][]', p_i_detail.id, id: "p_i_id_#{p_i_counter}", class: "#{p_i_detail.class.to_s.downcase}_id_class"
+      %td{style: 'text-align: center;'}
+        = position
+      %td
+        = p_i_detail.material.name
+
+      %td.unit-field{'data-counter': p_i_counter, id: "unit_#{p_i_counter}"}
+        = p_i_detail.material.unit
+
+      %td
+        = number_field_tag 'details[qty][]', p_i_detail.qty, step: 0.01, class: 'form-control validate-field', id: "qty_#{p_i_counter}", 'data-counter': p_i_counter
+
+      %td
+        = number_field_tag 'details[price][]', p_i_detail.price, step: 0.01, class: 'form-control validate-field', id: "price_#{p_i_counter}", 'data-counter': p_i_counter
+
+      %td.remove_row{id: "remove_#{p_i_counter}", 'data-counter': p_i_counter}
+

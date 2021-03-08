@@ -20,6 +20,8 @@ class Item < ApplicationRecord
             uniqueness: true
 
 
+  mount_uploaders :item_files, ItemUploader
+
   def price
      eval_field(self, 'price')
   end

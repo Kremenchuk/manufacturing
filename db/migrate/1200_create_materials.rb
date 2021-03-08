@@ -11,6 +11,7 @@ class CreateMaterials < ActiveRecord::Migration[5.0]
       t.integer :size_a
       t.integer :size_b
       t.text    :note
+      t.float   :qty,       default: 0.0
       t.timestamps
     end
   end

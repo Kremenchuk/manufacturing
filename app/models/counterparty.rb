@@ -5,4 +5,6 @@ class Counterparty < ApplicationRecord
             presence: true
 
   has_many :order_manufacturings
+
+  has_many :purchase_invoices
 end

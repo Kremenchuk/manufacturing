@@ -265,3 +265,23 @@ input[type = 'checkbox'] {
   font-size: 24px;
   margin-bottom: 12px;
 }
+
+
+
+//работет для дататейбл выдиляет разными цветами четные и нечетные строки
+
+//table.display tbody tr:nth-child(even):hover td{
+//  background-color: red !important;
+//}
+//
+//table.display tbody tr:nth-child(odd):hover td {
+//  background-color: blue !important;
+//}
+
+//table.display tbody tr:nth-child(even):hover td{
+//  background-color: red !important;
+//}
+
+table.display tbody tr:nth-child(odd):hover td, table.display tbody tr:nth-child(even):hover td {
+  background-color: rgba(236, 255, 179, 1) !important;
+}

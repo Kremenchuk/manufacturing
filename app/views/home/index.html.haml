@@ -2,8 +2,11 @@
   .col-md-2
     .nav-menu
       %ul.nav.nav-pills.nav-stacked
+        -if can? :manage, PurchaseInvoice
+          %li#purchase_invoice-li.tabs-class.active
+            =link_to 'Приходные накладные' , '#purchase_invoice', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
         -if can? :manage, OrderManufacturing
-          %li#order_manufacturing-li.tabs-class.active
+          %li#order_manufacturing-li.tabs-class
             =link_to 'Наряды в производство' , '#order_manufacturing', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
         -if can? :manage, Payroll
           %li#payroll-li.tabs-class
@@ -30,7 +33,16 @@
 
 
   .tab-content
-    #order_manufacturing.tabs-class.tab-pane.fade.in.active
+    #purchase_invoice.tabs-class.tab-pane.fade.in.active
+      .col-md-10
+        .add-new-button
+          = link_to new_purchase_invoice_path, class: 'btn btn-default' do
+            %i.fa.fa-plus-square
+        #purchase_invoice-data
+          = render 'purchase_invoices/table'
+
+
+    #order_manufacturing.tabs-class.tab-pane.fade.in
       .col-md-10
         .add-new-button
           = link_to new_order_manufacturing_path, class: 'btn btn-default' do
@@ -122,6 +134,11 @@
 
 :javascript
   var edit_material_path = "#{escape_javascript(edit_material_path(0))}"
+
+
+:javascript
+  var edit_purchase_invoice_path = "#{escape_javascript(edit_purchase_invoice_path(0))}"
+
 
 -#:javascript
 -#  var edit_semi_finished_path = "#{escape_javascript(edit_semi_finished_path(0))}"

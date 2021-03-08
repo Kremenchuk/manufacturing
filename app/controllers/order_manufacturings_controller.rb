@@ -2,14 +2,15 @@ class OrderManufacturingsController < ApplicationController
 
   # o_m -> order_manufacturing
 
-  before_action :find_o_m, only: [:edit, :update, :destroy, :copy_o_m, :o_m_pre_print, :o_m_used_material_jobs]
+  before_action :find_o_m, only: [:edit, :update, :destroy, :copy_o_m, :o_m_pre_print, :o_m_used_material_jobs, :o_m_change_status, :remove_file_from_o_m]
 
   def index
     data_hash = {
         view_context: view_context,
-        sort_column: %w[date number counterparty.name invoice],
+        sort_column: %w[start_date finish_date number counterparty.name invoice o_m_status],
         model: OrderManufacturing,
-        search_query: 'date like :search or UPPER(number) like :search or UPPER(invoice) like :search or counterparty_id IN (SELECT counterparties.id FROM counterparties WHERE UPPER(counterparties.name) like :search)',
+        search_query: 'start_date like :search or finish_date like :search or UPPER(number) like :search or UPPER(invoice) like :search or
+                       counterparty_id IN (SELECT counterparties.id FROM counterparties WHERE UPPER(counterparties.name) like :search)',
     }
 
     respond_to do |format|
@@ -73,7 +74,8 @@ class OrderManufacturingsController < ApplicationController
       @o_m.number = @o_m.counterparty.short_name + '-'
       @o_m_details = OrderManufacturing.find(session[:o_m]['id']).items if session[:o_m]['id'].present?
       @o_m.id = nil
-      @o_m.date = nil
+      @o_m.start_date = nil
+      @o_m.finish_date = nil
       session.delete(:o_m)
     end
   end
@@ -83,7 +85,10 @@ class OrderManufacturingsController < ApplicationController
   end
 
   def update
+    o_m_files_in_o_m = @o_m.o_m_files
     @o_m.attributes = permit_params
+    o_m_files_in_o_m += permit_params[:o_m_files]
+    @o_m.o_m_files = o_m_files_in_o_m
     create_update_action(@o_m, params.permit(:commit)[:commit])
   end
 
@@ -115,6 +120,14 @@ class OrderManufacturingsController < ApplicationController
     @counterparty = Counterparty.find(params[:counterparty][:id])
   end
 
+  def o_m_change_status
+    @o_m.o_m_status = params[:o_m_status]
+    @o_m.save
+  end
+
+  def add_file_to_o_m
+
+  end
 
   # def o_m_hand_print
   #   print_array = Array.new
@@ -148,6 +161,24 @@ class OrderManufacturingsController < ApplicationController
   def o_m_used_material_jobs
     @used_materials = @o_m.used_materials
     @used_jobs = @o_m.used_jobs
+  end
+
+  def remove_file_from_o_m
+    remain_images = @o_m.o_m_files
+    deleted_image = remain_images.delete_at(params[:file_index].to_i)
+    begin
+      File.delete(deleted_image.path)
+    rescue Errno::ENOENT => e
+      flash[:messages] = "Файл не удален. Error: #{e}"
+      flash[:class] = 'flash-error'
+      flash[:class_element] = 'error-class'
+      session[:o_m] = @o_m
+      exit -1
+    end
+    @o_m.o_m_files = remain_images
+    @o_m.save!
+
+    redirect_to edit_order_manufacturing_path(@o_m)
   end
 
   private
@@ -188,7 +219,7 @@ class OrderManufacturingsController < ApplicationController
   end
 
   def permit_params
-    params.require(:order_manufacturing).permit(:date, :number, :invoice, :note) #counterparty.name
+    params.require(:order_manufacturing).permit(:start_date, :finish_date, :number, :invoice, :note, {o_m_files: []}) #counterparty.name
   end
 
   def permit_type_id_qty

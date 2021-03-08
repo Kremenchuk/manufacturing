@@ -1,0 +1,275 @@
+.col-md-12
+  .col-md-2
+    - if @p_i.id.present?
+      = link_to purchase_invoice_path(@p_i.id), method: :delete, class: 'btn btn-default', title: 'Удалить', data: {confirm: 'Точно удалить?'} do
+        %i.fa.fa-trash
+      = hidden_field_tag('p_i_id', @p_i.id)
+      - if @p_i.p_i_status == 1
+        = link_to material_from_warehouse_path(@p_i.id), method: :put, class: 'btn btn-danger', title: 'Убрать материалы со склада', data: {confirm: 'Точно УБРАТЬ материал на склад?'} do
+          %i.fa.fa-cubes
+            Убрать материалы со склада
+          = hidden_field_tag('p_i_id', @p_i.id)
+      -else
+        = link_to material_to_warehouse_path(@p_i.id), method: :put, class: 'btn btn-success', title: 'Внесение материала на склад', data: {confirm: 'Точно ВНЕСТИ материал на склад?'} do
+          %i.fa.fa-cubes
+            Внести материал на склад
+        = hidden_field_tag('p_i_id', @p_i.id)
+
+
+= form_for @p_i, html: {class: 'submit-form'} do |f|
+  .col-md-12
+    .col-md-12
+      .col-md-6
+        .form-group
+          = f.label :counterparty, 'Контрагент'
+          = link_to '', id: 'add_counterparty_detail', remote: true, class: 'add_new_entity', 'data-toggle': 'modal', 'data-target': '#counterparties-modal' do
+            = text_field_tag :counterparty, @p_i.counterparty.present? ? @p_i.counterparty.name : nil, class: 'form-control validate-field', name: 'purchase_invoice[counterparty]', id: 'counterparty',
+            autocomplete: :off
+    .col-md-12
+      .col-md-3
+        .form-group
+          = f.label :number, 'Номер'
+          = f.text_field :number, class: 'form-control validate-field', autocomplete: :off
+        .form-group
+          = f.label :date, 'Дата'
+          = f.text_field :date, class: 'form-control validate-field'
+      .col-md-3
+        .form-group
+          = f.label :total_price, 'Полная стоимость накладной'
+          = f.text_field :total_price, class: 'form-control validate-field', autocomplete: :off
+      .col-md-3
+        .form-group
+          = f.label :we_pay, 'Мы оплатили'
+          = f.text_field :we_pay, class: 'form-control validate-field', autocomplete: :off
+  .col-md-12.hidden-element
+    .add-new-button
+      = link_to '', id: 'add-material-details-to-p_i', remote: true, class: 'btn btn-default add_new_entity', 'data-toggle': 'modal', 'data-target': '#materials-modal' do
+        %i.fa.fa-plus-square
+          Добавить материал
+  .col-md-12.table-style.hidden-element
+    %table#p_i-details-table{cellspacing: '1', cellpadding: '1', border: '1', width: '100%'}
+      %thead
+        %tr
+          %th.table-2 №
+          %th.table-45 Наименование
+          %th.table-10 ед.изм.
+          %th.table-10 Количество
+          %th.table-10 Цена
+          %th.table-5 Удалить
+      %tbody#p_i-details-table-body
+        -if @p_i_details.present?
+          = render partial: 'p_i_detail'
+
+
+  .col-md-12
+    .form-group
+      = f.submit 'Сохранить и выйти', class: 'btn btn-success'
+      = f.submit 'Сохранить', class: 'btn btn-success'
+      = link_to 'Отмена', root_path(active_tab: 'item'), class: 'btn btn-danger'
+
+/модальне вікно для додавання контрагента
+#counterparties-modal.modal.fade{:role => 'dialog'}
+  .modal-dialog
+    .modal-content
+      = form_tag(add_counterparty_p_i_path, remote: true, method: :get, id: 'p_i_counterparty_form') do
+        .modal-header
+          %button.close{'data-dismiss': 'modal', type: 'button'} ×
+          %h4.modal-title Добавить
+        .modal-body
+          %table#counterparties_p_i-datatable.display.datatable-table{'data-source': p_i_counterparty_datatable_url(format: 'json')}
+            %thead
+              %th.table-10 V
+              %th.table-45 Наименование
+              %th.table-45 Короткое наименование
+              %th.table-10 Тип
+            %tbody
+        .modal-footer
+          %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
+
+/модальне вікно для додавання матеріалів до таблиці продукції
+#materials-modal.modal.fade{:role => 'dialog'}
+  .modal-dialog
+    .modal-content
+      = form_tag(add_p_i_detail_path, remote: true, method: :get, id: 'p_i_material_details_form') do
+        .modal-header
+          %button.close{'data-dismiss': 'modal', type: 'button'} ×
+          %h4.modal-title Добавить
+        .modal-body
+          %table#material-details-datatable.display.datatable-table{'data-source': p_i_material_details_datatable_url(format: 'json')}
+            %thead
+              %th.table-4 V
+              %th.table-40 Наименование
+              %th.table-10 Ед. измерения
+            %tbody
+        .modal-footer
+          = link_to 'Добавить', '#',class: 'btn btn-success', remote: true, 'data-dismiss': 'modal', id: 'submit_materials_form',
+            onclick: "$('#p_i_material_details_form').submit()"
+          %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
+
+:coffee
+  #  $('body').on 'click', 'table#material-details-datatable tr', (event) ->
+  #    event.stopPropagation()
+  #    elem = document.getElementById($(this).find(':radio:eq(0)').attr('id'))
+  #    elem.click()
+
+  #Функція вираховування суми та ваги по item
+  @sumWeight = (sum_field, unit_field, weight_field) ->
+    if $('#item_item_type').val() == 'Материал'
+      return
+    else
+      i = 0
+      result = 0
+      percent = []
+      weight_result = 0
+      while i < sum_field.length
+        id = $(sum_field[i]).data('counter')
+        unit = $.trim($('#unit_' + id).text())
+        if $('#qty_' + $(weight_field[i]).data('counter')).val()
+          weight_result = weight_result + parseFloat($(weight_field[i]).val()) * parseFloat($('#qty_' + $(weight_field[i]).data('counter')).val())
+        if unit != "%"
+          result = result + parseFloat($(sum_field[i]).html())
+        else
+          percent.push({id: id, val: parseFloat($.trim($('#price_' + id).text()))})
+        i++
+      # Підрахунок процентних нарахувань з сумою по кожній позиції
+      i = 0
+      while i < percent.length
+        $('#sum_' + percent[i]['id']).html(((result / 100.0) * percent[i]['val']).toFixed(2))
+        result = result + (result / 100.0) * percent[i]['val']
+        i++
+      $('#item_weight').val(weight_result.toFixed(2))
+      $('#item_price').val(result.toFixed(2))
+
+
+  sum_field = document.getElementsByClassName('sum_field')
+  unit_field = document.getElementsByClassName('unit-field')
+  weight_field = document.getElementsByClassName('weight_class')
+  sumWeight(sum_field, unit_field, weight_field)
+
+    #  @materialDetailsIds = () ->
+    #    return $('.material_id_class').map(-> $(this).val()).get()
+    #
+    #  @p_iDetailsIds = () ->
+    #    return $('.item_id_class').map(-> $(this).val()).get()
+    #
+    #  @jobDetailsIds = () ->
+    #    return $('.job_id_class').map(-> $(this).val()).get()
+
+
+  if $('#item_item_type').val() == 'Материал'
+    $('.hidden-element').css('display': 'none')
+    $('#item-details-table-body').html('')
+    $('#item_price').attr('readonly', false)
+
+  window.materialDetailsTable = $('#material-details-datatable').DataTable
+    bServerSide: true
+    "language": window.dataTableJson
+    ajax:
+      url: $('#material-details-datatable').data('source')
+      dataType: 'json'
+      cache: false
+      type: 'GET'
+      data: (d) ->
+        myData = {ids: materialDetailsIds()}
+        if myData
+          $.extend d, myData
+        return
+
+
+
+  $ ->
+    $('body').on 'click', 'table#counterparties_p_i-datatable tr', (event) ->
+      event.stopPropagation()
+      elem = document.getElementById($(this).find(':radio:eq(0)').attr('id'))
+      elem.click()
+
+    $('body').on 'click', '.datatable-radio', (event) ->
+      event.stopPropagation()
+      elem = document.getElementById(this.id)
+      $('#p_i_counterparty_form').submit()
+
+    $('#counterparties_p_i-datatable').DataTable
+      bServerSide: true
+      "language": window.dataTableJson
+      ajax:
+        url: $('#counterparties_p_i-datatable').data('source')
+        dataType: 'json'
+        cache: false
+        type: 'GET'
+        data: (d) ->
+          myData = {ids: itemDetailsIds()}
+          if myData
+            $.extend d, myData
+          return
+
+
+    $('#purchase_invoice_date').datepicker({dateFormat: 'dd.mm.yy'})
+
+
+    $('body').on 'click', '.datatable-radio', (event) ->
+      event.stopPropagation()
+      elem = document.getElementById(this.id)
+      $('#item_item_group_form').submit()
+    #При натисканні на радіобатон при виборі матеріала сабмітим форму
+    #    $('body').on 'click', '.datatable-radio', (event) ->
+    #      event.stopPropagation()
+    #      elem = document.getElementById(this.id)
+    #      #      $('#material_details_form').submit()
+    #      $('#submit_materials_form').click
+
+    # Перезавантаження даних до таблиць details для item
+    $('#add-item-details-to-item').click ->
+      window.itemDetailsTable.ajax.reload()
+
+    $('#add-material-details-to-item').click ->
+      window.materialDetailsTable.ajax.reload()
+
+    $('#add-job-details-to-item').click ->
+      window.jobDetailsTable.ajax.reload()
+
+    $('#item_item_type').change ->
+      if $(this).val() == 'Материал'
+        $('.hidden-element').css('display': 'none')
+        $('#item-details-table-body').html('')
+        $('#item_price').attr('readonly', false)
+      else
+        if $('#item_unit').val() != '%'
+          $('.hidden-element').css('display': 'block')
+          $('#item_price').attr('readonly', true)
+
+
+    $('#item_unit').change ->
+      if $(this).val() == '%'
+        $('.hidden-element').css('display': 'none')
+        $('#item-details-table-body').html('')
+        $('#item_price').attr('readonly', false)
+      else
+        if $('#item_item_type').val() != 'Материал'
+          $('.hidden-element').css('display': 'block')
+          $('#item_price').attr('readonly', true)
+
+
+    $('form').on 'keypress', (e) ->
+      if e.keyCode == 13
+        return false
+
+    $('.calculated_field').on 'click', (e) ->
+      $(this).select()
+
+    # внесено зміни до поля кількості
+    $('.calculated_field').on 'keyup', (e) ->
+      re = /[а-яА-Яa-zA-Z]/
+      if re.test($(this).val()) == false
+        # Вираховування суми позиції в якій змінено кількість
+        id = $(this).data('counter')
+        qty = $('#qty_' + id).val()
+        price = $('#price_' + id).html()
+        $('#sum_' + id).html((qty * price).toFixed(2))
+
+        sumWeight(sum_field, unit_field, weight_field)
+
+        if e.keyCode == 13
+          index = $(this).data('counter') + 1
+          $("input.calculated_field[data-counter='" + index + "']").select()
+
+

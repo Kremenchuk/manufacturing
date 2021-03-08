@@ -1,7 +1,7 @@
 class ItemsController < ApplicationController
 
 
-  before_action :find_item, only: [:edit, :update, :destroy, :copy_item]
+  before_action :find_item, only: [:edit, :update, :destroy, :copy_item, :remove_file_from_item]
 
   def index
     data_hash = {
@@ -48,6 +48,24 @@ class ItemsController < ApplicationController
       format.json { render json: DatatableClass.new(data_hash) }
     end
 
+  end
+
+  def item_material_datatable
+    data_hash = {
+        view_context: view_context,
+        sort_column: %w[name unit],
+        model: Material,
+        search_query: 'UPPER(name) like :search',
+        modal_query: 'nil'
+    }
+    # if params[:ids].present?
+    #   data_hash[:modal_query] = "id NOT IN (#{params[:ids].join(',')})"
+    # end
+
+    respond_to do |format|
+      format.html
+      format.json { render json: DatatableClass.new(data_hash) }
+    end
   end
 
   def add_item_group
@@ -99,13 +117,16 @@ class ItemsController < ApplicationController
   end
 
   def update
+    item_files_in_item = @item.item_files
     @item.attributes = permit_params
-    create_update_action(@item)
+    item_files_in_item += permit_params[:item_files]
+    @item.item_files = item_files_in_item
+    create_update_action(@item, params.permit(:commit)[:commit])
   end
 
   def create
     item = Item.new(permit_params)
-    create_update_action(item)
+    create_update_action(item, params.permit(:commit)[:commit])
   end
 
   def destroy
@@ -128,9 +149,27 @@ class ItemsController < ApplicationController
   end
 
 
+  def remove_file_from_item
+    remain_images = @item.item_files
+    deleted_image = remain_images.delete_at(params[:file_index].to_i)
+    begin
+      File.delete(deleted_image.path)
+    rescue Errno::ENOENT => e
+      flash[:messages] = "Файл не удален. Error: #{e}"
+      flash[:class] = 'flash-error'
+      flash[:class_element] = 'error-class'
+      session[:item] = @item
+      exit -1
+    end
+    @item.item_files = remain_images
+    @item.save!
+
+    redirect_to edit_item_path(@item)
+  end
+
   private
 
-  def create_update_action(item)
+  def create_update_action(item, commit)
     begin
       item.item_group = ItemGroup.find_by(name: params[:item][:item_group])
       details = Array.new
@@ -151,13 +190,17 @@ class ItemsController < ApplicationController
       end
       item.details = details
       item.save!
-      redirect_to root_path(active_tab: 'item')
     rescue => e
       flash[:messages] = "'#{item.name}' наименование не уникально. Error: #{e}"
       flash[:class] = 'flash-error'
       flash[:class_element] = 'error-class'
       session[:item] = item
       redirect_to new_item_path(copy: true)
+    end
+    if commit == 'Сохранить и выйти'
+      redirect_to root_path(active_tab: 'item')
+    else
+      redirect_to edit_item_path(item.id)
     end
   end
 
@@ -177,7 +220,7 @@ class ItemsController < ApplicationController
   end
 
   def permit_params
-    params.require(:item).permit(:name, :unit, :size_l, :size_a, :size_b, :area, :volume)
+    params.require(:item).permit(:name, :unit, :size_l, :size_a, :size_b, :area, :volume, {item_files: []})
     # :area, :weight, :volume,
   end
 

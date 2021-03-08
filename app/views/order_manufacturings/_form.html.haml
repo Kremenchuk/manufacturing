@@ -9,24 +9,31 @@
         %i.fa.fa-print
         %i.fa.fa-laptop
       = link_to 'Используемые материалы и работы', o_m_used_material_jobs_path(@o_m.id), class: 'btn btn-default', 'data-toggle': 'modal', 'data-target': '#used-material-jobs-modal', remote: true
+      = link_to 'Без статуса', o_m_change_status_path(@o_m.id, o_m_status: 0), class: 'btn btn-default', method: :put
+      = link_to 'В работу', o_m_change_status_path(@o_m.id, o_m_status: 1), class: 'btn btn-danger', method: :put
+      = link_to 'Готов', o_m_change_status_path(@o_m.id, o_m_status: 2), class: 'btn btn-warning', method: :put
+      = link_to 'Отгружен', o_m_change_status_path(@o_m.id, o_m_status: 3), class: 'btn btn-success', method: :put
 
 = form_for @o_m, html: {class: 'submit-form'} do |f|
-  .col-md-12
-    .col-md-6
+  .col-md-6
+    .col-md-12
       .form-group
         = f.label :counterparty, 'Контрагент'
         = link_to '', id: 'add_counterparty_detail', remote: true, class: 'add_new_entity', 'data-toggle': 'modal', 'data-target': '#counterparties-modal' do
           = text_field_tag :counterparty, @o_m.counterparty.present? ? @o_m.counterparty.name : nil, class: 'form-control validate-field', name: 'order_manufacturing[counterparty]', id: 'counterparty'
-  .col-md-12
-    .col-md-6{style: 'margin-left: -15px; padding-right: 0;'}
+    .col-md-12{style: 'margin-left: -15px; padding-right: 0;'}
       .col-md-3
         .form-group
           = f.label :number, 'Номер'
           = f.text_field :number, class: 'form-control validate-field'
       .col-md-3
         .form-group
-          = f.label :date, 'Дата выполнения'
-          = f.text_field :date, value: (@o_m.date.present? ? @o_m.date : Time.now.strftime('%d.%m.%Y')), class: 'form-control validate-field'
+          = f.label :start_date, 'Дата начала'
+          = f.text_field :start_date, value: (@o_m.start_date.present? ? @o_m.start_date : Time.now.strftime('%d.%m.%Y')), class: 'form-control validate-field'
+      .col-md-3
+        .form-group
+          = f.label :finish_date, 'Дата выполнения'
+          = f.text_field :finish_date, value: (@o_m.finish_date.present? ? @o_m.finish_date : Time.now.strftime('%d.%m.%Y')), class: 'form-control validate-field'
       .col-md-3
         .form-group
           = f.label :invoice, 'Счет'
@@ -35,8 +42,8 @@
         .form-group
           = f.label :price, 'Стоимость заказа'
           = f.text_field :price, class: 'form-control', readonly: true
-  .col-md-12
-    .col-md-6{style: 'margin-left: -15px; padding-right: 0;'}
+
+    .col-md-12{style: 'margin-left: -15px; padding-right: 0;'}
       .col-md-3
         .form-group
           = f.label :weight, 'Вес'
@@ -45,11 +52,29 @@
         .form-group
           = f.label :volume, 'Объем'
           = f.text_field :volume, class: 'form-control'
-  .col-md-12
-    .col-md-6
+      .col-md-3
+        .form-group
+          = f.label :total_price, 'Полная стоимость проекта'
+          = f.text_field :total_price, class: 'form-control'
+      .col-md-3
+        .form-group
+          = f.label :con_pay, 'Контрагент оплатил'
+          = f.text_field :con_pay, class: 'form-control'
+    .col-md-12
       .form-group
         = f.label :note, 'Примечание'
         = f.text_area :note, class: 'form-control'
+
+  .col-md-6
+    .form-group
+      - @o_m.o_m_files.each_with_index do |o_m_file, index|
+        .col-md-6
+          = link_to o_m_file.identifier, o_m_file.url, target: :_blank
+        .col-md-6
+          = link_to "Удалить", remove_file_from_o_m_path(@o_m.id, file_index: index), class: 'btn btn-default', method: :put, data: { confirm: "Удалить?" }
+    .col-md-12
+      = f.file_field :o_m_files, multiple: true
+
   .col-md-12
     .add-new-button
       = link_to '', id: 'add_o_m_detail', remote: true, class: 'btn btn-default add_new_entity', 'data-toggle': 'modal', 'data-target': '#o_m-details-modal' do
@@ -70,11 +95,11 @@
         -if @o_m_details.present?
           = render partial: 'o_m_detail'
 
-
-  .form-group
-    = f.submit 'Сохранить и выйти', class: 'btn btn-success'
-    = f.submit 'Сохранить', class: 'btn btn-success'
-    = link_to 'Отмена', root_path(active_tab: 'order_manufacturing'), class: 'btn btn-danger'
+  .col-md-12
+    .form-group
+      = f.submit 'Сохранить и выйти', class: 'btn btn-success'
+      = f.submit 'Сохранить', class: 'btn btn-success'
+      = link_to 'Отмена', root_path(active_tab: 'order_manufacturing'), class: 'btn btn-danger'
 
 /модальне вікно для додавання до таблиці продукції
 #o_m-details-modal.modal.fade{:role => 'dialog'}
@@ -249,7 +274,8 @@
       elem = document.getElementById($(this).find(':radio:eq(0)').attr('id'))
       elem.click()
 
-    $('#order_manufacturing_date').datepicker({dateFormat: 'dd.mm.yy'})
+    $('#order_manufacturing_start_date').datepicker({dateFormat: 'dd.mm.yy'})
+    $('#order_manufacturing_finish_date').datepicker({dateFormat: 'dd.mm.yy'})
 
 
     $('body').on 'click', '.datatable-radio', (event) ->

@@ -5,7 +5,7 @@ class PayrollsController < ApplicationController
         view_context: view_context,
         sort_column: %w[number date worker.fio],
         model: Payroll,
-        search_query: 'date like :search or UPPER(number) like :search or UPPER(worker.fio) like :search'
+        search_query: 'UPPER(number) like :search or date like :search or worker_id IN (SELECT workers.id FROM workers WHERE UPPER(workers.fio) like :search)'
     }
 
     respond_to do |format|

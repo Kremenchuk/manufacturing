@@ -1,3 +1,72 @@
 // Place all the styles related to the order_manufacturing controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+.no-status{
+  background-color: #f7f7f7 !important;
+}
+
+.in-work-status{
+  background-color: #d9534f !important;
+}
+
+.finished-status{
+  background-color: #f0ad4e !important;
+}
+
+.shipped-status{
+  background-color: #5cb85c !important;
+}
+
+//#order_manufacturing-table > tbody > tr.even:hover {
+//  background-color: #DDFF75;
+//}
+
+//td:hover {
+//  background-color: #DDFF75;
+//}
+
+//#order_manufacturing-table tr:hover{
+//  background-color: #DDFF75;
+//}`
+
+#order_manufacturing-table tbody tr.even:hover, #order_manufacturing-table tbody tr.even td.highlighted {
+  background-color: #ECFFB3;
+}
+
+#order_manufacturing-table tbody tr.odd:hover, #order_manufacturing-table tbody tr.odd td.highlighted {
+  background-color: #E6FF99;
+}
+
+#order_manufacturing-table tr.even:hover {
+  background-color: #ECFFB3;
+}
+
+#order_manufacturing-table tr.even:hover td.sorting_1 {
+  background-color: #DDFF75;
+}
+
+#order_manufacturing-table tr.even:hover td.sorting_2 {
+  background-color: #E7FF9E;
+}
+
+#order_manufacturing-table tr.even:hover td.sorting_3 {
+  background-color: #E2FF89;
+}
+
+#order_manufacturing-table tr.odd:hover {
+  background-color: #E6FF99;
+}
+
+#order_manufacturing-table tr.odd:hover td.sorting_1 {
+  background-color: #D6FF5C;
+}
+
+#order_manufacturing-table tr.odd:hover td.sorting_2 {
+  background-color: #E0FF84;
+}
+
+#order_manufacturing-table tr.odd:hover td.sorting_3 {
+  background-color: #DBFF70;
+}

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 1300) do
+ActiveRecord::Schema.define(version: 1500) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,12 +37,13 @@ ActiveRecord::Schema.define(version: 1300) do
     t.float    "size_l"
     t.float    "size_a"
     t.float    "size_b"
-    t.json     "details",       default: {}
-    t.integer  "item_group_id"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
     t.float    "area"
     t.float    "volume"
+    t.json     "details",       default: {}
+    t.integer  "item_group_id"
+    t.json     "item_files"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
     t.index ["item_group_id"], name: "index_items_on_item_group_id", using: :btree
     t.index ["name"], name: "index_items_on_name", unique: true, using: :btree
   end
@@ -57,29 +58,35 @@ ActiveRecord::Schema.define(version: 1300) do
   end
 
   create_table "materials", force: :cascade do |t|
-    t.string   "name",                   null: false
-    t.integer  "unit",       default: 0, null: false
-    t.float    "price",                  null: false
-    t.float    "weight",                 null: false
+    t.string   "name",                     null: false
+    t.integer  "unit",       default: 0,   null: false
+    t.float    "price",                    null: false
+    t.float    "weight",                   null: false
     t.float    "area"
     t.float    "volume"
     t.integer  "size_l"
     t.integer  "size_a"
     t.integer  "size_b"
     t.text     "note"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.float    "qty",        default: 0.0
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
   create_table "order_manufacturings", force: :cascade do |t|
-    t.string   "number",          null: false
-    t.string   "date",            null: false
+    t.string   "number",                      null: false
+    t.string   "start_date",                  null: false
+    t.string   "finish_date",                 null: false
     t.string   "invoice"
     t.text     "note"
+    t.integer  "o_m_status",      default: 0
+    t.float    "total_price"
+    t.float    "con_pay"
     t.integer  "counterparty_id"
     t.integer  "user_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.json     "o_m_files"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
     t.index ["counterparty_id"], name: "index_order_manufacturings_on_counterparty_id", using: :btree
     t.index ["user_id"], name: "index_order_manufacturings_on_user_id", using: :btree
   end
@@ -107,11 +114,32 @@ ActiveRecord::Schema.define(version: 1300) do
 
   create_table "payrolls", force: :cascade do |t|
     t.integer  "worker_id"
-    t.integer  "number"
+    t.string   "number",     null: false
     t.string   "date",       null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["worker_id"], name: "index_payrolls_on_worker_id", using: :btree
+  end
+
+  create_table "purchase_invoices", force: :cascade do |t|
+    t.integer  "counterparty_id"
+    t.string   "number",                      null: false
+    t.string   "date",                        null: false
+    t.float    "total_price",                 null: false
+    t.float    "we_pay",                      null: false
+    t.integer  "p_i_status",      default: 0
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.index ["counterparty_id"], name: "index_purchase_invoices_on_counterparty_id", using: :btree
+  end
+
+  create_table "purchase_invoices_details", force: :cascade do |t|
+    t.integer "purchase_invoice_id"
+    t.integer "material_id"
+    t.float   "qty",                 null: false
+    t.float   "price",               null: false
+    t.index ["material_id"], name: "index_purchase_invoices_details_on_material_id", using: :btree
+    t.index ["purchase_invoice_id"], name: "index_purchase_invoices_details_on_purchase_invoice_id", using: :btree
   end
 
   create_table "roles", force: :cascade do |t|

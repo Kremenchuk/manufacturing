@@ -42,6 +42,18 @@
           = f.label :item_group, 'Группа изделия'
           = link_to '', id: 'add_item_group_detail', remote: true, class: 'add_new_entity', 'data-toggle': 'modal', 'data-target': '#items_group-modal' do
             = text_field_tag :item_group, @item.item_group.present? ? @item.item_group.name : nil, class: 'form-control validate-field', name: 'item[item_group]', id: 'item_group'
+      .col-md-4
+        .form-group
+          - @item.item_files.each_with_index do |item_file, index|
+            .col-md-12
+              .col-md-6
+                = link_to item_file.identifier, item_file.url, target: :_blank
+              .col-md-6
+                = link_to "Удалить", remove_file_from_item_path(@item.id, file_index: index), class: 'btn btn-default', method: :put, data: { confirm: "Удалить?" }
+          .col-md-12
+            .col-md-6
+              = f.file_field :item_files, multiple: true
+
   .col-md-12.hidden-element
     .add-new-button
       = link_to '', id: 'add-material-details-to-item', remote: true, class: 'btn btn-default add_new_entity', 'data-toggle': 'modal', 'data-target': '#materials-modal' do
@@ -72,7 +84,8 @@
 
   .col-md-12
     .form-group
-      = button_tag 'Сохранить', class: 'btn btn-success'
+      = f.submit 'Сохранить и выйти', class: 'btn btn-success'
+      = f.submit 'Сохранить', class: 'btn btn-success'
       = link_to 'Отмена', root_path(active_tab: 'item'), class: 'btn btn-danger'
 
 /модальне вікно для додавання продукції до таблиці продукції
@@ -104,7 +117,7 @@
           %button.close{'data-dismiss': 'modal', type: 'button'} ×
           %h4.modal-title Добавить
         .modal-body
-          %table#material-details-datatable.display.datatable-table{'data-source': material_details_datatable_url(format: 'json')}
+          %table#material-details-datatable.display.datatable-table{'data-source': item_material_datatable_url(format: 'json')}
             %thead
               %th.table-4 V
               %th.table-40 Наименование

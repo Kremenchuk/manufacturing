@@ -15,6 +15,10 @@ Rails.application.routes.draw do
     get 'add_counterparty' => 'order_manufacturings#add_counterparty'
     get 'o_m_counterparty_datatable' => 'order_manufacturings#o_m_counterparty_datatable'
     get 'o_m_used_material_jobs/:id' => 'order_manufacturings#o_m_used_material_jobs', as: 'o_m_used_material_jobs'
+    put 'o_m_change_status/:id' => 'order_manufacturings#o_m_change_status', as: 'o_m_change_status'
+    put 'add_file_to_o_m/:id' => 'order_manufacturings#add_file_to_o_m', as: 'add_file_to_o_m'
+    put 'remove_file_from_o_m/:id' => 'order_manufacturings#remove_file_from_o_m', as: 'remove_file_from_o_m'
+
     # get 'o_m_hand_print/:id' => 'order_manufacturings#o_m_hand_print', as: 'o_m_hand_print'
     # get 'o_m_pre_print/:id' => 'order_manufacturings#o_m_pre_print', as: 'o_m_pre_print'
   #---order_manufacturings---
@@ -31,7 +35,8 @@ Rails.application.routes.draw do
     get 'item_details_datatable' => 'items#item_details_datatable'
     get 'copy_item/:id' => 'items#copy_item', as: 'copy_item'
     get 'add_item_group' => 'items#add_item_group'
-
+    put 'remove_file_from_item/:id' => 'items#remove_file_from_item', as: 'remove_file_from_item'
+    get 'item_material_datatable' => 'items#item_material_datatable'
   #---items---
 
   #item_groups
@@ -70,6 +75,20 @@ Rails.application.routes.draw do
   resources :item_groups
   #---role---
 
+  # purchese_invoice
+    resources :purchase_invoices
+    get 'add_counterparty_p_i' => 'purchase_invoices#add_counterparty_p_i'
+    get 'add_p_i_detail' => 'purchase_invoices#add_p_i_detail'
+    get 'p_i_details_datatable' => 'purchase_invoices#p_i_details_datatable'
+    get 'p_i_counterparty_datatable' => 'purchase_invoices#p_i_counterparty_datatable'
+    get 'p_i_material_details_datatable' => 'purchase_invoices#p_i_material_details_datatable'
+    get 'add_p_i_detail' => 'purchase_invoices#add_p_i_detail'
+    put 'material_to_warehouse/:id' => 'purchase_invoices#material_to_warehouse', as: 'material_to_warehouse'
+    put 'material_from_warehouse/:id' => 'purchase_invoices#material_from_warehouse', as: 'material_from_warehouse'
+  #---purchese_invoice---
+
+
+  # get 'material_details_datatable' => 'purchase_invoices#material_details_datatable'
   # #semi_finisheds
   #   resources :semi_finisheds
   #   get 'copy_semi_finished/:id' => 'copy_semi_finisheds#copy_semi_finished', as: 'copy_semi_finished'
