@@ -21,23 +21,23 @@
           = f.select :unit, ['шт', 'м/п', 'кг'], {}, {class: 'form-control validate-field'}
         .form-group
           = f.label :area, 'Площадь'
-          = f.text_field :area, class: 'form-control'
+          = f.number_field :area, class: 'form-control', step: 0.00001
         .form-group
           = f.label :weight, 'Вес'
-          = f.text_field :weight, class: 'form-control'
+          = f.number_field :weight, class: 'form-control', step: 0.0001
         .form-group
           = f.label :volume, 'Объем'
-          = f.text_field :volume, class: 'form-control'
+          = f.number_field :volume, class: 'form-control', step: 0.00000001
       .col-md-3
         .form-group
           = f.label :size_l, 'Длина'
-          = f.text_field :size_l, class: 'form-control'
+          = f.number_field :size_l, class: 'form-control', step: 1
         .form-group
           = f.label :size_a, 'Размер А'
-          = f.text_field :size_a, class: 'form-control'
+          = f.number_field :size_a, class: 'form-control', step: 1
         .form-group
           = f.label :size_b, 'Размер Б'
-          = f.text_field :size_b, class: 'form-control'
+          = f.number_field :size_b, class: 'form-control', step: 1
         .form-group
           = f.label :item_group, 'Группа изделия'
           = link_to '', id: 'add_item_group_detail', remote: true, class: 'add_new_entity', 'data-toggle': 'modal', 'data-target': '#items_group-modal' do
@@ -175,38 +175,38 @@
     elem.click()
 
   #Функція вираховування суми та ваги по item
-  @sumWeight = (sum_field, unit_field, weight_field) ->
-    if $('#item_item_type').val() == 'Материал'
-      return
-    else
-      i = 0
-      result = 0
-      percent = []
-      weight_result = 0
-      while i < sum_field.length
-        id = $(sum_field[i]).data('counter')
-        unit = $.trim($('#unit_' + id).text())
-        if $('#qty_' + $(weight_field[i]).data('counter')).val()
-          weight_result = weight_result + parseFloat($(weight_field[i]).val()) * parseFloat($('#qty_' + $(weight_field[i]).data('counter')).val())
-        if unit != "%"
-          result = result + parseFloat($(sum_field[i]).html())
-        else
-          percent.push({id: id, val: parseFloat($.trim($('#price_' + id).text()))})
-        i++
-      # Підрахунок процентних нарахувань з сумою по кожній позиції
-      i = 0
-      while i < percent.length
-        $('#sum_' + percent[i]['id']).html(((result / 100.0) * percent[i]['val']).toFixed(2))
-        result = result + (result / 100.0) * percent[i]['val']
-        i++
-      $('#item_weight').val(weight_result.toFixed(2))
-      $('#item_price').val(result.toFixed(2))
+  #  @sumWeight = (sum_field, unit_field, weight_field) ->
+  #    if $('#item_item_type').val() == 'Материал'
+  #      return
+  #    else
+  #      i = 0
+  #      result = 0
+  #      percent = []
+  #      weight_result = 0
+  #      while i < sum_field.length
+  #        id = $(sum_field[i]).data('counter')
+  #        unit = $.trim($('#unit_' + id).text())
+  #        if $('#qty_' + $(weight_field[i]).data('counter')).val()
+  #          weight_result = weight_result + parseFloat($(weight_field[i]).val()) * parseFloat($('#qty_' + $(weight_field[i]).data('counter')).val())
+  #        if unit != "%"
+  #          result = result + parseFloat($(sum_field[i]).html())
+  #        else
+  #          percent.push({id: id, val: parseFloat($.trim($('#price_' + id).text()))})
+  #        i++
+  #      # Підрахунок процентних нарахувань з сумою по кожній позиції
+  #      i = 0
+  #      while i < percent.length
+  #        $('#sum_' + percent[i]['id']).html(((result / 100.0) * percent[i]['val']).toFixed(2))
+  #        result = result + (result / 100.0) * percent[i]['val']
+  #        i++
+  #      $('#item_weight').val(weight_result.toFixed(2))
+  #      $('#item_price').val(result.toFixed(2))
 
 
   sum_field = document.getElementsByClassName('sum_field')
   unit_field = document.getElementsByClassName('unit-field')
   weight_field = document.getElementsByClassName('weight_class')
-  sumWeight(sum_field, unit_field, weight_field)
+  #sumWeight(sum_field, unit_field, weight_field)
 
     #  @materialDetailsIds = () ->
     #    return $('.material_id_class').map(-> $(this).val()).get()
@@ -343,7 +343,7 @@
         price = $('#price_' + id).html()
         $('#sum_' + id).html((qty * price).toFixed(2))
 
-        sumWeight(sum_field, unit_field, weight_field)
+        #sumWeight(sum_field, unit_field, weight_field)
 
         if e.keyCode == 13
           index = $(this).data('counter') + 1

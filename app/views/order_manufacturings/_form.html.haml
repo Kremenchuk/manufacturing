@@ -8,11 +8,16 @@
       = link_to o_m_automatic_print_path(@o_m.id), id: 'o_m_automatic_print', class: 'btn btn-default',  title: 'Печать с АВТОМАТИЧЕСКИМ объединением' do
         %i.fa.fa-print
         %i.fa.fa-laptop
-      = link_to 'Используемые материалы и работы', o_m_used_material_jobs_path(@o_m.id), class: 'btn btn-default', 'data-toggle': 'modal', 'data-target': '#used-material-jobs-modal', remote: true
-      = link_to 'Без статуса', o_m_change_status_path(@o_m.id, o_m_status: 0), class: 'btn btn-default', method: :put
-      = link_to 'В работу', o_m_change_status_path(@o_m.id, o_m_status: 1), class: 'btn btn-danger', method: :put
-      = link_to 'Готов', o_m_change_status_path(@o_m.id, o_m_status: 2), class: 'btn btn-warning', method: :put
-      = link_to 'Отгружен', o_m_change_status_path(@o_m.id, o_m_status: 3), class: 'btn btn-success', method: :put
+        = link_to 'Используемые материалы', o_m_used_materials_path(@o_m.id), class: 'btn btn-default', 'data-toggle': 'modal', 'data-target': '#used-material-modal', remote: true
+        = link_to 'Используемые работы', o_m_used_jobs_path(@o_m.id), class: 'btn btn-default', 'data-toggle': 'modal', 'data-target': '#used-jobs-modal', remote: true
+      - unless @o_m.o_m_status == 0
+        = link_to 'Без статуса', o_m_change_status_path(@o_m.id, o_m_status: 0), class: 'btn btn-default', method: :put, data: {confirm: 'Материалы будут ВОЗВРАЩЕНЫ на склад!'}
+      - unless @o_m.o_m_status == 1
+        = link_to 'В работу', o_m_change_status_path(@o_m.id, o_m_status: 1), class: 'btn btn-danger', method: :put, data: {confirm: 'Материалы будут СПИСАНЫ со склада!'}
+      - unless @o_m.o_m_status == 2
+        = link_to 'Готов', o_m_change_status_path(@o_m.id, o_m_status: 2), class: 'btn btn-warning', method: :put
+      - unless @o_m.o_m_status == 3
+        = link_to 'Отгружен', o_m_change_status_path(@o_m.id, o_m_status: 3), class: 'btn btn-success', method: :put
 
 = form_for @o_m, html: {class: 'submit-form'} do |f|
   .col-md-6
@@ -41,25 +46,25 @@
       .col-md-3{style: 'padding-right: 0;'}
         .form-group
           = f.label :price, 'Стоимость заказа'
-          = f.text_field :price, class: 'form-control', readonly: true
+          = f.number_field :price, class: 'form-control', step: 0.01
 
     .col-md-12{style: 'margin-left: -15px; padding-right: 0;'}
       .col-md-3
         .form-group
           = f.label :weight, 'Вес'
-          = f.text_field :weight, class: 'form-control'
+          = f.number_field :weight, class: 'form-control', step: 0.001
       .col-md-3
         .form-group
           = f.label :volume, 'Объем'
-          = f.text_field :volume, class: 'form-control'
+          = f.number_field :volume, class: 'form-control', step: 0.0000001
       .col-md-3
         .form-group
           = f.label :total_price, 'Полная стоимость проекта'
-          = f.text_field :total_price, class: 'form-control'
+          = f.number_field :total_price, class: 'form-control', step: 0.01
       .col-md-3
         .form-group
           = f.label :con_pay, 'Контрагент оплатил'
-          = f.text_field :con_pay, class: 'form-control'
+          = f.number_field :con_pay, class: 'form-control', step: 0.01
     .col-md-12
       .form-group
         = f.label :note, 'Примечание'
@@ -140,7 +145,8 @@
         .modal-footer
           %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
 
-#used-material-jobs-modal.modal.fade{:role => 'dialog'}
+-#модальне вікно використовуваного матерілу
+#used-material-modal.modal.fade{:role => 'dialog'}
   .modal-dialog
     .modal-content
       .modal-header
@@ -148,24 +154,34 @@
         %h4.modal-title Добавить
       .modal-body
         .col-md-12
-          %table
+          %table.table-materials-jobs-style
             %thead
               %th.table-10 №
-              %th.table-70 Наименование
+              %th.table-45 Наименование
               %th.table-10 Ед. изм.
               %th.table-10 Количество
             %tbody#o_m-used-materials-table-body
+      .modal-footer
+        %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
+
+-#модальне вікно використовуваного матерілу
+#used-jobs-modal.modal.fade{:role => 'dialog'}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{'data-dismiss': 'modal', type: 'button'} ×
+        %h4.modal-title Добавить
+      .modal-body
         .col-md-12
-          %table
+          %table.table-materials-jobs-style
             %thead
               %th.table-10 №
-              %th.table-70 Наименование
+              %th.table-45 Наименование
               %th.table-10 Количество
               %th.table-10
             %tbody#o_m-used-jobs-table-body
       .modal-footer
         %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
-
 
 -#- if @o_m.id.present?
 -#  /модальне вікно для вибору об'єднання однакових виробів пуд час друку
@@ -195,26 +211,26 @@
 
 :coffee
   # Вираховування загальної суми та ваги по item
-  @sumWeight = (sum_field, weight_field) ->
-    i = 0
-    result = 0
-    weight_result = 0
-    while i < sum_field.length
-      id = $(sum_field[i]).data('counter')
-      unit = $.trim($('#unit_' + id).text())
-      if $('#qty_' + $(weight_field[i]).data('counter')).val()
-        weight_result = weight_result + parseFloat($(weight_field[i]).val()) * parseFloat($('#qty_' + $(weight_field[i]).data('counter')).val())
-        result = result + parseFloat($(sum_field[i]).html())
-      i++
-    # Підрахунок процентних нарахувань з сумою по кожній позиції
-    console.log(weight_result)
-    console.log(result)
-    $('#order_manufacturing_weight').val(weight_result.toFixed(2))
-    $('#order_manufacturing_price').val(result.toFixed(2))
-
-  sum_field = document.getElementsByClassName('sum_field')
-  weight_field = document.getElementsByClassName('weight_class')
-  sumWeight(sum_field, weight_field)
+  #  @sumWeight = (sum_field, weight_field) ->
+  #    i = 0
+  #    result = 0
+  #    weight_result = 0
+  #    while i < sum_field.length
+  #      id = $(sum_field[i]).data('counter')
+  #      unit = $.trim($('#unit_' + id).text())
+  #      if $('#qty_' + $(weight_field[i]).data('counter')).val()
+  #        weight_result = weight_result + parseFloat($(weight_field[i]).val()) * parseFloat($('#qty_' + $(weight_field[i]).data('counter')).val())
+  #        result = result + parseFloat($(sum_field[i]).html())
+  #      i++
+  #    # Підрахунок процентних нарахувань з сумою по кожній позиції
+  #    console.log(weight_result)
+  #    console.log(result)
+  #    $('#order_manufacturing_weight').val(weight_result.toFixed(2))
+  #    $('#order_manufacturing_price').val(result.toFixed(2))
+  #
+  #  sum_field = document.getElementsByClassName('sum_field')
+  #  weight_field = document.getElementsByClassName('weight_class')
+  #  sumWeight(sum_field, weight_field)
 
   @itemDetailsIds = () ->
     return $('.item_id_class').map(-> $(this).val()).get()

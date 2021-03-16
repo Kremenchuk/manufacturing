@@ -36,11 +36,11 @@
       .col-md-3
         .form-group
           = f.label :total_price, 'Полная стоимость накладной'
-          = f.text_field :total_price, class: 'form-control validate-field', autocomplete: :off
+          = f.number_field :total_price, class: 'form-control validate-field', autocomplete: :off, step: 0.001
       .col-md-3
         .form-group
           = f.label :we_pay, 'Мы оплатили'
-          = f.text_field :we_pay, class: 'form-control validate-field', autocomplete: :off
+          = f.number_field :we_pay, class: 'form-control validate-field', autocomplete: :off, step: 0.001
   .col-md-12.hidden-element
     .add-new-button
       = link_to '', id: 'add-material-details-to-p_i', remote: true, class: 'btn btn-default add_new_entity', 'data-toggle': 'modal', 'data-target': '#materials-modal' do

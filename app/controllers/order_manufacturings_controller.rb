@@ -2,7 +2,7 @@ class OrderManufacturingsController < ApplicationController
 
   # o_m -> order_manufacturing
 
-  before_action :find_o_m, only: [:edit, :update, :destroy, :copy_o_m, :o_m_pre_print, :o_m_used_material_jobs, :o_m_change_status, :remove_file_from_o_m]
+  before_action :find_o_m, only: [:edit, :update, :destroy, :copy_o_m, :o_m_pre_print, :o_m_used_materials, :o_m_used_jobs, :o_m_change_status, :remove_file_from_o_m]
 
   def index
     data_hash = {
@@ -76,6 +76,7 @@ class OrderManufacturingsController < ApplicationController
       @o_m.id = nil
       @o_m.start_date = nil
       @o_m.finish_date = nil
+      @o_m.o_m_status = 0
       session.delete(:o_m)
     end
   end
@@ -124,11 +125,19 @@ class OrderManufacturingsController < ApplicationController
 
   def o_m_change_status
     @o_m.o_m_status = params[:o_m_status]
-    @o_m.save
-  end
-
-  def add_file_to_o_m
-
+    if @o_m.save and @o_m.o_m_status == 1
+      @o_m.used_materials.each do |used_material|
+        used_material[0].qty -= used_material[1]
+        used_material[0].save!
+      end
+    end
+    if @o_m.save and @o_m.o_m_status == 0
+      @o_m.used_materials.each do |used_material|
+        used_material[0].qty += used_material[1]
+        used_material[0].save!
+      end
+    end
+    redirect_to edit_order_manufacturing_path(@o_m.id)
   end
 
   # def o_m_hand_print
@@ -160,8 +169,11 @@ class OrderManufacturingsController < ApplicationController
     send_file excel_file.file_name
   end
 
-  def o_m_used_material_jobs
+  def o_m_used_materials
     @used_materials = @o_m.used_materials
+  end
+
+  def o_m_used_jobs
     @used_jobs = @o_m.used_jobs
   end
 
@@ -221,7 +233,7 @@ class OrderManufacturingsController < ApplicationController
   end
 
   def permit_params
-    params.require(:order_manufacturing).permit(:start_date, :finish_date, :number, :invoice, :note, {o_m_files: []}) #counterparty.name
+    params.require(:order_manufacturing).permit(:start_date, :finish_date, :number, :invoice, :total_price, :con_pay,:note, {o_m_files: []}) #counterparty.name
   end
 
   def permit_type_id_qty

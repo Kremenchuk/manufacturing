@@ -18,7 +18,7 @@
     %td.unit-field{'data-counter': item_counter, id: "unit_#{item_counter}"}
       = item.unit
     %td
-      = number_field_tag 'details[qty][]', item_qty, step: 0.01, class: 'form-control calculated_field', id: "qty_#{item_counter}", 'data-counter': item_counter
+      = number_field_tag 'details[qty][]', item_qty, step: 0.001, class: 'form-control calculated_field', id: "qty_#{item_counter}", 'data-counter': item_counter
     %td{id: "price_#{item_counter}"}
       = item.price
     %td.sum_field{id: "sum_#{item_counter}", 'data-counter': item_counter}

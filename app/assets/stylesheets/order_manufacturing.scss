@@ -19,6 +19,27 @@
   background-color: #5cb85c !important;
 }
 
+.no-status-text{
+  color: #000000 !important;
+}
+
+.in-work-status-text{
+  color: #d9534f !important;
+}
+
+.finished-status-text{
+  color: #f0ad4e !important;
+}
+
+.shipped-status-text{
+  color: #5cb85c !important;
+}
+
+.table-materials-jobs-style tr td {
+  border: 1px solid black;
+  font-size: 16px;
+}
+
 //#order_manufacturing-table > tbody > tr.even:hover {
 //  background-color: #DDFF75;
 //}
@@ -30,43 +51,43 @@
 //#order_manufacturing-table tr:hover{
 //  background-color: #DDFF75;
 //}`
-
-#order_manufacturing-table tbody tr.even:hover, #order_manufacturing-table tbody tr.even td.highlighted {
-  background-color: #ECFFB3;
-}
-
-#order_manufacturing-table tbody tr.odd:hover, #order_manufacturing-table tbody tr.odd td.highlighted {
-  background-color: #E6FF99;
-}
-
-#order_manufacturing-table tr.even:hover {
-  background-color: #ECFFB3;
-}
-
-#order_manufacturing-table tr.even:hover td.sorting_1 {
-  background-color: #DDFF75;
-}
-
-#order_manufacturing-table tr.even:hover td.sorting_2 {
-  background-color: #E7FF9E;
-}
-
-#order_manufacturing-table tr.even:hover td.sorting_3 {
-  background-color: #E2FF89;
-}
-
-#order_manufacturing-table tr.odd:hover {
-  background-color: #E6FF99;
-}
-
-#order_manufacturing-table tr.odd:hover td.sorting_1 {
-  background-color: #D6FF5C;
-}
-
-#order_manufacturing-table tr.odd:hover td.sorting_2 {
-  background-color: #E0FF84;
-}
-
-#order_manufacturing-table tr.odd:hover td.sorting_3 {
-  background-color: #DBFF70;
-}
+//
+//#order_manufacturing-table tbody tr.even:hover, #order_manufacturing-table tbody tr.even td.highlighted {
+//  background-color: #ECFFB3;
+//}
+//
+//#order_manufacturing-table tbody tr.odd:hover, #order_manufacturing-table tbody tr.odd td.highlighted {
+//  background-color: #E6FF99;
+//}
+//
+//#order_manufacturing-table tr.even:hover {
+//  background-color: #ECFFB3;
+//}
+//
+//#order_manufacturing-table tr.even:hover td.sorting_1 {
+//  background-color: #DDFF75;
+//}
+//
+//#order_manufacturing-table tr.even:hover td.sorting_2 {
+//  background-color: #E7FF9E;
+//}
+//
+//#order_manufacturing-table tr.even:hover td.sorting_3 {
+//  background-color: #E2FF89;
+//}
+//
+//#order_manufacturing-table tr.odd:hover {
+//  background-color: #E6FF99;
+//}
+//
+//#order_manufacturing-table tr.odd:hover td.sorting_1 {
+//  background-color: #D6FF5C;
+//}
+//
+//#order_manufacturing-table tr.odd:hover td.sorting_2 {
+//  background-color: #E0FF84;
+//}
+//
+//#order_manufacturing-table tr.odd:hover td.sorting_3 {
+//  background-color: #DBFF70;
+//}

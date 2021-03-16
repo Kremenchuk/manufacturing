@@ -92,7 +92,7 @@ class PurchaseInvoicesController < ApplicationController
     if @p_i.destroy!
       flash[:messages] = "'#{@p_i.number}' удалено"
       flash[:class] = 'flash-success'
-      redirect_to root_path(active_tab: 'p_i')
+      redirect_to root_path(active_tab: 'purchase_invoice')
     else
       flash[:messages] = "'#{@p_i.number}' не удалено #{@p_i.errors}"
       flash[:class] = 'flash-error'

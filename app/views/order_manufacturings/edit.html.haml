@@ -1,4 +1,17 @@
 %h1
-  = "Редактирование '#{@o_m.number}'"
+  .col-md-12{style: '  padding-bottom: 25px'}
+    - case @o_m.o_m_status
+      - when 0
+        .no-status-text
+          = "Редактирование '#{@o_m.number}'. Заказ 'Без статуса'"
+      - when 1
+        .in-work-status-text
+          = "Редактирование '#{@o_m.number}'. Заказ 'В работе'"
+      - when 2
+        .finished-status-text
+          = "Редактирование '#{@o_m.number}'. Заказ 'Готов'"
+      - when 3
+        .shipped-status-text
+          = "Редактирование '#{@o_m.number}'. Заказ 'Отгружен'"
 .col-md-12
   = render 'form'

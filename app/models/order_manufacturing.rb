@@ -85,7 +85,7 @@ private
     else
       if element.is_a? Item
         element.details.each do |element_details|
-          find_materials_in_item(element_details, stillage_details[2]* qty)
+          find_materials_in_item(element_details, stillage_details[2] * qty)
         end
       end
     end
@@ -115,7 +115,7 @@ private
       for j in (i+1)..(unit_array.size - 1)
         if unit_array[i].present? and unit_array[j].present?
           if unit_array[i][0].id == unit_array[j][0].id
-            unit_qty = unit_array[i][1] + unit_array[j][1]
+            unit_qty = unit_qty + unit_array[j][1]
             unit_array[j] = nil
           end
         end

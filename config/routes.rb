@@ -14,9 +14,9 @@ Rails.application.routes.draw do
     get 'add_o_m_detail' => 'order_manufacturings#add_o_m_detail'
     get 'add_counterparty' => 'order_manufacturings#add_counterparty'
     get 'o_m_counterparty_datatable' => 'order_manufacturings#o_m_counterparty_datatable'
-    get 'o_m_used_material_jobs/:id' => 'order_manufacturings#o_m_used_material_jobs', as: 'o_m_used_material_jobs'
+    get 'o_m_used_materials/:id' => 'order_manufacturings#o_m_used_materials', as: 'o_m_used_materials'
+    get 'o_m_used_jobs/:id' => 'order_manufacturings#o_m_used_jobs', as: 'o_m_used_jobs'
     put 'o_m_change_status/:id' => 'order_manufacturings#o_m_change_status', as: 'o_m_change_status'
-    put 'add_file_to_o_m/:id' => 'order_manufacturings#add_file_to_o_m', as: 'add_file_to_o_m'
     put 'remove_file_from_o_m/:id' => 'order_manufacturings#remove_file_from_o_m', as: 'remove_file_from_o_m'
 
     # get 'o_m_hand_print/:id' => 'order_manufacturings#o_m_hand_print', as: 'o_m_hand_print'
