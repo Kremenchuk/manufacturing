@@ -233,7 +233,7 @@ class OrderManufacturingsController < ApplicationController
   end
 
   def permit_params
-    params.require(:order_manufacturing).permit(:start_date, :finish_date, :number, :invoice, :total_price, :con_pay,:note, {o_m_files: []}) #counterparty.name
+    params.require(:order_manufacturing).permit(:start_date, :finish_date, :number, :invoice, :total_price, :con_pay,:note, :extra_charge, :indirect_costs, :payroll_taxes, {o_m_files: []}) #counterparty.name
   end
 
   def permit_type_id_qty

@@ -9,6 +9,9 @@ class CreateOrderManufacturings < ActiveRecord::Migration[5.0]
       t.integer    :o_m_status, default: 0
       t.float      :total_price
       t.float      :con_pay
+      t.float      :extra_charge
+      t.float      :indirect_costs
+      t.float      :payroll_taxes
       t.belongs_to :counterparty
       t.belongs_to :user
       t.json       :o_m_files

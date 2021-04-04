@@ -3,6 +3,9 @@ Rails.application.routes.draw do
   devise_for :users
   root 'home#index'
 
+  # users
+    resources :users
+
   #order_manufacturings
     resources :order_manufacturings
     get 'o_m_details_datatable' => 'order_manufacturings#o_m_details_datatable'

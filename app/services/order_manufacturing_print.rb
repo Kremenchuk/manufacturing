@@ -80,7 +80,7 @@ class OrderManufacturingPrint
       @next_row = 3 + index # Начало табличной части
     end
 
-    @book.cell(1, 6, "Дата изготовления: #{@o_m.date}",{
+    @book.cell(1, 6, "Дата изготовления: #{@o_m.finish_date}",{
         :font_size    => 12,
         :row_height   => 25,
         :horizontal_alignment => 'center',

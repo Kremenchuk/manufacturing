@@ -23,7 +23,7 @@ class Item < ApplicationRecord
   mount_uploaders :item_files, ItemUploader
 
   def price
-     eval_field(self, 'price')
+     eval_field(self, 'price',)
   end
 
   def weight
@@ -44,7 +44,14 @@ class Item < ApplicationRecord
       item.details.each do |item_details|
         case item_details[1]
           when 'Job'
-            next
+            if field_name == 'price'
+              job = Job.find(item_details[0])
+              if job.send(field_name).present?
+                item_field += job.send(field_name) * item_details[2]
+              end
+            else
+              next
+            end
           when 'Material'
             material = Material.find(item_details[0])
             if material.send(field_name).present?

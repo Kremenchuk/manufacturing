@@ -16,34 +16,11 @@
         .form-group
           = f.label :date, 'Дата выполнения'
           = f.text_field :date, value: (@payroll.date.present? ? @payroll.date : Time.now.strftime('%d.%m.%Y')), class: 'form-control validate-field'
-      .col-md-3
-        .form-group
-          = f.label :invoice, 'Счет'
-          = f.text_field :invoice, class: 'form-control'
-      .col-md-3{style: 'padding-right: 0;'}
-        .form-group
-          = f.label :price, 'Стоимость заказа'
-          = f.text_field :price, class: 'form-control', readonly: true
-  .col-md-12
-    .col-md-6{style: 'margin-left: -15px; padding-right: 0;'}
-      .col-md-3
-        .form-group
-          = f.label :weight, 'Вес'
-          = f.text_field :weight, class: 'form-control'
-      .col-md-3
-        .form-group
-          = f.label :volume, 'Объем'
-          = f.text_field :volume, class: 'form-control'
-  .col-md-12
-    .col-md-6
-      .form-group
-        = f.label :note, 'Примечание'
-        = f.text_area :note, class: 'form-control'
   .col-md-12
     .add-new-button
-      = link_to '', id: 'add_o_m_detail', remote: true, class: 'btn btn-default add_new_entity', 'data-toggle': 'modal', 'data-target': '#o_m-details-modal' do
+      = link_to '', id: 'add_o_m_job', remote: true, class: 'btn btn-default add_new_entity', 'data-toggle': 'modal', 'data-target': '#o_m-jobss-modal' do
         %i.fa.fa-plus-square
-          Добавить изделия
+          Добавить работу
   .col-md-12.table-style.hidden-element
     %table#o_m-details-table{cellspacing: '1', cellpadding: '1', border: '1', width: '100%'}
       %thead
@@ -57,7 +34,7 @@
           %th.table-5 Удалить
       %tbody#o_m-details-table-body
         -if @o_m_details.present?
-          = render partial: 'o_m_detail'
+          = render partial: '_payroll_detail'
 
 
   .form-group

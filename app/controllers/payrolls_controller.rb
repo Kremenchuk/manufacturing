@@ -1,5 +1,7 @@
 class PayrollsController < ApplicationController
 
+  before_action :find_payroll, only: [:edit, :update, :destroy, :copy_o_m, :o_m_pre_print, :o_m_used_materials, :o_m_used_jobs, :o_m_change_status, :remove_file_from_o_m]
+
   def index
     data_hash = {
         view_context: view_context,
@@ -21,5 +23,12 @@ class PayrollsController < ApplicationController
 
   def edit
     a=2
+  end
+
+
+  private
+
+  def find_payroll
+    @payroll = Payroll.find(params[:id])
   end
 end

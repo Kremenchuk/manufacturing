@@ -3,7 +3,7 @@
     Роли пользователей
 .col-md-12
   - @roles.each do |role|
-    = form_tag(edit_role_path(role.id), remote: true, method: :get, id: 'role_form') do
+    = form_tag(edit_role_path(role.id), method: :get, id: 'role_form') do
       .col-md-3
         = text_field_tag :role_name, role.name, class: 'form-control validate-field', name: 'role[name]'
       .col-md-7
@@ -29,7 +29,7 @@
 
 .col-md-12
   - @item_groups.each do |item_group|
-    = form_tag(edit_item_group_path(item_group.id), remote: true, method: :get, id: 'role_form') do
+    = form_tag(edit_item_group_path(item_group.id), method: :get, id: 'role_form') do
       .col-md-3
         = text_field_tag :item_group_name, item_group.name, class: 'form-control validate-field', name: 'item_group[name]'
       .col-md-7
@@ -46,3 +46,32 @@
     .col-md-2
       = submit_tag 'Добавить', class: 'btn btn-success'
 
+.col-md-12
+  %hr
+
+.col-md-12
+  %h1
+    Администрирование пользователей
+
+.col-md-12
+  - @users.each do |user|
+    = form_tag(edit_user_path(user.id), method: :get, id: 'role_form') do
+      .col-md-3
+        = text_field_tag :user_email, user.email, class: 'form-control validate-field', name: 'user[email]'
+      .col-md-3
+        = text_field_tag :user_password, user.password, class: 'form-control validate-field', name: 'user[password]'
+      .col-md-4
+        = select_tag :user_role, options_for_select(@roles.collect{ |u| [u.name, u.id] }, user.role.id), class: 'form-control validate-field', name: 'user[role]'
+      .col-md-2
+        = submit_tag 'Редактировать', class: 'btn btn-success'
+        = link_to user_path(id: user.id), method: :delete, class: 'btn btn-default', title: 'Удалить', data: {confirm: 'Точно удалить?'} do
+          %i.fa.fa-trash
+  = form_tag(users_path, method: :post, id: 'new_role_form') do
+    .col-md-3
+      = text_field_tag :user_name, '', class: 'form-control validate-field', name: 'user[email]'
+    .col-md-3
+      = text_field_tag :user_range, '', class: 'form-control validate-field', name: 'user[password]'
+    .col-md-4
+      = select_tag :user_role, options_for_select(@roles.collect{ |u| [u.name, u.id] }), class: 'form-control validate-field', name: 'user[role]'
+    .col-md-2
+      = submit_tag 'Добавить', class: 'btn btn-success'

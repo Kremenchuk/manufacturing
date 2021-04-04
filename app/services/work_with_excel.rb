@@ -1,4 +1,5 @@
 class WorkWithExcel
+  require 'rubyXL/convenience_methods'
 
   def initialize(file_path)
     @file_path = file_path

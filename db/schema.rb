@@ -82,6 +82,9 @@ ActiveRecord::Schema.define(version: 1500) do
     t.integer  "o_m_status",      default: 0
     t.float    "total_price"
     t.float    "con_pay"
+    t.float    "extra_charge"
+    t.float    "indirect_costs"
+    t.float    "payroll_taxes"
     t.integer  "counterparty_id"
     t.integer  "user_id"
     t.json     "o_m_files"

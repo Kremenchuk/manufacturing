@@ -19,7 +19,7 @@ class OrderManufacturing < ApplicationRecord
     order_manufacturing_price = 0.0
     if self.order_manufacturings_details.present?
       self.order_manufacturings_details.each do |details|
-        order_manufacturing_price += details.item.price.nil? ? 0.0 : details.item.price
+        order_manufacturing_price += details.item.price.nil? ? 0.0 : (details.item.price * details.qty)
       end
     end
     return order_manufacturing_price
