@@ -315,7 +315,7 @@ $(document).ready ->
     hoverPositionLabel(this)
 
   #Видалення позиції
-  $('.remove_row').on 'click', (e) ->
+  $(document).on 'click', '.remove_row', (e) ->
     id = $(this).data('counter')
     $(this).closest('tr').remove()
     i = 0

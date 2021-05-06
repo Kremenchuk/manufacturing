@@ -60,16 +60,10 @@ class MaterialsController < ApplicationController
   end
 
   def destroy
-    if (SemiFinishedDetail.where(semi_finished_detailable_type: 'Material', semi_finished_detailable_id: @material.id)).present?
-      flash[:messages] = "'#{@material.name}' невозможно удалить! Данный материал задействован"
-      flash[:class] = 'flash-error'
-      redirect_to edit_material_path(@material.id)
-    else
-      @material.destroy!
-      flash[:messages] = "'#{@material.name}' удалено"
-      flash[:class] = 'flash-success'
-      redirect_to root_path(active_tab: 'material')
-    end
+    @material.destroy!
+    flash[:messages] = "'#{@material.name}' удалено"
+    flash[:class] = 'flash-success'
+    redirect_to root_path(active_tab: 'material')
   end
 
   def copy_material

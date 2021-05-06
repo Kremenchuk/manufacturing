@@ -32,7 +32,7 @@
           = f.text_field :number, class: 'form-control validate-field', autocomplete: :off
         .form-group
           = f.label :date, 'Дата'
-          = f.text_field :date, class: 'form-control validate-field'
+          = f.text_field :date, value: (@p_i.date.present? ? @p_i.date : Time.now.strftime('%d.%m.%Y')), class: 'form-control validate-field'
       .col-md-3
         .form-group
           = f.label :total_price, 'Полная стоимость накладной'
@@ -65,7 +65,7 @@
     .form-group
       = f.submit 'Сохранить и выйти', class: 'btn btn-success'
       = f.submit 'Сохранить', class: 'btn btn-success'
-      = link_to 'Отмена', root_path(active_tab: 'item'), class: 'btn btn-danger'
+      = link_to 'Отмена', root_path(active_tab: 'purchase_invoice'), class: 'btn btn-danger'
 
 /модальне вікно для додавання контрагента
 #counterparties-modal.modal.fade{:role => 'dialog'}

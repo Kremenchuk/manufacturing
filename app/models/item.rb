@@ -52,15 +52,21 @@ class Item < ApplicationRecord
             else
               next
             end
-          when 'Material'
+        when 'Material'
+          begin
             material = Material.find(item_details[0])
             if material.send(field_name).present?
               item_field += material.send(field_name) * item_details[2]
             end
-          when 'Item'
+          rescue
+          end
+        when 'Item'
+          begin
             detail_item = Item.find(item_details[0])
             item_field += eval_field(detail_item, field_name) * item_details[2]
+          rescue
         end
+      end
       end
    end
     return item_field

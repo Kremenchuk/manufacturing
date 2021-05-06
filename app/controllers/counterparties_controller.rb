@@ -1,7 +1,7 @@
 class CounterpartiesController < ApplicationController
 
   before_action :permit_params, only: [:create, :update]
-  before_action :find_counterparty, only: [:edit, :update]
+  before_action :find_counterparty, only: [:edit, :update, :destroy]
 
   def index
     data_hash = {
@@ -33,6 +33,13 @@ class CounterpartiesController < ApplicationController
 
   def create
     Counterparty.create(permit_params)
+    redirect_to root_path(active_tab: 'counterparty')
+  end
+
+  def destroy
+    @counterparty.destroy!
+    flash[:messages] = "'#{@counterparty.name}' удалено"
+    flash[:class] = 'flash-success'
     redirect_to root_path(active_tab: 'counterparty')
   end
 

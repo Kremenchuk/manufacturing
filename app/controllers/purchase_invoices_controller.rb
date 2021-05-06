@@ -16,24 +16,6 @@ class PurchaseInvoicesController < ApplicationController
     end
   end
 
-  def p_i_details_datatable
-    data_hash = {
-        view_context: view_context,
-        sort_column: %w[name unit qty],
-        model: PurchaseInvoice,
-        search_query: 'UPPER(name) like :search',
-        modal_query: 'nil'
-    }
-    if params[:ids].present?
-      data_hash[:modal_query] = "id NOT IN (#{params[:ids].join(',')})"
-    end
-
-    respond_to do |format|
-      format.html
-      format.json { render json: DatatableClass.new(data_hash) }
-    end
-  end
-
 
   def p_i_counterparty_datatable
     data_hash = {
@@ -59,16 +41,12 @@ class PurchaseInvoicesController < ApplicationController
         search_query: 'UPPER(name) like :search',
         modal_query: 'select'
     }
-    if params[:ids].present?
-      data_hash[:modal_query] = "id NOT IN (#{params[:ids].join(',')})"
-    end
 
     respond_to do |format|
       format.html
       format.json { render json: DatatableClass.new(data_hash) }
     end
   end
-
 
   def new
     @p_i = PurchaseInvoice.new

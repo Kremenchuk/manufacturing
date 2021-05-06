@@ -65,12 +65,13 @@
       .form-group
         = f.label :counterparty, 'Контрагент'
         = link_to '', id: 'add_counterparty_detail', remote: true, class: 'add_new_entity', 'data-toggle': 'modal', 'data-target': '#counterparties-modal' do
-          = text_field_tag :counterparty, @o_m.counterparty.present? ? @o_m.counterparty.name : nil, class: 'form-control validate-field', name: 'order_manufacturing[counterparty]', id: 'counterparty'
+          = text_field_tag :counterparty, @o_m.counterparty.present? ? @o_m.counterparty.name : nil, class: 'form-control validate-field', name: 'order_manufacturing[counterparty]', id: 'counterparty',
+          autocomplete: :off
     .col-md-12{style: 'margin-left: -15px; padding-right: 0;'}
       .col-md-3
         .form-group
           = f.label :number, 'Номер'
-          = f.text_field :number, class: 'form-control validate-field'
+          = f.text_field :number, class: 'form-control validate-field', autocomplete: :off
       .col-md-3
         .form-group
           = f.label :start_date, 'Дата начала'
@@ -82,7 +83,7 @@
       .col-md-3
         .form-group
           = f.label :invoice, 'Счет'
-          = f.text_field :invoice, class: 'form-control'
+          = f.text_field :invoice, class: 'form-control', autocomplete: :off
       .col-md-3{style: 'padding-right: 0;'}
         .form-group
           = f.label :price, 'Стоимость заказа'
@@ -92,19 +93,19 @@
       .col-md-3
         .form-group
           = f.label :weight, 'Вес'
-          = f.number_field :weight, class: 'form-control', step: 0.001
+          = f.number_field :weight, class: 'form-control', step: 0.001, autocomplete: :off
       .col-md-3
         .form-group
           = f.label :volume, 'Объем'
-          = f.number_field :volume, class: 'form-control', step: 0.0000001
+          = f.number_field :volume, class: 'form-control', step: 0.0000001, autocomplete: :off
       .col-md-3
         .form-group
           = f.label :total_price, 'Полная стоимость проекта'
-          = f.number_field :total_price, class: 'form-control', step: 0.01
+          = f.number_field :total_price, class: 'form-control', step: 0.01, autocomplete: :off
       .col-md-3
         .form-group
           = f.label :con_pay, 'Контрагент оплатил'
-          = f.number_field :con_pay, class: 'form-control', step: 0.01
+          = f.number_field :con_pay, class: 'form-control', step: 0.01, autocomplete: :off
     .col-md-12
       .form-group
         = f.label :note, 'Примечание'
@@ -114,15 +115,15 @@
       .col-md-3
         .form-group
           = f.label :extra_charge, 'Наценка'
-          = f.number_field :extra_charge, value: (@o_m.extra_charge.present? ? @o_m.extra_charge : 25.00), class: 'form-control validate-field', step: 0.01
+          = f.number_field :extra_charge, value: (@o_m.extra_charge.present? ? @o_m.extra_charge : 25.00), class: 'form-control validate-field', step: 0.01, autocomplete: :off
       .col-md-3
         .form-group
           = f.label :indirect_costs, 'Косвенные затраты'
-          = f.number_field :indirect_costs, value: (@o_m.indirect_costs.present? ? @o_m.indirect_costs : 16.00), class: 'form-control validate-field', step: 0.01
+          = f.number_field :indirect_costs, value: (@o_m.indirect_costs.present? ? @o_m.indirect_costs : 16.00), class: 'form-control validate-field', step: 0.01, autocomplete: :off
       .col-md-3
         .form-group
           = f.label :payroll_taxes, 'Налоги на ЗП'
-          = f.number_field :payroll_taxes, value: (@o_m.payroll_taxes.present? ? @o_m.payroll_taxes : 22.00), class: 'form-control validate-field', step: 0.01
+          = f.number_field :payroll_taxes, value: (@o_m.payroll_taxes.present? ? @o_m.payroll_taxes : 22.00), class: 'form-control validate-field', step: 0.01, autocomplete: :off
 
   .col-md-6
     .form-group

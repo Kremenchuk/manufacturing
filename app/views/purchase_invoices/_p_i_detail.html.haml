@@ -21,6 +21,8 @@
       %td.remove_row{id: "remove_#{p_i_counter}", 'data-counter': p_i_counter}
 
   - if p_i_detail.is_a? PurchaseInvoicesDetail
+    - if p_i_detail.material.nil?
+      - next
     - position = p_i_counter + 1
     %tr{class: 'position_details_line', 'data-position': position}
       %td{style: 'display: none'}

@@ -1,6 +1,6 @@
 class WorkersController < ApplicationController
 
-  before_action :find_worker, only: [:edit, :update]
+  before_action :find_worker, only: [:edit, :update, :destroy]
 
   def index
     data_hash = {
@@ -31,6 +31,13 @@ class WorkersController < ApplicationController
 
   def create
     Worker.create(permit_params)
+    redirect_to root_path(active_tab: 'worker')
+  end
+
+  def destroy
+    @worker.destroy!
+    flash[:messages] = "'#{@worker.fio}' удалено"
+    flash[:class] = 'flash-success'
     redirect_to root_path(active_tab: 'worker')
   end
 
