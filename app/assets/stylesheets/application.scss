@@ -285,3 +285,9 @@ input[type = 'checkbox'] {
 table.display tbody tr:nth-child(odd):hover td, table.display tbody tr:nth-child(even):hover td {
   background-color: rgba(236, 255, 179, 1) !important;
 }
+
+.select-item-group{
+  font-size: 20px;
+  padding: 5px 5px 5px 5px;
+  float: right;
+}

@@ -1,9 +1,22 @@
-- @used_jobs.each_with_index do |item, item_counter|
+- summ = 0
+- @used_jobs.each_with_index do |job, item_counter|
   %tr
     %td.table-10
       = item_counter + 1
     %td.table-40-left
-      = item[0].name
+      = job[0].name
     %td.table-10
-      = item[1]
-
+      = job[1]
+    %td.table-10
+      = job[0].price
+    %td.table-10
+      = job[0].price * job[1]
+      - summ = summ + job[0].price * job[1]
+%tr
+  %td
+  %td
+  %td
+  %td
+    Итого:
+  %td
+    = summ

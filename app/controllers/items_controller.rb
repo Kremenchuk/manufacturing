@@ -6,9 +6,10 @@ class ItemsController < ApplicationController
   def index
     data_hash = {
         view_context: view_context,
-        sort_column: %w[name unit item_type price weight],
+        sort_column: %w[name unit price weight item_group],
         model: Item,
-        search_query: 'UPPER(name) like :search'
+        search_query: 'UPPER(name) like :search or
+                       item_group_id IN (SELECT item_groups.id FROM item_groups WHERE UPPER(item_groups.name) like :search)'
     }
     respond_to do |format|
       format.html
@@ -19,9 +20,10 @@ class ItemsController < ApplicationController
   def item_details_datatable
     data_hash = {
         view_context: view_context,
-        sort_column: %w[name unit],
+        sort_column: %w[name unit item_group],
         model: Item,
-        search_query: 'UPPER(name) like :search',
+        search_query: 'UPPER(name) like :search or
+                       item_group_id IN (SELECT item_groups.id FROM item_groups WHERE UPPER(item_groups.name) like :search)',
         modal_query: 'nil'
     }
     if params[:ids].present?

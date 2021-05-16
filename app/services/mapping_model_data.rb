@@ -56,6 +56,7 @@ class MappingModelData
             #radio_helper(model_data_i.id, 'counterparty', '[id]','datatable-radio', 'data-dismiss="modal"'),
             model_data_i.name,
             model_data_i.unit,
+            model_data_i.item_group.name
             #model_data_i.item_type,
             #Float(model_data_i.price),
             #model_data_i.weight.present? ? Float(model_data_i.weight) : 0
@@ -68,8 +69,9 @@ class MappingModelData
             name:      model_data_i.name,
             unit:      model_data_i.unit,
             # item_type: model_data_i.item_type,
-            price:     0,#Float(model_data_i.price),
-            weight:    0#model_data_i.weight.present? ? Float(model_data_i.weight) : 0
+            price:     Float(model_data_i.price),
+            weight:    model_data_i.weight.present? ? Float(model_data_i.weight) : 0,
+            item_group:    model_data_i.item_group.name
         }
       end
     end

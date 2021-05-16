@@ -1,10 +1,25 @@
-- @used_materials.each_with_index do |item, item_counter|
+- summ = 0
+- @used_materials.each_with_index do |material, item_counter|
   %tr
     %td.table-10
       = item_counter + 1
     %td.table-40-left
-      = item[0].name
+      = material[0].name
     %td.table-10
-      = item[0].unit
+      = material[0].unit
     %td.table-10
-      = item[1]
+      = material[1]
+    %td.table-10
+      = material[0].price
+    %td.table-10
+      = material[0].price * material[1]
+      - summ = summ + material[0].price * material[1]
+%tr
+  %td
+  %td
+  %td
+  %td
+  %td
+    Итого:
+  %td
+    = summ

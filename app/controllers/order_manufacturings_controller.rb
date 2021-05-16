@@ -24,7 +24,8 @@ class OrderManufacturingsController < ApplicationController
         view_context: view_context,
         sort_column: %w[name unit],
         model: Item,
-        search_query: 'UPPER(name) like :search',
+        search_query: 'UPPER(name) like :search or
+                       item_group_id IN (SELECT item_groups.id FROM item_groups WHERE UPPER(item_groups.name) like :search)',
         modal_query: 'nil'
     }
     if params[:ids].present?
@@ -68,6 +69,7 @@ class OrderManufacturingsController < ApplicationController
   end
 
   def new
+    @item_groups = ItemGroup.all
     @o_m = OrderManufacturing.new
     if session[:o_m].present?
       @o_m.attributes = session[:o_m].as_json
@@ -82,10 +84,12 @@ class OrderManufacturingsController < ApplicationController
   end
 
   def edit
+    @item_groups = ItemGroup.all
     @o_m_details = @o_m.items
   end
 
   def update
+    @item_groups = ItemGroup.all
     o_m_files_in_o_m = @o_m.o_m_files
     @o_m.attributes = permit_params
     if permit_params[:o_m_files].present?

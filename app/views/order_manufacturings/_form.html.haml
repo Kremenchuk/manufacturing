@@ -175,6 +175,9 @@
               %th.table-4 V
               %th.table-40 Наименование
               %th.table-10 Ед. измерения
+              %th.table-10 Группа
+              .select-item-group
+                = select_tag "item_group", options_from_collection_for_select(@item_groups, "name", "name"), id:'item_group_in_o_m_d', include_blank: 'Все группы'
             %tbody
         .modal-footer
           = link_to 'Добавить', '#',class: 'btn btn-success', remote: true, 'data-dismiss': 'modal',
@@ -215,11 +218,13 @@
               %th.table-45 Наименование
               %th.table-10 Ед. изм.
               %th.table-10 Количество
+              %th.table-10 Цена
+              %th.table-10 Сумма
             %tbody#o_m-used-materials-table-body
       .modal-footer
         %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
 
--#модальне вікно використовуваного матерілу
+-#модальне вікно використаних робіт
 #used-jobs-modal.modal.fade{:role => 'dialog'}
   .modal-dialog
     .modal-content
@@ -233,7 +238,8 @@
               %th.table-10 №
               %th.table-45 Наименование
               %th.table-10 Количество
-              %th.table-10
+              %th.table-10 Цена
+              %th.table-10 Сумма
             %tbody#o_m-used-jobs-table-body
       .modal-footer
         %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close

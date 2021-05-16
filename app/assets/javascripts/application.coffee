@@ -93,7 +93,8 @@ $(document).ready ->
 
   $('#payroll-table').DataTable
     bServerSide: true
-    "language": window.dataTableJson
+    "language": window.dataTableJson,
+    "pageLength": 25
     ajax:
       url: $('#payroll-table').data('source')
       dataType: 'json'
@@ -112,7 +113,8 @@ $(document).ready ->
   $('#order_manufacturing-table').DataTable
     bServerSide: true
     #sAjaxSource: $('#order_manufacturing-table').data('source')
-    "language": window.dataTableJson
+    "language": window.dataTableJson,
+    "pageLength": 25
     ajax:
       url: $('#order_manufacturing-table').data('source')
       dataType: 'json'
@@ -144,7 +146,8 @@ $(document).ready ->
 
   $('#purchase_invoice-table').DataTable
     bServerSide: true
-    "language": window.dataTableJson
+    "language": window.dataTableJson,
+    "pageLength": 25
     ajax:
       url: $('#purchase_invoice-table').data('source')
       dataType: 'json'
@@ -168,7 +171,8 @@ $(document).ready ->
 
   $('#item-table').DataTable
     bServerSide: true
-    "language": window.dataTableJson
+    "language": window.dataTableJson,
+    "pageLength": 25
     ajax:
       url: $('#item-table').data('source')
       dataType: 'json'
@@ -178,12 +182,14 @@ $(document).ready ->
       { "data": "name" },
       { "data": "unit" },
       { "data": "price" },
-      { "data": "weight" }
+      { "data": "weight" },
+      { "data": "item_group"}
     ]
 
   $('#material-table').DataTable
     bServerSide: true
-    "language": window.dataTableJson
+    "language": window.dataTableJson,
+    "pageLength": 25
     ajax:
       url: $('#material-table').data('source')
       dataType: 'json'
@@ -198,7 +204,8 @@ $(document).ready ->
 
   $('#semi_finished-table').DataTable
     bServerSide: true
-    "language": window.dataTableJson
+    "language": window.dataTableJson,
+    "pageLength": 25
     ajax:
       url: $('#semi_finished-table').data('source')
       dataType: 'json'
@@ -214,7 +221,8 @@ $(document).ready ->
 
   $('#job-table').DataTable
     bServerSide: true
-    "language": window.dataTableJson
+    "language": window.dataTableJson,
+    "pageLength": 25
     ajax:
       url: $('#job-table').data('source')
       dataType: 'json'
@@ -229,7 +237,8 @@ $(document).ready ->
 
   $('#worker-table').DataTable
     bServerSide: true
-    "language": window.dataTableJson
+    "language": window.dataTableJson,
+    "pageLength": 25
     ajax:
       url: $('#worker-table').data('source')
       dataType: 'json'
@@ -243,7 +252,8 @@ $(document).ready ->
   $('#counterparty-table').DataTable
     bServerSide: true
     #sAjaxSource: $('#counterparty-table').data('source')
-    "language": window.dataTableJson
+    "language": window.dataTableJson,
+    "pageLength": 25
     ajax:
       url: $('#counterparty-table').data('source')
       dataType: 'json'
@@ -324,3 +334,17 @@ $(document).ready ->
       $(table_element[i]).attr("data-position", (i + 1));
       $(table_element[i].querySelector('.position-label')).html((i + 1))
       i++
+
+
+  $('#item_group_in_item').on 'change', (e) ->
+    filterGlobal()
+
+  filterGlobal = ->
+    $('#item-table').DataTable().search($('#item_group_in_item').val()).draw()
+
+
+  $('#item_group_in_o_m_d').on 'change', (e) ->
+    filterGlobalOM()
+
+  filterGlobalOM = ->
+    $('#o_m-details-datatable').DataTable().search($('#item_group_in_o_m_d').val()).draw()

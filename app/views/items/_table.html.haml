@@ -5,6 +5,9 @@
       %th.table-10 Ед. измерения
       %th.table-15 Себестоимость
       %th.table-15 Вес
+      %th.table-15 Группа
+      .select-item-group
+        = select_tag "item_group", options_from_collection_for_select(@item_groups, "name", "name"), id:'item_group_in_item', include_blank: 'Все группы'
     %tbody
 
 
