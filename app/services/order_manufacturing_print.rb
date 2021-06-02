@@ -38,10 +38,10 @@ class OrderManufacturingPrint
 
     @o_m.order_manufacturings_details.each do |stillage|
       # o_m_items << [stillage, stillage.qty, true]
+      print_hight_element(0, stillage.item, stillage.qty)
       stillage.item.details.each do |stillage_details|
         if stillage_details[3]
-          @next_row +=1
-          print_low_element(0, stillage_details, stillage_details[2] * stillage.qty)
+          print_low_element(4, stillage_details, stillage_details[2] * stillage.qty)
         else
           next
         end
@@ -165,89 +165,136 @@ class OrderManufacturingPrint
   end
 
 
+  def print_hight_element(pos, elem, qty)
+    @next_row += 1
+    fill_color = 'AFAFAF'
+    text_to_cell = elem.name
+    @book.cell(@next_row, 0,  text_to_cell ,{
+        :font_size            => 10,
+        :border               => [[:bottom, 'thin'], [:left, 'thin'], [:right, 'thin']],
+        :merge_cells          => {row: @next_row, col: 4},
+        :fill_color => fill_color
+    })
+
+    @book.cell(@next_row, 4, '',{
+        :col_width => 6,
+        :border => [[:bottom, 'thin'], [:left, 'thin'], [:right, 'thin']],
+        :fill_color => fill_color
+    })
+
+    @book.cell(@next_row, 5, '',{
+        :col_width => 6,
+        :border => [[:bottom, 'thin'], [:left, 'thin'], [:right, 'thin']],
+        :fill_color => fill_color
+    })
+
+    @book.cell(@next_row, 6, '',{
+        :col_width => 6,
+        :border => [[:bottom, 'thin'], [:left, 'thin'], [:right, 'thin']],
+        :fill_color => fill_color
+    })
+
+    @book.cell(@next_row, 7, qty,{
+        :border => [[:bottom, 'thin'], [:left, 'thin'], [:right, 'thin']],
+        :fill_color => fill_color
+    })
+
+    @book.cell(@next_row, 8, '',{
+        :border => [[:bottom, 'thin'], [:left, 'thin'], [:right, 'thin']],
+        :horizontal_alignment => 'center',
+        :fill_color => fill_color
+    })
+
+    @book.cell(@next_row, 9, '',{
+        :border => [[:bottom, 'thin'], [:left, 'thin'], [:right, 'thin']],
+        :fill_color => fill_color
+    })
+
+  end
+
   def print_low_element(pos, elem, qty)
 
     if elem[3]
-      @next_row += 1
       elem = find_db_element(elem)
       if elem[0].is_a? Material
         @all_material << [elem[0], qty]
-      end
-
-      if elem[0].is_a? Item
-        size_l = elem[0].size_l.to_i != 0 ? "L=#{elem[0].size_l.to_i}" : ''
-        size_a = elem[0].size_a.to_i != 0 ? "A=#{elem[0].size_a.to_i}" : ''
-        size_b = elem[0].size_b.to_i != 0 ? "B=#{elem[0].size_b.to_i}" : ''
-      end
-      # # Визначення кольору заливки вкладених елементів
-      if pos == 0
-        fill_color = 'AFAFAF'
       else
-        fill_color = 'FFFFFF'
-      end
+        @next_row += 1
+        if elem[0].is_a? Item
+          size_l = elem[0].size_l.to_i != 0 ? "L=#{elem[0].size_l.to_i}" : ''
+          size_a = elem[0].size_a.to_i != 0 ? "A=#{elem[0].size_a.to_i}" : ''
+          size_b = elem[0].size_b.to_i != 0 ? "B=#{elem[0].size_b.to_i}" : ''
+        end
+        # # Визначення кольору заливки вкладених елементів
+        if pos == 4
+          fill_color = 'AFAFAF'
+        else
+          fill_color = 'FFFFFF'
+        end
 
-      # @book.cell(@next_row, 0, @next_row - 6,{
-      #     :border => [[:bottom, 'thin'], [:left, 'thin'], [:right, 'thin']],
-      #     :fill_color => fill_color
-      # })
+        # @book.cell(@next_row, 0, @next_row - 6,{
+        #     :border => [[:bottom, 'thin'], [:left, 'thin'], [:right, 'thin']],
+        #     :fill_color => fill_color
+        # })
 
-      if elem[0].is_a? Job
-        text_to_cell = elem[0].name_for_print
-      else
-        text_to_cell = elem[0].name
-      end
-      @book.cell(@next_row, 0,  " " * pos + text_to_cell,{
-          :font_size            => 10,
-          :border               => [[:bottom, 'thin'], [:left, 'thin'], [:right, 'thin']],
-          :merge_cells          => {row: @next_row, col: 4},
-          :fill_color => fill_color
-      })
+        if elem[0].is_a? Job
+          text_to_cell = elem[0].name_for_print
+        else
+          text_to_cell = elem[0].name
+        end
+        @book.cell(@next_row, 0,  " " * pos + text_to_cell,{
+            :font_size            => 10,
+            :border               => [[:bottom, 'thin'], [:left, 'thin'], [:right, 'thin']],
+            :merge_cells          => {row: @next_row, col: 4},
+            :fill_color => fill_color
+        })
 
-      @book.cell(@next_row, 4, size_l,{
-          :col_width => 6,
-          :border => [[:bottom, 'thin'], [:left, 'thin'], [:right, 'thin']],
-          :fill_color => fill_color
-      })
+        @book.cell(@next_row, 4, size_l,{
+            :col_width => 6,
+            :border => [[:bottom, 'thin'], [:left, 'thin'], [:right, 'thin']],
+            :fill_color => fill_color
+        })
 
-      @book.cell(@next_row, 5, size_a,{
-          :col_width => 6,
-          :border => [[:bottom, 'thin'], [:left, 'thin'], [:right, 'thin']],
-          :fill_color => fill_color
-      })
+        @book.cell(@next_row, 5, size_a,{
+            :col_width => 6,
+            :border => [[:bottom, 'thin'], [:left, 'thin'], [:right, 'thin']],
+            :fill_color => fill_color
+        })
 
-      @book.cell(@next_row, 6, size_b,{
-          :col_width => 6,
-          :border => [[:bottom, 'thin'], [:left, 'thin'], [:right, 'thin']],
-          :fill_color => fill_color
-      })
+        @book.cell(@next_row, 6, size_b,{
+            :col_width => 6,
+            :border => [[:bottom, 'thin'], [:left, 'thin'], [:right, 'thin']],
+            :fill_color => fill_color
+        })
 
-      @book.cell(@next_row, 7, qty,{
-          :border => [[:bottom, 'thin'], [:left, 'thin'], [:right, 'thin']],
-          :fill_color => fill_color
-      })
+        @book.cell(@next_row, 7, qty,{
+            :border => [[:bottom, 'thin'], [:left, 'thin'], [:right, 'thin']],
+            :fill_color => fill_color
+        })
 
-      if elem[0].is_a? Job
-        text_to_cell = ''
-      else
-        text_to_cell = elem[0].unit
-      end
-      @book.cell(@next_row, 8, text_to_cell,{
-          :border => [[:bottom, 'thin'], [:left, 'thin'], [:right, 'thin']],
-          :horizontal_alignment => 'center',
-          :fill_color => fill_color
-      })
+        if elem[0].is_a? Job
+          text_to_cell = ''
+        else
+          text_to_cell = elem[0].unit
+        end
+        @book.cell(@next_row, 8, text_to_cell,{
+            :border => [[:bottom, 'thin'], [:left, 'thin'], [:right, 'thin']],
+            :horizontal_alignment => 'center',
+            :fill_color => fill_color
+        })
 
-      @book.cell(@next_row, 9, '',{
-          :border => [[:bottom, 'thin'], [:left, 'thin'], [:right, 'thin']],
-          :fill_color => fill_color
-      })
+        @book.cell(@next_row, 9, '',{
+            :border => [[:bottom, 'thin'], [:left, 'thin'], [:right, 'thin']],
+            :fill_color => fill_color
+        })
 
-      # -- Основное тело
+        # -- Основное тело
 
-      if elem[0].is_a? Item
-        pos += 4
-        elem[0].details.each do |item_details|
-          print_low_element(pos, item_details, item_details[2] * qty)
+        if elem[0].is_a? Item
+          pos += 4
+          elem[0].details.each do |item_details|
+            print_low_element(pos, item_details, item_details[2] * qty)
+          end
         end
       end
     else

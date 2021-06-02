@@ -21,27 +21,27 @@
           = f.select :unit, ['шт', 'м/п', 'кг'], {}, {class: 'form-control validate-field'}
         .form-group
           = f.label :area, 'Площадь'
-          = f.number_field :area, class: 'form-control', step: 0.00001
+          = f.number_field :area, class: 'form-control', step: 0.00001, autocomplete: :off
         .form-group
           = f.label :weight, 'Вес'
-          = f.number_field :weight, class: 'form-control', step: 0.0001
+          = f.number_field :weight, class: 'form-control', step: 0.0001, autocomplete: :off
         .form-group
           = f.label :volume, 'Объем'
-          = f.number_field :volume, class: 'form-control', step: 0.00000001
+          = f.number_field :volume, class: 'form-control', step: 0.00000001, autocomplete: :off
       .col-md-3
         .form-group
           = f.label :size_l, 'Длина'
-          = f.number_field :size_l, class: 'form-control', step: 1
+          = f.number_field :size_l, class: 'form-control', step: 1, autocomplete: :off
         .form-group
           = f.label :size_a, 'Размер А'
-          = f.number_field :size_a, class: 'form-control', step: 1
+          = f.number_field :size_a, class: 'form-control', step: 1, autocomplete: :off
         .form-group
           = f.label :size_b, 'Размер Б'
-          = f.number_field :size_b, class: 'form-control', step: 1
+          = f.number_field :size_b, class: 'form-control', step: 1, autocomplete: :off
         .form-group
           = f.label :item_group, 'Группа изделия'
           = link_to '', id: 'add_item_group_detail', remote: true, class: 'add_new_entity', 'data-toggle': 'modal', 'data-target': '#items_group-modal' do
-            = text_field_tag :item_group, @item.item_group.present? ? @item.item_group.name : nil, class: 'form-control validate-field', name: 'item[item_group]', id: 'item_group'
+            = text_field_tag :item_group, @item.item_group.present? ? @item.item_group.name : nil, class: 'form-control validate-field', name: 'item[item_group]', id: 'item_group', autocomplete: :off
       .col-md-4
         .form-group
           - @item.item_files.each_with_index do |item_file, index|
