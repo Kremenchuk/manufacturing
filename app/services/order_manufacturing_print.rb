@@ -175,20 +175,23 @@ class OrderManufacturingPrint
         :merge_cells          => {row: @next_row, col: 4},
         :fill_color => fill_color
     })
+    size_l = elem.size_l.present? ? "L=#{elem.size_l.to_i}" : ''
+    size_a = elem.size_a.present? ? "A=#{elem.size_a.to_i}" : ''
+    size_b = elem.size_b.present? ? "B=#{elem.size_b.to_i}" : ''
 
-    @book.cell(@next_row, 4, '',{
+    @book.cell(@next_row, 4, size_l,{
         :col_width => 6,
         :border => [[:bottom, 'thin'], [:left, 'thin'], [:right, 'thin']],
         :fill_color => fill_color
     })
 
-    @book.cell(@next_row, 5, '',{
+    @book.cell(@next_row, 5, size_a,{
         :col_width => 6,
         :border => [[:bottom, 'thin'], [:left, 'thin'], [:right, 'thin']],
         :fill_color => fill_color
     })
 
-    @book.cell(@next_row, 6, '',{
+    @book.cell(@next_row, 6, size_b,{
         :col_width => 6,
         :border => [[:bottom, 'thin'], [:left, 'thin'], [:right, 'thin']],
         :fill_color => fill_color
