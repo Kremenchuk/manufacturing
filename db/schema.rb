@@ -133,6 +133,7 @@ ActiveRecord::Schema.define(version: 1500) do
     t.integer  "p_i_status",      default: 0
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
+    t.text     "note"
     t.index ["counterparty_id"], name: "index_purchase_invoices_on_counterparty_id", using: :btree
   end
 

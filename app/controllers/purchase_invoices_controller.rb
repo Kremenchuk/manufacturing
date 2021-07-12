@@ -145,7 +145,7 @@ class PurchaseInvoicesController < ApplicationController
   end
 
   def permit_params
-    params.require(:purchase_invoice).permit(:number, :date, :total_price, :we_pay)
+    params.require(:purchase_invoice).permit(:number, :date, :total_price, :we_pay, :note)
     # :area, :weight, :volume,
   end
 

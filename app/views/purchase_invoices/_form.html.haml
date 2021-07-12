@@ -41,6 +41,10 @@
         .form-group
           = f.label :we_pay, 'Мы оплатили'
           = f.number_field :we_pay, class: 'form-control validate-field', autocomplete: :off, step: 0.001
+      .col-md-12
+        .form-group
+          = f.label :note, 'Примечание'
+          = f.text_area :note, class: 'form-control validate-field', autocomplete: :off
   .col-md-12.hidden-element
     .add-new-button
       = link_to '', id: 'add-material-details-to-p_i', remote: true, class: 'btn btn-default add_new_entity', 'data-toggle': 'modal', 'data-target': '#materials-modal' do
