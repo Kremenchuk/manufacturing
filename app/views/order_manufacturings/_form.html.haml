@@ -18,8 +18,9 @@
       - if @o_m.id.present?
         = link_to copy_o_m_path(@o_m.id), class: 'btn btn-default', title: 'Копировать' do
           %i.fa.fa-clone
-        = link_to order_manufacturing_path(@o_m.id), method: :delete, class: 'btn btn-danger', title: 'Удалить', data: {confirm: 'Точно удалить?'} do
-          %i.fa.fa-trash
+        -if can? :manage, :all
+          = link_to order_manufacturing_path(@o_m.id), method: :delete, class: 'btn btn-danger', title: 'Удалить', data: {confirm: 'Точно удалить?'} do
+            %i.fa.fa-trash
         = link_to o_m_automatic_print_path(@o_m.id), id: 'o_m_automatic_print', class: 'btn btn-default',  title: 'Печать с АВТОМАТИЧЕСКИМ объединением' do
           %i.fa.fa-print
           %i.fa.fa-laptop

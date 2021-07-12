@@ -7,9 +7,10 @@
             Убрать материалы со склада
           = hidden_field_tag('p_i_id', @p_i.id)
       -else
-        = link_to purchase_invoice_path(@p_i.id), method: :delete, class: 'btn btn-default', title: 'Удалить', data: {confirm: 'Точно удалить?'} do
-          %i.fa.fa-trash
-          = hidden_field_tag('p_i_id', @p_i.id)
+        -if can? :manage, :all
+          = link_to purchase_invoice_path(@p_i.id), method: :delete, class: 'btn btn-default', title: 'Удалить', data: {confirm: 'Точно удалить?'} do
+            %i.fa.fa-trash
+            = hidden_field_tag('p_i_id', @p_i.id)
         = link_to material_to_warehouse_path(@p_i.id), method: :put, class: 'btn btn-success', title: 'Внесение материала на склад', data: {confirm: 'Точно ВНЕСТИ материал на склад?'} do
           %i.fa.fa-cubes
             Внести материал на склад
