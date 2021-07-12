@@ -64,7 +64,7 @@ class JobsController < ApplicationController
   end
 
   def copy_job
-    @job.name = 'Новая работа'
+    # @job.name = 'Новая работа'
     @job.id = nil
     session[:job] = @job.attributes
     redirect_to new_job_path

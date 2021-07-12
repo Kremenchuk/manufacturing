@@ -145,7 +145,7 @@ class ItemsController < ApplicationController
   end
 
   def copy_item
-    @item.name = 'Новая продукция'
+    # item.name = 'Новая продукция'
     @item.id = nil
     session[:item] = @item.attributes
     session[:item_details] = @item.details

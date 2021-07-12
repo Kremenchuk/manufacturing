@@ -67,7 +67,7 @@ class MaterialsController < ApplicationController
   end
 
   def copy_material
-    @material.name = 'Новый материал'
+    # @material.name = 'Новый материал'
     @material.id = nil
     session[:material] = @material.attributes
     redirect_to new_material_path
