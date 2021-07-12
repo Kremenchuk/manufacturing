@@ -4,7 +4,7 @@ class Item < ApplicationRecord
   default_scope { order(created_at: :desc) }
 
   enum item_type: ['Коробчатый', 'Складской', 'Тележка', 'Другое']
-  enum unit: ['шт', 'м/п', 'кг', '%']
+  enum unit: ['шт', 'м/п', 'кг', 'комп.']
   enum for_sale: ['Не для продажи', 'Для продажи']
 
   has_many :order_manufacturings_details
