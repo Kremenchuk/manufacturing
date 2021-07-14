@@ -79,13 +79,13 @@ class JobsController < ApplicationController
   def create_update_action(job)
     begin
       job.save!
-      redirect_to root_path(active_tab: 'job')
+      redirect_to root_path(active_tab: 'job') and return
     rescue => e
       flash[:messages] = "'#{job.name}' наименование не уникально. Error: #{e}"
       flash[:class] = 'flash-error'
       flash[:class_element] = 'error-class'
       session[:job] = job
-      redirect_to new_job_path(copy: true)
+      redirect_to new_job_path(copy: true) and return
     end
   end
 

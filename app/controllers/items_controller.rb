@@ -199,12 +199,12 @@ class ItemsController < ApplicationController
       flash[:class] = 'flash-error'
       flash[:class_element] = 'error-class'
       session[:item] = item
-      redirect_to new_item_path(copy: true)
+      redirect_to new_item_path(copy: true) and return
     end
     if commit == 'Сохранить и выйти'
-      redirect_to root_path(active_tab: 'item')
+      redirect_to root_path(active_tab: 'item') and return
     else
-      redirect_to edit_item_path(item.id)
+      redirect_to edit_item_path(item.id) and return
     end
   end
 

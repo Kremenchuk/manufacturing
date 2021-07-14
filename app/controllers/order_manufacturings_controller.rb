@@ -205,13 +205,13 @@ class OrderManufacturingsController < ApplicationController
         flash[:class] = 'flash-error'
         flash[:class_element] = 'error-class'
         session[:o_m] = o_m
-        redirect_to new_order_manufacturing_path(copy: true)
+        redirect_to new_order_manufacturing_path(copy: true) and return
         return
       end
       if commit == 'Сохранить и выйти'
-        redirect_to root_path(active_tab: 'order_manufacturing')
+        redirect_to root_path(active_tab: 'order_manufacturing') and return
       else
-        redirect_to edit_order_manufacturing_path(o_m.id)
+        redirect_to edit_order_manufacturing_path(o_m.id) and return
       end
   end
 
