@@ -4,15 +4,28 @@
       - o_m_materials_price = 0
       - o_m_jobs_price = 0
 
-      -@o_m.used_materials.each do |material|
-        - o_m_materials_price = o_m_materials_price + material[0].price * material[1]
-      -@o_m.used_jobs.each do |job|
-        - o_m_jobs_price = o_m_jobs_price + job[0].price * job[1]
-      - o_m_jobs_taxes = (@o_m.payroll_taxes.present? ? ((@o_m.payroll_taxes / 100) * o_m_jobs_price).round(2) : (0.22 * o_m_jobs_price).round(2))
-      - o_m_indirect_costs = (@o_m.indirect_costs .present? ? ((@o_m.indirect_costs  / 100) * (@o_m.price + o_m_jobs_taxes)).round(2) : (0.16 * (@o_m.price + o_m_jobs_taxes)).round(2))
-      - o_m_extra_charge = (@o_m.extra_charge .present? ? (((@o_m.extra_charge  / 100) ) * (@o_m.price + o_m_jobs_taxes + o_m_indirect_costs)).round(2) : (0.25 * (@o_m.price + o_m_jobs_taxes + o_m_indirect_costs)).round(2))
-      - o_m_total_price = (@o_m.price + o_m_jobs_taxes + o_m_indirect_costs + o_m_extra_charge).round(2)
+      - if @o_m.used_materials
+        -@o_m.used_materials.each do |material|
+          - o_m_materials_price = o_m_materials_price + material[0].price * material[1]
+        -@o_m.used_jobs.each do |job|
+          - o_m_jobs_price = o_m_jobs_price + job[0].price * job[1]
+        - o_m_jobs_taxes = (@o_m.payroll_taxes.present? ? ((@o_m.payroll_taxes / 100) * o_m_jobs_price).round(2) : (0.22 * o_m_jobs_price).round(2))
+        - o_m_indirect_costs = (@o_m.indirect_costs .present? ? ((@o_m.indirect_costs  / 100) * (@o_m.price + o_m_jobs_taxes)).round(2) : (0.16 * (@o_m.price + o_m_jobs_taxes)).round(2))
+        - o_m_extra_charge = (@o_m.extra_charge .present? ? (((@o_m.extra_charge  / 100) ) * (@o_m.price + o_m_jobs_taxes + o_m_indirect_costs)).round(2) : (0.25 * (@o_m.price + o_m_jobs_taxes + o_m_indirect_costs)).round(2))
+        - o_m_total_price = (@o_m.price + o_m_jobs_taxes + o_m_indirect_costs + o_m_extra_charge).round(2)
 
+      - if o_m_materials_price.nil?
+        - o_m_materials_price = 0.0
+      - if o_m_jobs_price.nil?
+        - o_m_jobs_price = 0.0
+      - if o_m_jobs_taxes.nil?
+        - o_m_jobs_taxes = 0.0
+      - if o_m_indirect_costs.nil?
+        - o_m_indirect_costs = 0.0
+      - if o_m_extra_charge.nil?
+        - o_m_extra_charge = 0.0
+      - if o_m_total_price.nil?
+        - o_m_total_price = 0.0
 
 
       - if @o_m.id.present?
@@ -39,16 +52,16 @@
       .col-md-6
         .col-md-12
           = label_tag :cost_price, "Себестоимость: ", class: 'summ_materials_jobs'
-          = label_tag :cost_price, "#{@o_m.price.round(2)}", class: 'summ_materials_jobs'
+          = label_tag :cost_price, "#{@o_m.price.present? ? @o_m.price.round(2): 0.0}", class: 'summ_materials_jobs'
         .col-md-12
           = label_tag :materials_price, "Стоимость материалов: ", class: 'summ_materials_jobs'
           = label_tag :materials_price, "#{o_m_materials_price.round(2)}", class: 'summ_materials_jobs'
         .col-md-12
           = label_tag :indirect_costs_price, "Косвенные затраты: ", class: 'summ_materials_jobs'
-          = label_tag :indirect_costs_price, "#{o_m_indirect_costs.round(2)}", class: 'summ_materials_jobs'
+          = label_tag :indirect_costs_price, "#{o_m_indirect_costs.present? ? o_m_indirect_costs.round(2): 0.0}", class: 'summ_materials_jobs'
         .col-md-12
           = label_tag :extra_charge_price, "Сумма наценки: ", class: 'summ_materials_jobs'
-          = label_tag :extra_charge_price, "#{o_m_extra_charge.round(2)}", class: 'summ_materials_jobs'
+          = label_tag :extra_charge_price, "#{o_m_extra_charge.present? ? o_m_extra_charge.round(2): 0.0}", class: 'summ_materials_jobs'
       .col-md-6
         .col-md-12
           = label_tag :jobs_taxes_price, "Стоимость работы: ", class: 'summ_materials_jobs'

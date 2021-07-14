@@ -16,6 +16,7 @@ class OrderManufacturing < ApplicationRecord
   mount_uploaders :o_m_files, OmUploader
 
   def price
+    begin
     order_manufacturing_price = 0.0
     if self.order_manufacturings_details.present?
       self.order_manufacturings_details.each do |details|
@@ -23,9 +24,12 @@ class OrderManufacturing < ApplicationRecord
       end
     end
     return order_manufacturing_price
+    rescue
+    end
   end
 
   def weight
+    begin
     order_manufacturing_weight = 0.0
     if self.order_manufacturings_details.present?
       self.order_manufacturings_details.each do |details|
@@ -33,9 +37,12 @@ class OrderManufacturing < ApplicationRecord
       end
     end
     return order_manufacturing_weight
+    rescue
+    end
   end
 
   def volume
+    begin
     order_manufacturing_volume = 0.0
     if self.order_manufacturings_details.present?
       self.order_manufacturings_details.each do |details|
@@ -43,9 +50,12 @@ class OrderManufacturing < ApplicationRecord
       end
     end
     return order_manufacturing_volume
+      rescue
+    end
   end
 
   def used_materials
+    begin
     @o_m_used_materials = Array.new
     self.order_manufacturings_details.each do |stillage|
       # o_m_items << [stillage, stillage.qty, true]
@@ -58,6 +68,8 @@ class OrderManufacturing < ApplicationRecord
     @o_m_used_materials = marge_unit(@o_m_used_materials)
 
     return @o_m_used_materials
+    rescue
+    end
   end
 
   def used_jobs
@@ -79,6 +91,7 @@ class OrderManufacturing < ApplicationRecord
 private
 
   def find_materials_in_item(stillage_details, qty)
+    begin
     element = stillage_details[1].constantize.find(stillage_details[0])
     if element.is_a? Material
       @o_m_used_materials << [element, stillage_details[2] * qty]
@@ -88,6 +101,8 @@ private
           find_materials_in_item(element_details, stillage_details[2] * qty)
         end
       end
+    end
+    rescue
     end
   end
 
