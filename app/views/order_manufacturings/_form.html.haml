@@ -52,7 +52,7 @@
       .col-md-6
         .col-md-12
           = label_tag :cost_price, "Себестоимость: ", class: 'summ_materials_jobs'
-          = label_tag :cost_price, "#{@o_m.price.present? ? @o_m.price.round(2) + o_m_jobs_taxes.round(2): 0.0}", class: 'summ_materials_jobs'
+          = label_tag :cost_price, "#{@o_m.price.present? ? (@o_m.price + o_m_jobs_taxes).round(2): 0.0}", class: 'summ_materials_jobs'
         .col-md-12
           = label_tag :materials_price, "Стоимость материалов: ", class: 'summ_materials_jobs'
           = label_tag :materials_price, "#{o_m_materials_price.round(2)}", class: 'summ_materials_jobs'
