@@ -6,12 +6,15 @@ class OrderManufacturing < ApplicationRecord
   has_many :items, through: :order_manufacturings_details
   belongs_to :counterparty
   belongs_to :user
+  has_many :orders_manual_materials, dependent: :destroy
+  has_many :materials, through: :orders_manual_materials
+
 
   validates :number, :start_date, :finish_date,
             presence: true
 
   validates :number,
-      uniqueness: true
+      uniqueness:  { scope: [:start_date, :finish_date] }
 
   mount_uploaders :o_m_files, OmUploader
 
@@ -66,6 +69,14 @@ class OrderManufacturing < ApplicationRecord
 
     # Объединение одинаковых материалов
     @o_m_used_materials = marge_unit(@o_m_used_materials)
+
+    # округление количеств для материалов для которых задана настройка
+    @o_m_used_materials.each_with_index do |used_material, index|
+      if used_material[0].round_one
+        @o_m_used_materials[index][1] = @o_m_used_materials[index][1].ceil
+      end
+    end
+
 
     return @o_m_used_materials
     rescue

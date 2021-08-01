@@ -107,10 +107,10 @@ class ItemsController < ApplicationController
     @item = Item.new
     if session[:item].present?
       @item.attributes = session[:item].as_json
-      find_item_details(session[:item_details])
+      find_item_details(session[:details])
 
       session.delete(:item)
-      session.delete(:item_details)
+      session.delete(:details)
     end
   end
 
@@ -148,7 +148,7 @@ class ItemsController < ApplicationController
     # item.name = 'Новая продукция'
     @item.id = nil
     session[:item] = @item.attributes
-    session[:item_details] = @item.details
+    session[:details] = @item.details
     redirect_to new_item_path(item_type: params[:item_type])
   end
 
@@ -163,6 +163,7 @@ class ItemsController < ApplicationController
       flash[:class] = 'flash-error'
       flash[:class_element] = 'error-class'
       session[:item] = @item
+      session[:details] = @item.details
       exit -1
     end
     @item.item_files = remain_images
@@ -199,6 +200,7 @@ class ItemsController < ApplicationController
       flash[:class] = 'flash-error'
       flash[:class_element] = 'error-class'
       session[:item] = item
+      session[:details] = item.details
       redirect_to new_item_path(copy: true) and return
     end
     if commit == 'Сохранить и выйти'

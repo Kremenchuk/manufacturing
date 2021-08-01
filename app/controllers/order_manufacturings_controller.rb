@@ -2,7 +2,8 @@ class OrderManufacturingsController < ApplicationController
 
   # o_m -> order_manufacturing
 
-  before_action :find_o_m, only: [:edit, :update, :destroy, :copy_o_m, :o_m_pre_print, :o_m_used_materials, :o_m_used_jobs, :o_m_change_status, :remove_file_from_o_m]
+  before_action :find_o_m, only: [:edit, :update, :destroy, :copy_o_m, :o_m_pre_print, :o_m_used_materials, :o_m_used_jobs, :o_m_change_status, :remove_file_from_o_m, :o_m_write_off_materials,
+  :o_m_save_write_off_materials]
 
   def index
     data_hash = {
@@ -79,7 +80,7 @@ class OrderManufacturingsController < ApplicationController
       @o_m.start_date = nil
       @o_m.finish_date = nil
       @o_m.o_m_status = 0
-      session.delete(:o_m)
+      # session.delete(:o_m)
     end
   end
 
@@ -129,17 +130,12 @@ class OrderManufacturingsController < ApplicationController
 
   def o_m_change_status
     @o_m.o_m_status = params[:o_m_status]
-    if @o_m.save and @o_m.o_m_status == 1
-      @o_m.used_materials.each do |used_material|
-        used_material[0].qty -= used_material[1]
-        used_material[0].save!
-      end
-    end
     if @o_m.save and @o_m.o_m_status == 0
-      @o_m.used_materials.each do |used_material|
-        used_material[0].qty += used_material[1]
-        used_material[0].save!
+      @o_m.orders_manual_materials.each do |used_material|
+        used_material.material.qty += used_material.qty
+        used_material.material.save!
       end
+      @o_m.orders_manual_materials.destroy_all
     end
     redirect_to edit_order_manufacturing_path(@o_m.id)
   end
@@ -153,7 +149,14 @@ class OrderManufacturingsController < ApplicationController
   end
 
   def o_m_used_materials
-    @used_materials = @o_m.used_materials
+    @used_materials = Array.new
+    if @o_m.materials.present?
+      @used_materials << @o_m.orders_manual_materials
+      @used_materials << 0
+    else
+      @used_materials << @o_m.used_materials
+      @used_materials << 1
+    end
   end
 
   def o_m_used_jobs
@@ -178,11 +181,36 @@ class OrderManufacturingsController < ApplicationController
     redirect_to edit_order_manufacturing_path(@o_m)
   end
 
+  def o_m_write_off_materials
+    @used_materials = Array.new
+    @used_materials << @o_m.used_materials
+    @used_materials << 1
+  end
+
+  def o_m_save_write_off_materials
+    if permit_write_off_materials.present?
+      if @o_m.orders_manual_materials.present?
+        @o_m.orders_manual_materials.destroy!
+      end
+      permit_write_off_materials[:id].each_with_index do |material_id, index|
+        material = Material.find_by_id(material_id)
+        o_m_material = OrdersManualMaterial.new
+        o_m_material.material = material
+        o_m_material.order_manufacturing = @o_m
+        o_m_material.qty = permit_write_off_materials[:qty][index].to_f
+        o_m_material.save!
+        material.qty -= permit_write_off_materials[:qty][index].to_f
+        material.save!
+      end
+      @o_m.o_m_status = params[:o_m_status]
+      @o_m.save!
+    end
+    redirect_to edit_order_manufacturing_path(@o_m.id) and return
+  end
+
+
   private
 
-  # def o_m_pre_print(id)
-  #   OrderManufacturingPrint.new(id).prepare_print
-  # end
 
   def create_update_action(o_m, commit)
       o_m.counterparty = Counterparty.find_by(name: params[:order_manufacturing][:counterparty])
@@ -221,6 +249,10 @@ class OrderManufacturingsController < ApplicationController
 
   def permit_type_id_qty
     params.require('details').permit(id: [], qty: [])
+  end
+
+  def permit_write_off_materials
+    params.require('materials').permit(id: [], qty: [])
   end
 
   def find_o_m

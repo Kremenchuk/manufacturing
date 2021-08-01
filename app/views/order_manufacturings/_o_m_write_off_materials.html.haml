@@ -1,0 +1,51 @@
+- summ = 0
+- @used_materials[0].each_with_index do |material, item_counter|
+  -if material[0].manual_write_off
+    %tr.manual-write-off-material
+      %td{style: 'display: none'}
+        = text_field_tag "materials[id][]", material[0].id, id: "material_id_#{item_counter}"
+      %td.table-10
+        = item_counter + 1
+      %td.table-40-left
+        = material[0].name
+      %td.table-10
+        = material[0].unit
+      %td.table-10
+        = text_field_tag "materials[qty][]", material[1], id: "material_qty_#{item_counter}"
+      %td.table-10
+        = material[0].price
+      %td.table-10
+        = material[0].price * material[1]
+        - summ = summ + material[0].price * material[1]
+
+  -else
+    %tr
+      %td{style: 'display: none'}
+        = text_field_tag "materials[id][]", material[0].id, id: "material_id_#{item_counter}"
+      %td.table-10
+        = item_counter + 1
+      %td.table-40-left
+        = material[0].name
+      %td.table-10
+        = material[0].unit
+      %td.table-10
+        = text_field_tag "materials[qty][]", material[1], id: "material_qty_#{item_counter}", readonly: true
+      %td.table-10
+        = material[0].price
+      %td.table-10
+        = material[0].price * material[1]
+        - summ = summ + material[0].price * material[1]
+%tr
+  %td
+  %td
+  %td
+  %td
+  %td
+    Итого:
+  %td
+    = summ.round(2)
+
+
+
+
+

@@ -4,15 +4,45 @@
       - o_m_materials_price = 0
       - o_m_jobs_price = 0
 
-      - if @o_m.used_materials
-        -@o_m.used_materials.each do |material|
-          - o_m_materials_price = o_m_materials_price + material[0].price * material[1]
+      - if @o_m.id.present?
+        - if @o_m.orders_manual_materials.present?
+          -@o_m.orders_manual_materials.each do |orders_manual_material|
+            - o_m_materials_price = o_m_materials_price + orders_manual_material.material.price * orders_manual_material.qty
+        -else
+          - if @o_m.used_materials
+            -@o_m.used_materials.each do |material|
+              - o_m_materials_price = o_m_materials_price + material[0].price * material[1]
+
         -@o_m.used_jobs.each do |job|
           - o_m_jobs_price = o_m_jobs_price + job[0].price * job[1]
         - o_m_jobs_taxes = (@o_m.payroll_taxes.present? ? ((@o_m.payroll_taxes / 100) * o_m_jobs_price).round(2) : (0.22 * o_m_jobs_price).round(2))
-        - o_m_indirect_costs = (@o_m.indirect_costs .present? ? ((@o_m.indirect_costs  / 100) * (@o_m.price + o_m_jobs_taxes)).round(2) : (0.16 * (@o_m.price + o_m_jobs_taxes)).round(2))
-        - o_m_extra_charge = (@o_m.extra_charge .present? ? (((@o_m.extra_charge  / 100) ) * (@o_m.price + o_m_jobs_taxes + o_m_indirect_costs)).round(2) : (0.25 * (@o_m.price + o_m_jobs_taxes + o_m_indirect_costs)).round(2))
-        - o_m_total_price = (@o_m.price + o_m_jobs_taxes + o_m_indirect_costs + o_m_extra_charge).round(2)
+        - o_m_indirect_costs = (@o_m.indirect_costs .present? ? ((@o_m.indirect_costs  / 100) * (o_m_materials_price + o_m_jobs_taxes + o_m_jobs_price)).round(2) : (0.16 * (o_m_materials_price + o_m_jobs_taxes + o_m_jobs_price)).round(2))
+
+        - o_m_extra_charge = (@o_m.extra_charge .present? ? (((@o_m.extra_charge  / 100) ) * (o_m_materials_price + o_m_jobs_taxes + o_m_jobs_price + o_m_indirect_costs)).round(2) : (0.25 * (o_m_materials_price + o_m_jobs_taxes + o_m_jobs_price + o_m_indirect_costs)).round(2))
+        - o_m_total_price = (o_m_materials_price + o_m_jobs_taxes + o_m_indirect_costs + o_m_extra_charge + o_m_jobs_price).round(2)
+
+
+
+        = link_to copy_o_m_path(@o_m.id), class: 'btn btn-default', title: 'Копировать' do
+          %i.fa.fa-clone
+        -if can? :manage, :all
+          = link_to order_manufacturing_path(@o_m.id), method: :delete, class: 'btn btn-danger', title: 'Удалить', data: {confirm: 'Точно удалить?'} do
+            %i.fa.fa-trash
+        = link_to o_m_automatic_print_path(@o_m.id), id: 'o_m_automatic_print', class: 'btn btn-default',  title: 'Печать с АВТОМАТИЧЕСКИМ объединением' do
+          %i.fa.fa-print
+          %i.fa.fa-laptop
+          = link_to 'Используемые материалы', o_m_used_materials_path(@o_m.id), class: 'btn btn-default', 'data-toggle': 'modal', 'data-target': '#used-material-modal', remote: true
+          = link_to 'Используемые работы', o_m_used_jobs_path(@o_m.id), class: 'btn btn-default', 'data-toggle': 'modal', 'data-target': '#used-jobs-modal', remote: true
+        - unless @o_m.o_m_status == 0
+          = link_to 'Без статуса', o_m_change_status_path(@o_m.id, o_m_status: 0), class: 'btn btn-default', method: :put, data: {confirm: 'Материалы будут ВОЗВРАЩЕНЫ на склад!'}
+        - unless @o_m.o_m_status == 1
+          = link_to 'В работу', o_m_write_off_materials_path(@o_m.id, o_m_status: 1), class: 'btn btn-danger', 'data-toggle': 'modal', 'data-target': '#write-off-materils-modal', remote: true,
+          data: {confirm: 'Материалы будут СПИСАНЫ со склада!'}
+
+        - unless @o_m.o_m_status == 2
+          = link_to 'Готов', o_m_change_status_path(@o_m.id, o_m_status: 2), class: 'btn btn-warning', method: :put
+        - unless @o_m.o_m_status == 3
+          = link_to 'Отгружен', o_m_change_status_path(@o_m.id, o_m_status: 3), class: 'btn btn-success', method: :put
 
       - if o_m_materials_price.nil?
         - o_m_materials_price = 0.0
@@ -27,32 +57,11 @@
       - if o_m_total_price.nil?
         - o_m_total_price = 0.0
 
-
-      - if @o_m.id.present?
-        = link_to copy_o_m_path(@o_m.id), class: 'btn btn-default', title: 'Копировать' do
-          %i.fa.fa-clone
-        -if can? :manage, :all
-          = link_to order_manufacturing_path(@o_m.id), method: :delete, class: 'btn btn-danger', title: 'Удалить', data: {confirm: 'Точно удалить?'} do
-            %i.fa.fa-trash
-        = link_to o_m_automatic_print_path(@o_m.id), id: 'o_m_automatic_print', class: 'btn btn-default',  title: 'Печать с АВТОМАТИЧЕСКИМ объединением' do
-          %i.fa.fa-print
-          %i.fa.fa-laptop
-          = link_to 'Используемые материалы', o_m_used_materials_path(@o_m.id), class: 'btn btn-default', 'data-toggle': 'modal', 'data-target': '#used-material-modal', remote: true
-          = link_to 'Используемые работы', o_m_used_jobs_path(@o_m.id), class: 'btn btn-default', 'data-toggle': 'modal', 'data-target': '#used-jobs-modal', remote: true
-        - unless @o_m.o_m_status == 0
-          = link_to 'Без статуса', o_m_change_status_path(@o_m.id, o_m_status: 0), class: 'btn btn-default', method: :put, data: {confirm: 'Материалы будут ВОЗВРАЩЕНЫ на склад!'}
-        - unless @o_m.o_m_status == 1
-          = link_to 'В работу', o_m_change_status_path(@o_m.id, o_m_status: 1), class: 'btn btn-danger', method: :put, data: {confirm: 'Материалы будут СПИСАНЫ со склада!'}
-        - unless @o_m.o_m_status == 2
-          = link_to 'Готов', o_m_change_status_path(@o_m.id, o_m_status: 2), class: 'btn btn-warning', method: :put
-        - unless @o_m.o_m_status == 3
-          = link_to 'Отгружен', o_m_change_status_path(@o_m.id, o_m_status: 3), class: 'btn btn-success', method: :put
-
     .col-md-6
       .col-md-6
         .col-md-12
           = label_tag :cost_price, "Себестоимость: ", class: 'summ_materials_jobs'
-          = label_tag :cost_price, "#{@o_m.price.present? ? (@o_m.price + o_m_jobs_taxes).round(2): 0.0}", class: 'summ_materials_jobs'
+          = label_tag :cost_price, "#{@o_m.price.present? ? (o_m_materials_price + o_m_jobs_taxes + o_m_jobs_price).round(2): 0.0}", class: 'summ_materials_jobs'
         .col-md-12
           = label_tag :materials_price, "Стоимость материалов: ", class: 'summ_materials_jobs'
           = label_tag :materials_price, "#{o_m_materials_price.round(2)}", class: 'summ_materials_jobs'
@@ -65,7 +74,7 @@
       .col-md-6
         .col-md-12
           = label_tag :jobs_taxes_price, "Стоимость работы: ", class: 'summ_materials_jobs'
-          = label_tag :jobs_taxes_price, "#{o_m_jobs_price.round(2) + o_m_jobs_taxes.round(2)}", class: 'summ_materials_jobs'
+          = label_tag :jobs_taxes_price, "#{(o_m_jobs_price + o_m_jobs_taxes).round(2)}", class: 'summ_materials_jobs'
         .col-md-12
           = label_tag :jobs_price, "Стоимость работы без налогов: ", class: 'summ_materials_jobs'
           = label_tag :jobs_price, "#{o_m_jobs_price.round(2)}", class: 'summ_materials_jobs'
@@ -223,7 +232,7 @@
     .modal-content
       .modal-header
         %button.close{'data-dismiss': 'modal', type: 'button'} ×
-        %h4.modal-title Добавить
+        %h4.modal-title Используемые материалы
       .modal-body
         .col-md-12
           %table.table-materials-jobs-style
@@ -244,7 +253,7 @@
     .modal-content
       .modal-header
         %button.close{'data-dismiss': 'modal', type: 'button'} ×
-        %h4.modal-title Добавить
+        %h4.modal-title Используемые работы
       .modal-body
         .col-md-12
           %table.table-materials-jobs-style
@@ -257,31 +266,30 @@
             %tbody#o_m-used-jobs-table-body
       .modal-footer
         %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
+- if @o_m.id.present?
+  -#модальное окно списания материалов с ручным заданием количества материалов
+  #write-off-materils-modal.modal.fade{:role => 'dialog'}
+    .modal-dialog
+      .modal-content
+        = form_tag(o_m_save_write_off_materials_path(@o_m.id, o_m_status: 1), method: :put, id: 'o_m_write_off_materils_form') do
+          .modal-header
+            %button.close{'data-dismiss': 'modal', type: 'button'} ×
+            %h4.modal-title Списание материалов
+          .modal-body
+            .col-md-12
+              %table.table-materials-jobs-style
+                %thead
+                  %th.table-10 №
+                  %th.table-45 Наименование
+                  %th.table-10 Количество
+                  %th.table-10 Цена
+                  %th.table-10 Сумма
+                %tbody#o_m-write-off-materials-table-body
+          .modal-footer
+            = link_to 'Сохранить', '#',class: 'btn btn-success', 'data-dismiss': 'modal',
+              onclick: "$('#o_m_write_off_materils_form').submit()"
+            %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
 
--#- if @o_m.id.present?
--#  /модальне вікно для вибору об'єднання однакових виробів пуд час друку
--#  #o_m_details_pre_print-modal.modal.fade{:role => 'dialog'}
--#    .modal-dialog
--#      .modal-content
--#        = form_tag(o_m_hand_print_path(@o_m.id), method: :get, id: 'o_m_details_pre_print_form') do
--#          = text_area_tag('item_arr_to_print', '', {hidden: true})
--#          .modal-header
--#            %button.close{'data-dismiss': 'modal', type: 'button'} ×
--#            %h4.modal-title Сортировать
--#          .modal-body
--#            = check_box_tag('check_all_check_box', 1, false, {class: 'o_m_details_pre_print-class'})
--#            = label_tag('check_box_label', 'Выбрать все', class: 'checkbox-inline')
--#            %table#o_m_details_pre_print_form-datatable.display.datatable-table{'data-source': o_m_details_pre_print_datatable_url(@o_m.present? ? @o_m.id : nil ,format: 'json')}
--#              %thead
--#                %th.table-4 V
--#                %th.table-40 Наименование
--#                %th.table-10 Ед. измерения
--#                %th.table-10 Количество
--#              %tbody
--#          .modal-footer
--#            = link_to 'Печать', '#',class: 'btn btn-success', 'data-dismiss': 'modal',
--#              onclick: "$('#o_m_details_pre_print_form').submit()"
--#            %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
 
 
 :coffee

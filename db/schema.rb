@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 1500) do
+ActiveRecord::Schema.define(version: 1700) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -58,19 +58,21 @@ ActiveRecord::Schema.define(version: 1500) do
   end
 
   create_table "materials", force: :cascade do |t|
-    t.string   "name",                     null: false
-    t.integer  "unit",       default: 0,   null: false
-    t.float    "price",                    null: false
-    t.float    "weight",                   null: false
+    t.string   "name",                             null: false
+    t.integer  "unit",             default: 0,     null: false
+    t.float    "price",                            null: false
+    t.float    "weight",                           null: false
     t.float    "area"
     t.float    "volume"
     t.integer  "size_l"
     t.integer  "size_a"
     t.integer  "size_b"
     t.text     "note"
-    t.float    "qty",        default: 0.0
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.float    "qty",              default: 0.0
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+    t.boolean  "manual_write_off", default: false
+    t.boolean  "round_one",        default: false
   end
 
   create_table "order_manufacturings", force: :cascade do |t|
@@ -100,6 +102,16 @@ ActiveRecord::Schema.define(version: 1500) do
     t.float   "qty",                    null: false
     t.index ["item_id"], name: "index_order_manufacturings_details_on_item_id", using: :btree
     t.index ["order_manufacturing_id"], name: "index_order_manufacturings_details_on_order_manufacturing_id", using: :btree
+  end
+
+  create_table "orders_manual_materials", force: :cascade do |t|
+    t.integer  "order_manufacturing_id"
+    t.integer  "material_id"
+    t.float    "qty"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.index ["material_id"], name: "index_orders_manual_materials_on_material_id", using: :btree
+    t.index ["order_manufacturing_id"], name: "index_orders_manual_materials_on_order_manufacturing_id", using: :btree
   end
 
   create_table "payroll_details", force: :cascade do |t|

@@ -8,6 +8,8 @@ class Material < ApplicationRecord
 
   has_many :purchase_invoices_details
   has_many :purchase_invoices, through: :purchase_invoices_details
+  has_many :orders_manual_materials
+  has_many :order_manufacturings, through: :orders_manual_materials
 
   validates :name, :unit, :price, :weight,
             presence: true

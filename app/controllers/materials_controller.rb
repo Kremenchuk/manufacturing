@@ -76,7 +76,7 @@ class MaterialsController < ApplicationController
   private
 
   def permit_params
-    attributes = params.require(:material).permit(:id, :name, :unit, :weight, :area, :volume, :price, :size_a, :size_b,:note)
+    attributes = params.require(:material).permit(:id, :name, :manual_write_off, :round_one, :unit, :weight, :area, :volume, :price, :size_a, :size_b, :note)
     attributes[:price] = attributes[:price].gsub(',', '.')
     return attributes
   end

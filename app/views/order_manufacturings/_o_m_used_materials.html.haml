@@ -1,25 +1,51 @@
 - summ = 0
-- @used_materials.each_with_index do |material, item_counter|
+- if @used_materials[1] == 0
+  - @used_materials[0].each_with_index do |o_m_manual_material, item_counter|
+    %tr
+      %td.table-10
+        = item_counter + 1
+      %td.table-40-left
+        = o_m_manual_material.material.name
+      %td.table-10
+        = o_m_manual_material.material.unit
+      %td.table-10
+        = o_m_manual_material.qty
+      %td.table-10
+        = o_m_manual_material.material.price
+      %td.table-10
+        = o_m_manual_material.material.price * o_m_manual_material.qty
+        - summ = summ + o_m_manual_material.material.price * o_m_manual_material.qty
   %tr
-    %td.table-10
-      = item_counter + 1
-    %td.table-40-left
-      = material[0].name
-    %td.table-10
-      = material[0].unit
-    %td.table-10
-      = material[1]
-    %td.table-10
-      = material[0].price
-    %td.table-10
-      = material[0].price * material[1]
-      - summ = summ + material[0].price * material[1]
-%tr
-  %td
-  %td
-  %td
-  %td
-  %td
-    Итого:
-  %td
-    = summ
+    %td
+    %td
+    %td
+    %td
+    %td
+      Итого:
+    %td
+      = summ.round(2)
+-else
+  - @used_materials[0].each_with_index do |material, item_counter|
+    %tr
+      %td.table-10
+        = item_counter + 1
+      %td.table-40-left
+        = material[0].name
+      %td.table-10
+        = material[0].unit
+      %td.table-10
+        = material[1]
+      %td.table-10
+        = material[0].price
+      %td.table-10
+        = material[0].price * material[1]
+        - summ = summ + material[0].price * material[1]
+  %tr
+    %td
+    %td
+    %td
+    %td
+    %td
+      Итого:
+    %td
+      = summ.round(2)
