@@ -28,7 +28,7 @@
         -if can? :manage, :all
           = link_to order_manufacturing_path(@o_m.id), method: :delete, class: 'btn btn-danger', title: 'Удалить', data: {confirm: 'Точно удалить?'} do
             %i.fa.fa-trash
-        = link_to o_m_automatic_print_path(@o_m.id), id: 'o_m_automatic_print', class: 'btn btn-default',  title: 'Печать с АВТОМАТИЧЕСКИМ объединением' do
+        = link_to automatic_print_order_manufacturing_path(@o_m.id), id: 'automatic_print', class: 'btn btn-default',  title: 'Печать с АВТОМАТИЧЕСКИМ объединением' do
           %i.fa.fa-print
           %i.fa.fa-laptop
           = link_to 'Используемые материалы', o_m_used_materials_path(@o_m.id), class: 'btn btn-default', 'data-toggle': 'modal', 'data-target': '#used-material-modal', remote: true
@@ -193,7 +193,7 @@
           %button.close{'data-dismiss': 'modal', type: 'button'} ×
           %h4.modal-title Добавить
         .modal-body
-          %table#o_m-details-datatable.display.datatable-table{'data-source': o_m_details_datatable_url(format: 'json')}
+          %table#o_m-details-datatable.display.datatable-table{'data-source': details_datatable_order_manufacturing_url(format: 'json')}
             %thead
               %th.table-4 V
               %th.table-40 Наименование
@@ -388,7 +388,7 @@
       event.stopPropagation()
       arrayToPrint()
 
-    # $('body').on 'submit', '#o_m_automatic_print_form', (event) ->
+    # $('body').on 'submit', '#automatic_print_form', (event) ->
     $('body').on 'submit', '#o_m_details_pre_print_form', (event) ->
       arrayToPrint()
 
@@ -450,7 +450,7 @@
 
     #Відмітити всі check_box на сторінці
     $('#check_all_check_box').click ->
-      # $('#o_m_automatic_print_form')
+      # $('#automatic_print_form')
       $('.o_m_details_pre_print-class').prop('checked', this.checked)
 
     $('.calculated_field').on 'click', (e) ->

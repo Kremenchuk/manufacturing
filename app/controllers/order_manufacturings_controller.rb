@@ -20,7 +20,7 @@ class OrderManufacturingsController < ApplicationController
     end
   end
 
-  def o_m_details_datatable
+  def details_datatable
     data_hash = {
         view_context: view_context,
         sort_column: %w[name unit],
@@ -54,7 +54,7 @@ class OrderManufacturingsController < ApplicationController
     end
   end
 
-  def o_m_details_pre_print_datatable
+  def details_pre_print_datatable
     data_hash = {
         view_context: view_context,
         sort_column: %w[name unit qty],
@@ -141,7 +141,7 @@ class OrderManufacturingsController < ApplicationController
   end
 
 
-  def o_m_automatic_print
+  def automatic_print
     excel_file = OrderManufacturingPrint.new(params[:id])
     excel_file.print
     # redirect_to edit_order_manufacturing_path(params[:id])

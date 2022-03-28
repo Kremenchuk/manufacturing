@@ -51,7 +51,7 @@
           %button.close{'data-dismiss': 'modal', type: 'button'} ×
           %h4.modal-title Добавить
         .modal-body
-          %table#o_m-details-datatable.display.datatable-table{'data-source': o_m_details_datatable_url(format: 'json')}
+          %table#o_m-details-datatable.display.datatable-table{'data-source': details_datatable_order_manufacturing_url(format: 'json')}
             %thead
               %th.table-4 V
               %th.table-40 Наименование
@@ -121,7 +121,7 @@
 -#          .modal-body
 -#            = check_box_tag('check_all_check_box', 1, false, {class: 'o_m_details_pre_print-class'})
 -#            = label_tag('check_box_label', 'Выбрать все', class: 'checkbox-inline')
--#            %table#o_m_details_pre_print_form-datatable.display.datatable-table{'data-source': o_m_details_pre_print_datatable_url(@o_m.present? ? @o_m.id : nil ,format: 'json')}
+-#            %table#o_m_details_pre_print_form-datatable.display.datatable-table{'data-source': details_pre_print_datatable_url(@o_m.present? ? @o_m.id : nil ,format: 'json')}
 -#              %thead
 -#                %th.table-4 V
 -#                %th.table-40 Наименование
@@ -229,7 +229,7 @@
       event.stopPropagation()
       arrayToPrint()
 
-    # $('body').on 'submit', '#o_m_automatic_print_form', (event) ->
+    # $('body').on 'submit', '#automatic_print_form', (event) ->
     $('body').on 'submit', '#o_m_details_pre_print_form', (event) ->
       arrayToPrint()
 
@@ -291,7 +291,7 @@
 
     #Відмітити всі check_box на сторінці
     $('#check_all_check_box').click ->
-      # $('#o_m_automatic_print_form')
+      # $('#automatic_print_form')
       $('.o_m_details_pre_print-class').prop('checked', this.checked)
 
     $('.calculated_field').on 'click', (e) ->

@@ -7,11 +7,11 @@ Rails.application.routes.draw do
     resources :users
 
   #order_manufacturings
-    resources :order_manufacturings
-    get 'o_m_details_datatable' => 'order_manufacturings#o_m_details_datatable'
-    get 'o_m_details_pre_print_datatable/:id' => 'order_manufacturings#o_m_details_pre_print_datatable', as: 'o_m_details_pre_print_datatable'
-
-    get 'o_m_automatic_print/:id' => 'order_manufacturings#o_m_automatic_print', as: 'o_m_automatic_print'
+    resources :order_manufacturings do
+      get :details_datatable, on: :member
+      get :details_pre_print_datatable, on: :member
+      get :automatic_print, on: :member
+    end
 
     get 'copy_o_m/:id' => 'order_manufacturings#copy_o_m', as: 'copy_o_m'
     get 'add_o_m_detail' => 'order_manufacturings#add_o_m_detail'
