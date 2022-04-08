@@ -1,14 +1,11 @@
 class WorkWithExcel
   require 'rubyXL/convenience_methods'
+  attr_reader :file_name
 
-  def initialize(file_path)
-    @file_path = file_path
+  def initialize(file_name)
+    @file_name = file_name
     @book = RubyXL::Workbook.new
     @sheet = @book[0]
-  end
-
-  def file_name
-    @file_path
   end
 
   def sheet(number = 0)
@@ -29,12 +26,8 @@ class WorkWithExcel
     options[:fill_color].present?             ? @sheet[row][col].change_fill(options[:fill_color])              : nil
   end
 
-  def save(file_path = nil)
-    if file_path.present?
-      @book.write file_path
-    else
-      @book.write @file_path
-    end
+  def save
+    @book.write file_name
   end
 
   private

@@ -1,0 +1,10 @@
+- @item_inclusions.each do |item_inclusion|
+  - claimant = @job || @item || @material
+  - link_path = case claimant.class.to_s
+  - when 'Material'
+    - edit_material_path(id: item_inclusion.id, path_to_return: edit_item_path, breadcrumb_name: claimant.name)
+  - when 'Job'
+    - edit_job_path(id: item_inclusion.id, path_to_return: edit_item_path, breadcrumb_name: claimant.name)
+  - when 'Item'
+    - edit_item_path(id: item_inclusion.id, path_to_return: edit_item_path, breadcrumb_name: claimant.name)
+  = link_to item_inclusion.name, link_path, class: 'btn btn-default'

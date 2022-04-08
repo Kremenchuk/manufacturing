@@ -4,31 +4,31 @@
       %ul.nav.nav-pills.nav-stacked
         -if can? :manage, PurchaseInvoice
           %li#purchase_invoice-li.tabs-class.active
-            =link_to 'Приходные накладные' , '#purchase_invoice', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+            =link_to t('menu.purchase_invoice') , '#purchase_invoice', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
         -if can? :manage, OrderManufacturing
           %li#order_manufacturing-li.tabs-class
-            =link_to 'Наряды в производство' , '#order_manufacturing', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+            =link_to t('menu.order_manufacturing') , '#order_manufacturing', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
         -if can? :manage, Payroll
           %li#payroll-li.tabs-class
-            =link_to 'Зарплатные ведомости' , '#payroll', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+            =link_to t('menu.payroll') , '#payroll', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
         -if can? :manage, Item
           %li#item-li.tabs-class
-            =link_to 'Продукция' , '#item', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+            =link_to t('menu.item') , '#item', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
         -if can? :manage, Material
           %li#material-li.tabs-class
-            =link_to 'Материалы' , '#material', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+            =link_to t('menu.material') , '#material', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
         -if can? :manage, Job
           %li#job-li.tabs-class
-            =link_to 'Работы' , '#job', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+            =link_to t('menu.job') , '#job', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
         -if can? :manage, Worker
           %li#worker-li.tabs-class
-            =link_to 'Работники' , '#worker', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+            =link_to t('menu.worker') , '#worker', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
         -if can? :manage, Counterparty
           %li#counterparty-li.tabs-class
-            =link_to 'Контрагенты' , '#counterparty', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+            =link_to t('menu.counterparties') , '#counterparty', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
         -if can? :manage, :all
           %li#administration-li.tabs-class
-            =link_to 'Администрирование' , '#administration', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+            =link_to t('menu.administrate') , '#administration', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
 
 
 

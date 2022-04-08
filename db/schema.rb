@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 1700) do
+ActiveRecord::Schema.define(version: 20220405065236) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,18 @@ ActiveRecord::Schema.define(version: 1700) do
     t.datetime "updated_at",             null: false
   end
 
+  create_table "item_details", force: :cascade do |t|
+    t.integer  "item_id",                        null: false
+    t.string   "detailable_type"
+    t.integer  "detailable_id"
+    t.float    "qty",             default: 0.0,  null: false
+    t.boolean  "print_in_o_m",    default: true
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.index ["detailable_type", "detailable_id"], name: "index_item_details_on_detailable_type_and_detailable_id", using: :btree
+    t.index ["item_id"], name: "index_item_details_on_item_id", using: :btree
+  end
+
   create_table "item_groups", force: :cascade do |t|
     t.string   "name",                   null: false
     t.integer  "range",      default: 0
@@ -31,30 +43,31 @@ ActiveRecord::Schema.define(version: 1700) do
   end
 
   create_table "items", force: :cascade do |t|
-    t.string   "name",                         null: false
-    t.integer  "unit",          default: 0,    null: false
-    t.boolean  "for_sale",      default: true
+    t.string   "name",                               null: false
+    t.integer  "unit",                default: 0,    null: false
+    t.boolean  "for_sale",            default: true
     t.float    "size_l"
     t.float    "size_a"
     t.float    "size_b"
     t.float    "area"
     t.float    "volume"
-    t.json     "details",       default: {}
     t.integer  "item_group_id"
     t.json     "item_files"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.boolean  "print_in_collection", default: true
     t.index ["item_group_id"], name: "index_items_on_item_group_id", using: :btree
     t.index ["name"], name: "index_items_on_name", unique: true, using: :btree
   end
 
   create_table "jobs", force: :cascade do |t|
-    t.string   "name",           null: false
-    t.string   "name_for_print", null: false
-    t.float    "price",          null: false
-    t.integer  "time",           null: false
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.string   "name",                               null: false
+    t.string   "name_for_print",                     null: false
+    t.float    "price",                              null: false
+    t.integer  "time",                               null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.boolean  "print_in_collection", default: true
   end
 
   create_table "materials", force: :cascade do |t|
@@ -166,19 +179,20 @@ ActiveRecord::Schema.define(version: 1700) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                  default: "", null: false
-    t.string   "encrypted_password",     default: "", null: false
+    t.string   "email",                  default: "",   null: false
+    t.string   "encrypted_password",     default: "",   null: false
     t.integer  "role_id"
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,  null: false
+    t.integer  "sign_in_count",          default: 0,    null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+    t.string   "locale",                 default: "ru"
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
     t.index ["role_id"], name: "index_users_on_role_id", using: :btree

@@ -14,7 +14,7 @@
     %td.position{style: 'text-align: center;'}
       = label_tag 'position', position, class: 'position-label'
     %td
-      = item.name
+      = link_to item.name, edit_item_path(id: item.id, path_to_return: URI(request.fullpath).path, breadcrumb_name: @o_m.number)
     %td.unit-field{'data-counter': item_counter, id: "unit_#{item_counter}"}
       = item.unit
     %td
@@ -22,6 +22,6 @@
     %td{id: "price_#{item_counter}"}
       = item.price.round(2)
     %td.sum_field{id: "sum_#{item_counter}", 'data-counter': item_counter}
-      = item_sum.round(2)
+      = item_sum.to_f.round(2)
     %td.remove_row{id: "remove_#{item_counter}", 'data-counter': item_counter}
 

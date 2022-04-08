@@ -23,6 +23,7 @@ class CounterpartiesController < ApplicationController
   end
 
   def edit
+    add_returning_path
   end
 
   def update
@@ -38,7 +39,7 @@ class CounterpartiesController < ApplicationController
 
   def destroy
     @counterparty.destroy!
-    flash[:messages] = "'#{@counterparty.name}' удалено"
+    flash[:messages] = "'#{@counterparty.name}' #{t('all_form.deleted')}"
     flash[:class] = 'flash-success'
     redirect_to root_path(active_tab: 'counterparty')
   end

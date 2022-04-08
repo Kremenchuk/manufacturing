@@ -1,7 +1,7 @@
 class JobsController < ApplicationController
 
   before_action :permit_params, only: [:create, :update]
-  before_action :find_job, only: [:edit, :update, :destroy, :copy_job]
+  before_action :find_job, only: [:edit, :update, :destroy, :copy_job, :item_inclusions]
 
   def index
     data_hash = {
@@ -49,6 +49,7 @@ class JobsController < ApplicationController
   end
 
   def edit
+    add_returning_path
   end
 
   def update
@@ -57,10 +58,16 @@ class JobsController < ApplicationController
   end
 
   def destroy
-    @job.destroy!
-    flash[:messages] = "'#{@job.name}' удалено"
-    flash[:class] = 'flash-success'
-    redirect_to root_path(active_tab: 'job')
+    if find_item_inclusions(@job).present?
+      flash[:messages] = t('jobs.cant_delete')
+      flash[:class] = 'flash-error'
+      redirect_to edit_job_path(@job)
+    else
+      @job.destroy
+      flash[:messages] = "'#{@job.name}' #{t('all_form.deleted')}"
+      flash[:class] = 'flash-success'
+      redirect_to root_path(active_tab: 'job')
+    end
   end
 
   def copy_job
@@ -72,6 +79,11 @@ class JobsController < ApplicationController
 
   def create
     create_update_action(Job.new(permit_params))
+  end
+
+  def item_inclusions
+    @item_inclusions = find_item_inclusions(@job)
+    render 'layouts/item_inclusions'
   end
 
   private
@@ -90,7 +102,7 @@ class JobsController < ApplicationController
   end
 
   def permit_params
-    params.require(:job).permit(:name, :name_for_print,:price, :time)
+    params.require(:job).permit(:name, :name_for_print,:price, :time, :print_in_collection)
   end
 
   def find_job

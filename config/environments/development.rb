@@ -8,7 +8,8 @@ Rails.application.configure do
 
   # Do not eager load code on boot.
   config.eager_load = false
-
+  config.log_level = :info
+  config.logger = ActiveSupport::Logger.new(config.paths['log'].first, 0, 50 * 1024)
   # Show full error reports.
   config.consider_all_requests_local = true
 

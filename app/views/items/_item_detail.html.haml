@@ -1,17 +1,20 @@
-- @item_details.each_with_index do |item, item_counter|
-  - item_qty = item[1]
+- @item_details.each_with_index do |detail, item_counter|
+  - item_detail = detail.is_a?(Array) ? detail[0] : detail.detailable
+  - item_qty = detail.is_a?(Array) ? detail[1] : detail.qty
   - position = item_counter + 1
-  - item_sum = Float(item[0].price) * Float(item_qty)
+  - item_sum = Float(item_detail.price) * Float(item_qty)
+  - print = detail.is_a?(Array) ? true : detail.print_in_o_m
+
   %tr{class: 'position_details_line', 'data-position': position}
     %td{style: 'display: none'}
-      = text_field_tag 'details[id][]', item[0].id, id: "item_id_#{item_counter}", class: "#{item[0].class.to_s.downcase}_id_class"
+      = text_field_tag 'details[id][]', item_detail.id, id: "item_id_#{item_counter}", class: "#{item_detail.class.to_s.downcase}_id_class"
     %td{style: 'display: none'}
-      - if item[0].class == Item || item[0].class == Material
-        = text_field_tag 'item_weight', item[0].weight.present? ? item[0].weight : 0, id: "item_weight_#{item_counter}", class: 'weight_class', 'data-counter': item_counter
+      - if item_detail.class == Item || item_detail.class == Material
+        = text_field_tag 'item_weight', item_detail.weight.present? ? item_detail.weight : 0, id: "item_weight_#{item_counter}", class: 'weight_class', 'data-counter': item_counter
       -else
         = text_field_tag 'item_weight', 0, id: "item_weight_#{item_counter}", class: 'weight_class', 'data-counter': item_counter
     %td{style: 'display: none'}
-      = text_field_tag 'details[details_type][]', item[0].class.to_s, id: "type_item_#{item_counter}"
+      = text_field_tag 'details[details_type][]', item_detail.class.to_s, id: "type_item_#{item_counter}"
     %td.position{style: 'text-align: center;'}
       = label_tag 'position', position, class: 'position-label'
       .position-menu
@@ -22,26 +25,33 @@
           = link_to '', class: 'down_item_details', onclick: 'moveTrPositionDetails(event, this, 1);' do
             %i.fa.fa-arrow-down
     %td
-      = item[0].name
-    - if item[0].class == Item || item[0].class == Material
+      - if @item.present?
+        - link_path = case item_detail.class.to_s
+        - when 'Material'
+          - edit_material_path(id: item_detail.id, path_to_return: URI(request.fullpath).path, breadcrumb_name: @item.name)
+        - when 'Job'
+          - edit_job_path(id: item_detail.id, path_to_return: URI(request.fullpath).path, breadcrumb_name: @item.name)
+        - when 'Item'
+          - edit_item_path(id: item_detail.id, path_to_return: URI(request.fullpath).path, breadcrumb_name: @item.name)
+        = link_to item_detail.name, link_path
+      - else
+        = item_detail.name
+    %td
+      = image_tag "#{item_detail.class.to_s.downcase}.png", {style: 'width: 100%;'}
+
+    - if item_detail.class == Item || item_detail.class == Material
       %td.unit-field{'data-counter': item_counter, id: "unit_#{item_counter}"}
-        = item[0].unit
+        = item_detail.unit
     -else
       %td.unit-field{'data-counter': item_counter, id: "unit_#{item_counter}"}
         шт
     %td
       = number_field_tag 'details[qty][]', item_qty, step: 0.000001, class: 'form-control calculated_field', id: "qty_#{item_counter}", 'data-counter': item_counter
     %td{id: "price_#{item_counter}"}
-      = item[0].price
+      = item_detail.price
     %td.sum_field{id: "sum_#{item_counter}", 'data-counter': item_counter}
-      = item_sum
+      = item_sum.to_f.round(2)
     %td.table-4
-      - if item[2]
-        - print = true
-      - if !item[2]
-        - print = false
-      - if item[2].nil?
-        - print = true
-      = check_box_tag 'details[print][]', item[0].id, print, {id: "print_#{item_counter}"}
+      = check_box_tag 'details[print][]', item_detail.id, print, {id: "print_#{item_counter}"}
     %td.remove_row{id: "remove_#{item_counter}", 'data-counter': item_counter}
 

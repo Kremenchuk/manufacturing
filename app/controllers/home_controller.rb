@@ -1,7 +1,7 @@
 class HomeController < ApplicationController
 
   def index
-    @roles = Role.all
+    session[:path_to_return] = []
     @item_groups = ItemGroup.all
     @users = User.all
     @roles = Role.all

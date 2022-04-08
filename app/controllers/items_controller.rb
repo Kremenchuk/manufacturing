@@ -1,7 +1,6 @@
 class ItemsController < ApplicationController
-
-
-  before_action :find_item, only: [:edit, :update, :destroy, :copy_item, :remove_file_from_item]
+  before_action :find_item, only: [:edit, :update, :destroy, :copy_item, :remove_file_from_item, :item_details_datatable,
+                                   :item_inclusions]
 
   def index
     data_hash = {
@@ -18,6 +17,7 @@ class ItemsController < ApplicationController
   end
 
   def item_details_datatable
+    ids = (find_item_inclusions(@items) + params[:ids]).join(',')
     data_hash = {
         view_context: view_context,
         sort_column: %w[name unit item_group],
@@ -26,8 +26,8 @@ class ItemsController < ApplicationController
                        item_group_id IN (SELECT item_groups.id FROM item_groups WHERE UPPER(item_groups.name) like :search)',
         modal_query: 'nil'
     }
-    if params[:ids].present?
-      data_hash[:modal_query] = "id NOT IN (#{params[:ids].join(',')})"
+    if ids.present?
+      data_hash[:modal_query] = "id NOT IN (#{ids})"
     end
 
     respond_to do |format|
@@ -76,7 +76,7 @@ class ItemsController < ApplicationController
 
   def add_item_detail
     @item_details = Array.new
-    params.permit('entity')
+    # params.permit('entity')
     case params[:entity]
       when 'item'
         params.require('item').permit('id')
@@ -105,17 +105,22 @@ class ItemsController < ApplicationController
 
   def new
     @item = Item.new
-    if session[:item].present?
-      @item.attributes = session[:item].as_json
-      find_item_details(session[:details])
+    @copyied = false
+    if session[:item_id].present?
+      @copyied = true
+      copied_item = Item.find(session[:item_id])
+      @item.attributes = copied_item.attributes
+      @item.id = nil
+      @item.item_details = copied_item.item_details
+      @item_details = @item.item_details
 
-      session.delete(:item)
-      session.delete(:details)
+      session.delete(:item_id)
     end
   end
 
   def edit
-    find_item_details(@item.details)
+    add_returning_path
+    @item_details = @item.item_details
   end
 
   def update
@@ -134,22 +139,25 @@ class ItemsController < ApplicationController
   end
 
   def destroy
-    if @item.destroy!
-      flash[:messages] = "'#{@item.name}' удалено"
-      flash[:class] = 'flash-success'
-      redirect_to root_path(active_tab: 'item')
-    else
-      flash[:messages] = "'#{@item.name}' не удалено #{@item.errors}"
+    if find_item_inclusions(@items).present?
+      flash[:messages] = t('items.cant_delete')
       flash[:class] = 'flash-error'
+      redirect_to edit_item_path(@item)
+    else
+      if @item.destroy
+        flash[:messages] = "'#{@item.name}' #{t('all_form.deleted')}"
+        flash[:class] = 'flash-success'
+        redirect_to root_path(active_tab: 'item')
+      else
+        flash[:messages] = "'#{@item.name}' #{t('all_form.not_deleted')} #{@item.errors}"
+        flash[:class] = 'flash-error'
+      end
     end
   end
 
   def copy_item
-    # item.name = 'Новая продукция'
-    @item.id = nil
-    session[:item] = @item.attributes
-    session[:details] = @item.details
-    redirect_to new_item_path(item_type: params[:item_type])
+    session[:item_id] = @item.id
+    redirect_to new_item_path
   end
 
 
@@ -163,7 +171,7 @@ class ItemsController < ApplicationController
       flash[:class] = 'flash-error'
       flash[:class_element] = 'error-class'
       session[:item] = @item
-      session[:details] = @item.details
+      session[:details] = @item.item_details
       exit -1
     end
     @item.item_files = remain_images
@@ -172,61 +180,55 @@ class ItemsController < ApplicationController
     redirect_to edit_item_path(@item)
   end
 
+  def item_inclusions
+    @item_inclusions = find_item_inclusions(@item)
+    render 'layouts/item_inclusions'
+  end
+
   private
 
   def create_update_action(item, commit)
     begin
-      item.item_group = ItemGroup.find_by(name: params[:item][:item_group])
-      details = Array.new
-      if item.present? && params['details'].present?
-        param_details = permit_type_id_qty
-        param_details[:id].each_with_index do |el, index|
-          details_el = Array.new
-          details_el << el.to_i
-          details_el << param_details[:details_type][index]
-          details_el << param_details[:qty][index].to_f
-          if param_details[:print].present?
-            details_el << param_details[:print].include?(el) ? true : false
-          else
-            details_el << false
+      ItemDetail.transaction do
+        Item.transaction do
+          item.item_group = ItemGroup.find_by(name: params[:item][:item_group])
+          item.save!
+          if params['details'].present?
+            item.item_details.destroy_all
+            param_details = permit_type_id_qty
+            param_details[:id].each_with_index do |el, index|
+              ItemDetail.create!(
+                item: item,
+                detailable: param_details[:details_type][index].constantize.find(el),
+                qty: param_details[:qty][index].to_f,
+                print_in_o_m: if param_details[:print].present?
+                                param_details[:print].include?(el) ? true : false
+                              else
+                                false
+                              end
+
+              )
+            end
           end
-          details << details_el
         end
       end
-      item.details = details
-      item.save!
     rescue => e
-      flash[:messages] = "'#{item.name}' наименование не уникально. Error: #{e}"
+      flash[:messages] = "'#{item.name}'. Error: #{e}"
       flash[:class] = 'flash-error'
       flash[:class_element] = 'error-class'
       session[:item] = item
-      session[:details] = item.details
+      session[:details] = item.item_details
       redirect_to new_item_path(copy: true) and return
     end
-    if commit == 'Сохранить и выйти'
+    if commit == t('all_form.save_out')
       redirect_to root_path(active_tab: 'item') and return
     else
       redirect_to edit_item_path(item.id) and return
     end
   end
 
-  def find_item_details(item_details = nil)
-    @item_details = Array.new
-    item_details.each do |el|
-      begin
-        detail = Array.new
-        detail << el[1].constantize.find(el[0])
-        detail << el[2]
-        detail << el[3]
-        @item_details << detail
-      rescue => e
-        next
-      end
-    end
-  end
-
   def permit_params
-    params.require(:item).permit(:name, :unit, :size_l, :size_a, :size_b, :area, :volume, {item_files: []})
+    params.require(:item).permit(:name, :unit, :size_l, :size_a, :size_b, :area, :volume, :print_in_collection,  {item_files: []})
     # :area, :weight, :volume,
   end
 

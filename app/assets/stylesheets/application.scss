@@ -36,17 +36,15 @@ body, html {
 .main-menu {
   padding-top: 5px;
   padding-left: 15px;
-  height: 35px;
+  padding-bottom: 5px;
   background-color: #ffffff;
   border-bottom: 1px solid #000000 ;
 }
 
-.messages-section {
-  padding-top: 5px;
-  padding-left: 15px;
-  height: 60px;
-  background-color: #ffffff;
-  border-bottom: 1px solid #000000 ;
+.user-info {
+  padding-right: 30px;
+  padding-top: 10px;
+  float: right;
 }
 
 .flash-messages {
@@ -204,21 +202,6 @@ input[type = 'checkbox'] {
   background-color: rgba(255, 0, 0, 0.5);
 }
 
-//.position:hover {
-//  .position-menu {
-//    width: 74px;
-//    opacity: 1;
-//    a {
-//      height: 34px;
-//      width: 34px;
-//      opacity: 1;
-//    }
-//    .link-menu {
-//      display: inline-block;
-//    }
-//  }
-//
-//}
 
 .link-menu {
   padding-top: 4px;
@@ -241,18 +224,6 @@ input[type = 'checkbox'] {
   display: none;
   box-shadow: 1px 1px 5px rgba(0,0,0,0.5);
   border-radius: 4px;
-  //transition: 0.5s;
-  //a {
-  //  height: 0;
-  //  width: 0;
-  //  opacity: 0;
-  //  transition: 0.5s step-start;
-  //
-  //}
-  //.link-menu {
-  //  display: none;
-  //  transition: 0.5s step-start;
-  //}
 
 }
 
@@ -290,4 +261,32 @@ table.display tbody tr:nth-child(odd):hover td, table.display tbody tr:nth-child
   font-size: 20px;
   padding: 5px 5px 5px 5px;
   float: right;
+}
+
+.col-md-6, .col-md-3{
+  padding-right: 0;
+}
+
+.md12-right {
+  margin-left: -15px;
+  padding-right: 0;
+}
+
+.padding-div-submit{
+  padding-left: 30px;
+}
+
+.bread-crumbs {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  > a {
+    display: inline;
+    background-color: darkcyan;
+  }
+}
+
+.inclusion-body > a {
+  color: #fff;
+  background-color: darkcyan;
+
 }

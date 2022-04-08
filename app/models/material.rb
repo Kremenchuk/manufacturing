@@ -1,11 +1,6 @@
 class Material < ApplicationRecord
-  enum unit: ['шт', 'м/п', 'кг']
 
-  default_scope { order(qty: :asc) }
-
-  has_many :order_manufacturings_details, as: :order_manufacturings_detailable
-
-
+  has_many :item_details, as: :detailable
   has_many :purchase_invoices_details
   has_many :purchase_invoices, through: :purchase_invoices_details
   has_many :orders_manual_materials
@@ -16,4 +11,9 @@ class Material < ApplicationRecord
 
   validates :name,
             uniqueness: true
+
+  enum unit: ['шт', 'м/п', 'кг']
+
+  default_scope { order(qty: :asc) }
+
 end

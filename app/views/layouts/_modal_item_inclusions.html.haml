@@ -1,0 +1,12 @@
+-#модальне вікно зі списком залежностей виробу (куди включений даний виріб)
+#item-inclusions-modal.modal.fade{:role => 'dialog'}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{'data-dismiss': 'modal', type: 'button'} ×
+        %h4.modal-title
+          =t('items.inclusions')
+      .modal-body
+        #item-inclusions-body.inclusion-body
+      .modal-footer
+        %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close

@@ -1,0 +1,129 @@
+ru:
+  o_m_print_excel:
+    head:
+      elements_name: Наименование элементов
+      value: Размеры
+      need_produce: Необходимо изготовить
+      produced: Изготовлено
+      used_materials: Необходимые материалы
+  menu:
+    purchase_invoice: Приходные накладные
+    order_manufacturing: Наряды в производство
+    payroll: Зарплатные ведомости
+    item: Продукция
+    material: Материалы
+    job: Работы
+    worker: Работники
+    counterparties: Контрагенты
+    counterparty: Контрагент
+    administrate: Администрирование
+  administrate:
+    user_role: Роли пользователей
+    item_group: Группы изделий
+    administrate: Администрирование пользователей
+  all_form:
+    include_in: Включено в...
+    deleted: удалено
+    not_deleted: не удалено
+    root_page: Главная страница
+    print_in_collection: Печатать в составе родительского изделия (V - в составе)
+    name: Наименование
+    short_name: Короткое наименование
+    name_for_print_om: Наименование для печати в наряде
+    price: Цена
+    time: Время
+    save: Сохранить
+    save_out: Сохранить и выйти
+    cancel: Отмена
+    edit: Редактирование
+    add: Добавить
+    confirm_delete: Точно удалить?
+    delete: Удалить
+    contrparty_type: Тип контрагента
+    seller: Продавец
+    buyer: Покупатель
+    type: Тип
+    unit: Ед. измерения
+    unit_short: ед. изм.
+    area: Площадь
+    weight: Вес
+    volume: Объем
+    size_l: Длина
+    size_a: Размер А
+    size_b: Размер Б
+    item_group: Группа изделия
+    add_material: Добавить материал
+    add_items: Добавить изделия
+    add_jobs: Добавить работы
+    qty: Количество
+    print: Печатать
+    sum: Сумма
+    rank: Ранг
+    cost: Себестоимость
+    group: Группа
+    all_group: Все группы
+    out: Выход
+    note: Примечание
+    copy: Копировать
+    used_material: Используемые материалы
+    used_jobs: Используемые работы
+    number: Номер
+    date: Дата
+    start_date: Дата начала
+    finish_date: Дата выполнения
+    invoice: Счет
+    order_price: Стоимость заказа
+    total_price: Полная стоимость проекта
+    con_pay: Контрагент оплатил
+    extra_charge: Наценка
+    indirect_costs: Косвенные затраты
+    payroll_taxes: Налоги на ЗП
+    sum_up: Итого
+    status: Статус
+    fio: ФИО
+    fio_short: ФИО
+    worker: Работник
+    we_pay: Мы оплатили
+    position: Должность
+  jobs:
+    form:
+      new_job: Новая работа
+      print_in_collection: Печатать работы в составе родительского изделия (V - в составе)
+    cant_delete: Удаление невозможно! Работа включена в состав дугого/дгугих изделий
+    inclusions: Работа включено в
+  counterparties:
+    new: Новый контрагент
+  items:
+    new: Новая продукция
+    cant_delete: Удаление невозможно! Изделие включено в состав дугого/дгугих изделий
+    inclusions: Изделие включено в
+  material:
+    new: Новый материал
+    cant_delete: Удаление невозможно! Материал включено в состав дугого/дгугих изделий
+    inclusions: Материал включено в
+  o_m:
+    new: Новый наряд в производство
+    return_material: Материалы будут ВОЗВРАЩЕНЫ на склад!
+    no_status: Без статуса
+    in_progress: В работу
+    use_material: Материалы будут СПИСАНЫ со склада!
+    done: Готов
+    shipped: Отгружен
+    order: Заказ
+    material_price: Стоимость материалов
+    indirect_costs_price: Косвенные затраты
+    extra_charge_price: Сумма наценки
+    jobs_taxes_price: Стоимость работы
+    jobs_price: Стоимость работы без налогов
+    jobs_taxes: Налоги на работы
+    modal_use_material: Списание материалов
+  payrolls:
+    new: Новий наряд на сдельную работу
+  purchase_invoices:
+    new: Новая приходная накладная
+    remove_materials: Убрать материалы со склада
+    add_materials: Внести материал на склад
+    confirm_add: Точно ВНЕСТИ материал на склад?
+    confirm_remove: Точно УБРАТЬ материал на склад?
+  workers:
+    new: Новый работник

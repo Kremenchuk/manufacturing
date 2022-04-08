@@ -1,13 +1,18 @@
 .col-md-12
   %table#item-table.display.datatable-table{'data-source': items_url(format: 'json')}
     %thead
-      %th.table-45 Наименование
-      %th.table-10 Ед. измерения
-      %th.table-15 Себестоимость
-      %th.table-15 Вес
-      %th.table-15 Группа
+      %th.table-45
+        = t('all_form.name')
+      %th.table-10
+        = t('all_form.unit')
+      %th.table-15
+        = t('all_form.cost')
+      %th.table-15
+        = t('all_form.weight')
+      %th.table-15
+        = t('all_form.group')
       .select-item-group
-        = select_tag "item_group", options_from_collection_for_select(@item_groups, "name", "name"), id:'item_group_in_item', include_blank: 'Все группы'
+        = select_tag "item_group", options_from_collection_for_select(@item_groups, "name", "name"), id:'item_group_in_item', include_blank: t('all_form.all_group')
     %tbody
 
 

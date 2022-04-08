@@ -1,8 +1,10 @@
 .col-md-12
   %table#worker-table.display.datatable-table{'data-source': workers_url(format: 'json')}
     %thead
-      %th.table-70 Фамилия Имя Отчество
-      %th.table-30 Должность
+      %th.table-70
+        = t('all_form.fio')
+      %th.table-30
+        = t('all_form.position')
     %tbody
 
 

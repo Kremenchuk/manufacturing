@@ -2,8 +2,8 @@ class OrderManufacturingsController < ApplicationController
 
   # o_m -> order_manufacturing
 
-  before_action :find_o_m, only: [:edit, :update, :destroy, :copy_o_m, :o_m_pre_print, :o_m_used_materials, :o_m_used_jobs, :o_m_change_status, :remove_file_from_o_m, :o_m_write_off_materials,
-  :o_m_save_write_off_materials]
+  before_action :find_o_m, only: [:edit, :update, :destroy, :copy_o_m, :o_m_used_materials, :o_m_used_jobs, :o_m_change_status, :remove_file_from_o_m, :o_m_write_off_materials,
+  :o_m_save_write_off_materials, :automatic_print]
 
   def index
     data_hash = {
@@ -85,6 +85,8 @@ class OrderManufacturingsController < ApplicationController
   end
 
   def edit
+    add_returning_path
+
     @item_groups = ItemGroup.all
     @o_m_details = @o_m.items
   end
@@ -101,11 +103,8 @@ class OrderManufacturingsController < ApplicationController
   end
 
   def destroy
-    @o_m.order_manufacturings_details.each do |o_m_detail|
-      o_m_detail.destroy!
-    end
-    @o_m.destroy!
-    flash[:messages] = "'#{@o_m.number}' удалено"
+    @o_m.destroy
+    flash[:messages] = "'#{@o_m.number}' #{t('all_form.deleted')}"
     flash[:class] = 'flash-success'
     redirect_to root_path(active_tab: 'order_manufacturing')
   end
@@ -142,7 +141,8 @@ class OrderManufacturingsController < ApplicationController
 
 
   def automatic_print
-    excel_file = OrderManufacturingPrint.new(params[:id])
+    excel_file = OrderManufacturingPrint.new(@o_m, "#{@o_m.number.to_s}" + ".xlsx")
+
     excel_file.print
     # redirect_to edit_order_manufacturing_path(params[:id])
     send_file excel_file.file_name
@@ -236,7 +236,7 @@ class OrderManufacturingsController < ApplicationController
         redirect_to new_order_manufacturing_path(copy: true) and return
         return
       end
-      if commit == 'Сохранить и выйти'
+      if commit == t('all_form.save_out')
         redirect_to root_path(active_tab: 'order_manufacturing') and return
       else
         redirect_to edit_order_manufacturing_path(o_m.id) and return

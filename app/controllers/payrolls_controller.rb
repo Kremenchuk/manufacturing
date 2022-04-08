@@ -22,7 +22,7 @@ class PayrollsController < ApplicationController
   end
 
   def edit
-    a=2
+    add_returning_path
   end
 
 

@@ -3,15 +3,15 @@
     - case @o_m.o_m_status
       - when 0
         .no-status-text
-          = "Редактирование '#{@o_m.number}'. Заказ 'Без статуса'"
+          = "#{t('all_form.edit')} '#{@o_m.number}'. #{t('o_m.order')} #{t('o_m.no_status')}"
       - when 1
         .in-work-status-text
-          = "Редактирование '#{@o_m.number}'. Заказ 'В работе'"
+          = "#{t('all_form.edit')} '#{@o_m.number}'. #{t('o_m.order')} #{t('o_m.in_progress')}"
       - when 2
         .finished-status-text
-          = "Редактирование '#{@o_m.number}'. Заказ 'Готов'"
+          = "#{t('all_form.edit')} '#{@o_m.number}'. #{t('o_m.order')} #{t('o_m.done')}"
       - when 3
         .shipped-status-text
-          = "Редактирование '#{@o_m.number}'. Заказ 'Отгружен'"
+          = "#{t('all_form.edit')} '#{@o_m.number}'. #{t('o_m.order')} #{t('o_m.shipped')}"
 .col-md-12
   = render 'form'

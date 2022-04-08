@@ -10,18 +10,19 @@ class RolesController < ApplicationController
   end
 
   def edit
+    add_returning_path
     @role.attributes = permit_params
     @role.save!
     redirect_to root_path(active_tab: 'administration')
   end
 
   def destroy
-    if @role.destroy!
-      flash[:messages] = "'#{@role.name}' удалено"
+    if @role.destroy
+      flash[:messages] = "'#{@role.name}' #{t('all_form.deleted')}"
       flash[:class] = 'flash-success'
       redirect_to root_path(active_tab: 'administration')
     else
-      flash[:messages] = "'#{@role.name}' не удалено #{@role.errors}"
+      flash[:messages] = "'#{@role.name}' #{t('all_form.not_deleted')} #{@role.errors}"
       flash[:class] = 'flash-error'
     end
   end

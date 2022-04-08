@@ -1,12 +1,18 @@
 .col-md-12
   %table#order_manufacturing-table.display.datatable-table{'data-source': order_manufacturings_url(format: 'json')}
     %thead
-      %th.table-10 Дата начала
-      %th.table-10 Дата отгрузки
-      %th.table-20 Номер
-      %th.table-45 Контрагент
-      %th.table-5 Счет
-      %th.table-10 Статус
+      %th.table-10
+        = t('all_form.start_date')
+      %th.table-10
+        = t('all_form.finish_date')
+      %th.table-20
+        = t('all_form.number')
+      %th.table-45
+        = t('menu.counterparty')
+      %th.table-5
+        = t('all_form.invoice')
+      %th.table-10
+        = t('all_form.status')
     %tbody
 
 

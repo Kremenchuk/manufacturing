@@ -7,15 +7,26 @@
     = javascript_include_tag 'application', 'data-turbolinks-track': true
   %body
     .wrapper
-      .main-menu
-        - if current_user.present?
-          = current_user.email
-          |
-          =link_to 'Выход', destroy_user_session_path, method: :delete
-      .messages-section
-        - if flash[:messages].present?
-          .flash-messages
-            .div{class: "#{flash[:class]}"}
-              = flash[:messages]
+      - if current_user.present?
+        .main-menu
+          .user-info
+          - if current_user.present?
+            = link_to t('all_form.root_page'), root_path, class: 'btn btn-success'
+            = select_tag :change_locale, options_for_select( %w(RU UK), I18n.locale.upcase)
+            = current_user.email
+            |
+            =link_to t('all_form.out'), destroy_user_session_path, method: :delete
+        - if session[:path_to_return].present?
+          .col-md-12
+            .bread-crumbs
+              - if session[:path_to_return].present?
+                - session[:path_to_return].each do |breadcrumbs|
+                  >
+                  = link_to breadcrumbs["breadcrumb_name"], breadcrumbs["path"], class: 'btn btn-info'
+        .messages-section
+          - if flash[:messages].present?
+            .flash-messages
+              .div{class: "#{flash[:class]}"}
+                = flash[:messages]
       .wrapper-yield
         = yield

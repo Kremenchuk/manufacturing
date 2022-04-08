@@ -1,0 +1,128 @@
+uk:
+  o_m_print_excel:
+    head:
+      elements_name: Найменування елементів
+      value: Розміри
+      need_produce: Необхідно виготовити
+      produced: Виготовлено
+      used_materials: Необхідні матеріали
+  menu:
+    purchase_invoice: Вхідні накладні
+    order_manufacturing: Наряди в виробництво
+    payroll: Зарплатні відомості
+    item: Продукція
+    material: Матеріали
+    job: Роботи
+    worker: Робітники
+    counterparties: Контрагенти
+    counterparty: Контрагент
+    administrate: Адміністрування
+  administrate:
+    user_role: Ролі користувачів
+    administrate: Адміністрування користувачів
+  all_form:
+    include_in: Включено до...
+    deleted: видалено
+    not_deleted: не видалено
+    root_page: Головна сторінка
+    print_in_collection: Друкувати у складі батьківського виробу (V - в складі)
+    name: Найменування
+    short_name: Коротке найменування
+    name_for_print_om: Найменування для друку в наряді
+    price: Ціна
+    time: Час
+    save: Зберегти
+    save_out: Зберегти і вийти
+    cancel: Відміна
+    edit: Редагування
+    add: Додати
+    confirm_delete: Точно видалити?
+    delete: Видалити
+    contrparty_type: Тип контрагента
+    seller: Продавець
+    buyer: Покупець
+    type: Тип
+    unit: Од. виміру
+    unit_short: Од.вим.
+    area: Площа
+    weight: Вага
+    volume: Об'єм
+    size_l: Довжина
+    size_a: Розмір А
+    size_b: Розмір Б
+    item_group: Група виробів
+    add_material: Додати матеріал
+    add_items: Додати вироби
+    add_jobs: Додати роботи
+    qty: Кількість
+    print: Друкувати
+    sum: Сума
+    rank: Ранг
+    cost: Собівартість
+    group: Група
+    all_group: Всі групи
+    out: Вихід
+    note: Нотатки
+    copy: Копіювати
+    used_material: Використовувані матеріали
+    used_jobs: Використовувані роботи
+    number: Номер
+    date: Дата
+    start_date: Дата початку
+    finish_date: Дата виконання
+    invoice: Рахунок
+    order_price: Вартість замовлення
+    total_price: Повна вартість
+    con_pay: Контрагент оплатив
+    extra_charge: Націнка
+    indirect_costs: Непрямі затрати
+    payroll_taxes: Податки на ЗП
+    sum_up: Всого
+    status: Статус
+    fio: Прізвище Ім'я По-батькові
+    fio_short: ПІБ
+    worker: Робітник
+    we_pay: Ми оплатили
+    position: Посада
+  jobs:
+    form:
+      new_job: Нова робота
+      print_in_collection: Друкувати роботи у складі батьківського виробу (V - в складі)
+    cant_delete: Видалення неможливе! Робота включений до складу іншого/інших виробів
+    inclusions: Робота належить до
+  counterparties:
+    new: Новий контрагент
+  items:
+    new: Нова продукція
+    cant_delete: Видалення неможливе! Виріб включений до складу іншого/інших виробів
+    inclusions: Виріб належить до
+  material:
+    new: Новий матеріал
+    cant_delete: Видалення неможливе! Матеріал включений до складу іншого/інших виробів
+    inclusions: Матеріал належить до
+  o_m:
+    new: Новий наряд у виробництво
+    return_material: Матеріали будуть ПОВЕРНУТІ на склад
+    no_status: Без статусу
+    in_progress: В роботі
+    use_material: Матеріали будуть СПИСАНІ зі складу!
+    done: Готове
+    shipped: Відвантажено
+    order: Замовлення
+    material_price: Вартість матеріалів
+    indirect_costs_price: Непрямі витрати
+    extra_charge_price: Сума націнки
+    jobs_taxes_price: Вартість робіт
+    jobs_price: Вартість робіт без податків
+    jobs_taxes: Податки на роботи
+    modal_use_material: Списання матеріалів
+  payrolls:
+    new: Новий наряд на відрядну роботу
+  purchase_invoices:
+    new: Нова вхідна накладна
+    remove_materials: Прибрати матеріали зі складу
+    add_materials: Внести матеріали на склад
+    confirm_add: Точно ВНЕСТИ матеріали на склад?
+    confirm_remove: Точно ПРИБРАТИ метеріали зі складу?
+  workers:
+    new: Новий робітник

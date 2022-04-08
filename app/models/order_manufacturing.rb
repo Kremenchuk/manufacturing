@@ -26,7 +26,7 @@ class OrderManufacturing < ApplicationRecord
         order_manufacturing_price += details.item.price.nil? ? 0.0 : (details.item.price * details.qty)
       end
     end
-    return order_manufacturing_price
+    return order_manufacturing_price.to_f.round(2)
     rescue
     end
   end
@@ -39,7 +39,7 @@ class OrderManufacturing < ApplicationRecord
         order_manufacturing_weight += details.item.weight.nil? ? 0.0 : details.item.weight
       end
     end
-    return order_manufacturing_weight
+    return order_manufacturing_weight.to_f.round(2)
     rescue
     end
   end
@@ -52,105 +52,66 @@ class OrderManufacturing < ApplicationRecord
         order_manufacturing_volume += details.item.volume.nil? ? 0.0 : details.item.volume
       end
     end
-    return order_manufacturing_volume
+    return order_manufacturing_volume.to_f
       rescue
     end
   end
 
   def used_materials
-    begin
-    @o_m_used_materials = Array.new
+    o_m_used_materials = Array.new
     self.order_manufacturings_details.each do |stillage|
-      # o_m_items << [stillage, stillage.qty, true]
-      stillage.item.details.each do |stillage_details|
-        find_materials_in_item(stillage_details, stillage.qty)
-      end
+      o_m_used_materials << stillage.item.all_used_materials(stillage.qty)
     end
 
     # Объединение одинаковых материалов
-    @o_m_used_materials = marge_unit(@o_m_used_materials)
+    o_m_used_materials = DataOperation.marge_unit(o_m_used_materials.flatten(1))
 
-    # округление количеств для материалов для которых задана настройка
-    @o_m_used_materials.each_with_index do |used_material, index|
+    # округление количеств материалов для которых задана настройка
+    o_m_used_materials.each_with_index do |used_material, index|
       if used_material[0].round_one
-        @o_m_used_materials[index][1] = @o_m_used_materials[index][1].ceil
+        o_m_used_materials[index][1] = o_m_used_materials[index][1].ceil
       end
     end
-
-
-    return @o_m_used_materials
-    rescue
-    end
+    o_m_used_materials
   end
 
   def used_jobs
-    @o_m_used_jobs = Array.new
+    o_m_used_jobs = Array.new
     self.order_manufacturings_details.each do |stillage|
-      # o_m_items << [stillage, stillage.qty, true]
-      stillage.item.details.each do |stillage_details|
-        find_jobs_in_item(stillage_details, stillage.qty)
-      end
+      o_m_used_jobs << stillage.item.all_used_jobs(stillage.qty)
     end
 
     # Объединение одинаковых работ
-    @o_m_used_jobs = marge_unit(@o_m_used_jobs)
+    o_m_used_jobs = DataOperation.marge_unit(o_m_used_jobs.flatten(1))
 
-    return @o_m_used_jobs
+    return o_m_used_jobs
   end
 
 
 private
 
-  def find_materials_in_item(stillage_details, qty)
-    begin
-    element = stillage_details[1].constantize.find(stillage_details[0])
-    if element.is_a? Material
-      @o_m_used_materials << [element, stillage_details[2] * qty]
-    else
-      if element.is_a? Item
-        element.details.each do |element_details|
-          find_materials_in_item(element_details, stillage_details[2] * qty)
-        end
-      end
-    end
-    rescue
-    end
-  end
-
-  def find_jobs_in_item(stillage_details, qty)
-    element = stillage_details[1].constantize.find(stillage_details[0])
-    if element.is_a? Job
-      @o_m_used_jobs << [element, stillage_details[2] * qty]
-    else
-      if element.is_a? Item
-        element.details.each do |element_details|
-          find_jobs_in_item(element_details, stillage_details[2]* qty)
-        end
-      end
-    end
-  end
-
-  def marge_unit(unit_array)
-    sum_unit = Array.new
-    for i in 0..(unit_array.size - 1)
-      if unit_array[i].nil?
-        next
-      else
-        unit_qty = unit_array[i][1]
-      end
-      for j in (i+1)..(unit_array.size - 1)
-        if unit_array[i].present? and unit_array[j].present?
-          if unit_array[i][0].id == unit_array[j][0].id
-            unit_qty = unit_qty + unit_array[j][1]
-            unit_array[j] = nil
-          end
-        end
-      end
-      sum_unit << [unit_array[i][0], unit_qty]
-    end
-
-    return sum_unit
-  end
+  # def marge_unit(unit_array)
+  #   unit_array = unit_array.flatten(1)
+  #   sum_unit = Array.new
+  #   for i in 0..(unit_array.size - 1)
+  #     if unit_array[i].nil?
+  #       next
+  #     else
+  #       unit_qty = unit_array[i][1]
+  #     end
+  #     for j in (i+1)..(unit_array.size - 1)
+  #       if unit_array[i].present? and unit_array[j].present?
+  #         if unit_array[i][0].id == unit_array[j][0].id
+  #           unit_qty = unit_qty + unit_array[j][1]
+  #           unit_array[j] = nil
+  #         end
+  #       end
+  #     end
+  #     sum_unit << [unit_array[i][0], unit_qty]
+  #   end
+  #
+  #   return sum_unit
+  # end
 
 
 end

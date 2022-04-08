@@ -1,20 +1,20 @@
 .col-md-12
   - if @counterparty.id.present?
-    = link_to counterparty_path(@counterparty.id), method: :delete, class: 'btn btn-default', title: 'Удалить', data: {confirm: 'Точно удалить?'} do
+    = link_to counterparty_path(@counterparty.id), method: :delete, class: 'btn btn-default', title: t('all_form.delete'), data: {confirm: t('all_form.confirm_delete')} do
       %i.fa.fa-trash
 
 = form_for @counterparty, html: {class: 'submit-form'} do |f|
   .col-xs-12
     .col-xs-6
       .form-group
-        = f.label :name, 'Наименование'
+        = f.label :name, t('all_form.name')
         = f.text_field :name, class: 'form-control validate-field'
       .form-group
-        = f.label :short_name, 'Короткое наименование'
+        = f.label :short_name, t('all_form.short_name')
         = f.text_field :short_name, class: 'form-control validate-field'
       .form-group
-        = f.label :c_type, 'Тип контрагента'
-        = f.select :c_type, ['Покупатель', 'Продавец'], {}, {class: 'form-control validate-field'}
+        = f.label :c_type, t('all_form.contrparty_type')
+        = f.select :c_type, [t('all_form.buyer'), t('all_form.seller')], {}, {class: 'form-control validate-field'}
       .form-group
-        = f.submit 'Сохранить', class: 'btn btn-success'
-        = link_to 'Отмена', root_path(active_tab: 'counterparty'), class: 'btn btn-danger'
+        = f.submit t('all_form.save'), class: 'btn btn-success'
+        = link_to t('all_form.cancel'), root_path(active_tab: 'counterparty'), class: 'btn btn-danger'

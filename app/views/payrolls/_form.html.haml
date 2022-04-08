@@ -3,44 +3,50 @@
   .col-md-12
     .col-md-6
       .form-group
-        = f.label :name, 'ФИО'
+        = f.label :name, t('all_form.fio_short')
         = link_to '', id: 'add_name', remote: true, class: 'add_new_entity', 'data-toggle': 'modal', 'data-target': '#worker-modal' do
           = text_field_tag :name, @payroll.worker.present? ? @payroll.worker.fio : nil, class: 'form-control validate-field', name: 'payroll[worker', id: 'worker'
   .col-md-12
     .col-md-6{style: 'margin-left: -15px; padding-right: 0;'}
       .col-md-3
         .form-group
-          = f.label :number, 'Номер'
+          = f.label :number, t('all_form.number')
           = f.text_field :number, class: 'form-control validate-field'
       .col-md-3
         .form-group
-          = f.label :date, 'Дата выполнения'
+          = f.label :date, t('all_form.finish_date')
           = f.text_field :date, value: (@payroll.date.present? ? @payroll.date : Time.now.strftime('%d.%m.%Y')), class: 'form-control validate-field'
   .col-md-12
     .add-new-button
       = link_to '', id: 'add_o_m_job', remote: true, class: 'btn btn-default add_new_entity', 'data-toggle': 'modal', 'data-target': '#o_m-jobss-modal' do
         %i.fa.fa-plus-square
-          Добавить работу
+          = t('all_form.add_jobs')
   .col-md-12.table-style.hidden-element
     %table#o_m-details-table{cellspacing: '1', cellpadding: '1', border: '1', width: '100%'}
       %thead
         %tr
           %th.table-2 №
-          %th.table-45 Наименование
-          %th.table-10 ед.изм.
-          %th.table-10 Количество
-          %th.table-10 Цена
-          %th.table-10 Сумма
-          %th.table-5 Удалить
+          %th.table-45
+            = t('all_form.name')
+          %th.table-10
+            = t('all_form.unit_short')
+          %th.table-10
+            = t('all_form.qty')
+          %th.table-10
+            = t('all_form.price')
+          %th.table-10
+            = t('all_form.sum')
+          %th.table-5
+            = t('all_form.delete')
       %tbody#o_m-details-table-body
         -if @o_m_details.present?
-          = render partial: '_payroll_detail'
+          = render partial: 'payroll_detail'
 
 
   .form-group
-    = f.submit 'Сохранить и выйти', class: 'btn btn-success'
-    = f.submit 'Сохранить', class: 'btn btn-success'
-    = link_to 'Отмена', root_path(active_tab: 'order_manufacturing'), class: 'btn btn-danger'
+    = f.submit t('all_form.save_out'), class: 'btn btn-success'
+    = f.submit t('all_form.save'), class: 'btn btn-success'
+    = link_to t('all_form.cancel'), cancel_button_path(returning_entity: 'order_manufacturing'), class: 'btn btn-danger'
 
 /модальне вікно для додавання до таблиці продукції
 #o_m-details-modal.modal.fade{:role => 'dialog'}
@@ -49,16 +55,19 @@
       = form_tag(add_o_m_detail_path, remote: true, method: :get, id: 'o_m_details_form') do
         .modal-header
           %button.close{'data-dismiss': 'modal', type: 'button'} ×
-          %h4.modal-title Добавить
+          %h4.modal-title
+            = t('all_form.add')
         .modal-body
           %table#o_m-details-datatable.display.datatable-table{'data-source': details_datatable_order_manufacturing_url(format: 'json')}
             %thead
               %th.table-4 V
-              %th.table-40 Наименование
-              %th.table-10 Ед. измерения
+              %th.table-40
+                = t('all_form.name')
+              %th.table-10
+                = t('all_form.unit')
             %tbody
         .modal-footer
-          = link_to 'Добавить', '#',class: 'btn btn-success', remote: true, 'data-dismiss': 'modal',
+          = link_to t('all_form.add'), '#',class: 'btn btn-success', remote: true, 'data-dismiss': 'modal',
             onclick: "$('#o_m_details_form').submit()"
           %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
 
@@ -69,14 +78,18 @@
       = form_tag(add_counterparty_path, remote: true, method: :get, id: 'o_m_counterparty_form') do
         .modal-header
           %button.close{'data-dismiss': 'modal', type: 'button'} ×
-          %h4.modal-title Добавить
+          %h4.modal-title
+            = t('all_form.add')
         .modal-body
           %table#counterparties-o_m-datatable.display.datatable-table{'data-source': o_m_counterparty_datatable_url(format: 'json')}
             %thead
               %th.table-10 V
-              %th.table-45 Наименование
-              %th.table-45 Короткое наименование
-              %th.table-10 Тип
+              %th.table-45
+                = t('all_form.name')
+              %th.table-45
+                = t('all_form.short_name')
+              %th.table-10
+                = t('all_form.type')
             %tbody
         .modal-footer
           %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
@@ -86,22 +99,28 @@
     .modal-content
       .modal-header
         %button.close{'data-dismiss': 'modal', type: 'button'} ×
-        %h4.modal-title Добавить
+        %h4.modal-title
+          = t('all_form.add')
       .modal-body
         .col-md-12
           %table
             %thead
               %th.table-10 №
-              %th.table-70 Наименование
-              %th.table-10 Ед. изм.
-              %th.table-10 Количество
+              %th.table-70
+                = t('all_form.name')
+              %th.table-10
+                = t('all_form.unit_short')
+              %th.table-10
+                = t('all_form.qty')
             %tbody#o_m-used-materials-table-body
         .col-md-12
           %table
             %thead
               %th.table-10 №
-              %th.table-70 Наименование
-              %th.table-10 Количество
+              %th.table-70
+                = t('all_form.name')
+              %th.table-10
+                = t('all_form.qty')
               %th.table-10
             %tbody#o_m-used-jobs-table-body
       .modal-footer
@@ -124,9 +143,9 @@
 -#            %table#o_m_details_pre_print_form-datatable.display.datatable-table{'data-source': details_pre_print_datatable_url(@o_m.present? ? @o_m.id : nil ,format: 'json')}
 -#              %thead
 -#                %th.table-4 V
--#                %th.table-40 Наименование
--#                %th.table-10 Ед. измерения
--#                %th.table-10 Количество
+-#                %th.table-40 = t('all_form.name')
+-#                %th.table-10 = t('all_form.unit')
+-#                %th.table-10 = t('all_form.qty')
 -#              %tbody
 -#          .modal-footer
 -#            = link_to 'Печать', '#',class: 'btn btn-success', 'data-dismiss': 'modal',

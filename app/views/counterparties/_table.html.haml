@@ -1,9 +1,12 @@
 .col-md-12
   %table#counterparty-table.display.datatable-table{'data-source': counterparties_url(format: 'json')}
     %thead
-      %th.table-45 Наименование
-      %th.table-45 Короткое наименование
-      %th.table-10 Тип
+      %th.table-45
+        = t('all_form.name')
+      %th.table-45
+        = t('all_form.short_name')
+      %th.table-10
+        = t('all_form.type')
     %tbody
 
 

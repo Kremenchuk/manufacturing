@@ -1,10 +1,14 @@
 .col-xs-12
   %table#job-table.display.datatable-table{'data-source': jobs_url(format: 'json')}
     %thead
-      %th.table-35 Наименование
-      %th.table-35 Наименование для печати
-      %th.table-10 Цена
-      %th.table-10 Время
+      %th.table-35
+        = t('all_form.name')
+      %th.table-35
+        = t('all_form.name_for_print_om')
+      %th.table-10
+        = t('all_form.price')
+      %th.table-10
+        = t('all_form.time')
     %tbody
 
 

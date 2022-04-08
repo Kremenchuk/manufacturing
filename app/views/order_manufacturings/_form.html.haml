@@ -23,26 +23,26 @@
 
 
 
-        = link_to copy_o_m_path(@o_m.id), class: 'btn btn-default', title: 'Копировать' do
+        = link_to copy_o_m_path(@o_m.id), class: 'btn btn-default', title: t('all_form.copy') do
           %i.fa.fa-clone
         -if can? :manage, :all
-          = link_to order_manufacturing_path(@o_m.id), method: :delete, class: 'btn btn-danger', title: 'Удалить', data: {confirm: 'Точно удалить?'} do
+          = link_to order_manufacturing_path(@o_m.id), method: :delete, class: 'btn btn-danger', title: t('all_form.delete'), data: {confirm: t('all_form.confirm_delete')} do
             %i.fa.fa-trash
-        = link_to automatic_print_order_manufacturing_path(@o_m.id), id: 'automatic_print', class: 'btn btn-default',  title: 'Печать с АВТОМАТИЧЕСКИМ объединением' do
+        = link_to automatic_print_order_manufacturing_path(@o_m.id), id: 'automatic_print', class: 'btn btn-default',  title: t('all_form.print') do
           %i.fa.fa-print
           %i.fa.fa-laptop
-          = link_to 'Используемые материалы', o_m_used_materials_path(@o_m.id), class: 'btn btn-default', 'data-toggle': 'modal', 'data-target': '#used-material-modal', remote: true
-          = link_to 'Используемые работы', o_m_used_jobs_path(@o_m.id), class: 'btn btn-default', 'data-toggle': 'modal', 'data-target': '#used-jobs-modal', remote: true
+          = link_to t('all_form.used_material'), o_m_used_materials_path(@o_m.id), class: 'btn btn-default', 'data-toggle': 'modal', 'data-target': '#used-material-modal', remote: true
+          = link_to t('all_form.used_jobs'), o_m_used_jobs_path(@o_m.id), class: 'btn btn-default', 'data-toggle': 'modal', 'data-target': '#used-jobs-modal', remote: true
         - unless @o_m.o_m_status == 0
-          = link_to 'Без статуса', o_m_change_status_path(@o_m.id, o_m_status: 0), class: 'btn btn-default', method: :put, data: {confirm: 'Материалы будут ВОЗВРАЩЕНЫ на склад!'}
+          = link_to t('o_m.no_status'), o_m_change_status_path(@o_m.id, o_m_status: 0), class: 'btn btn-default', method: :put, data: {confirm: t('o_m.return_material')}
         - unless @o_m.o_m_status == 1
-          = link_to 'В работу', o_m_write_off_materials_path(@o_m.id, o_m_status: 1), class: 'btn btn-danger', 'data-toggle': 'modal', 'data-target': '#write-off-materils-modal', remote: true,
-          data: {confirm: 'Материалы будут СПИСАНЫ со склада!'}
+          = link_to t('o_m.in_progress'), o_m_write_off_materials_path(@o_m.id, o_m_status: 1), class: 'btn btn-danger', 'data-toggle': 'modal', 'data-target': '#write-off-materils-modal', remote: true,
+          data: {confirm: t('o_m.use_material')}
 
         - unless @o_m.o_m_status == 2
-          = link_to 'Готов', o_m_change_status_path(@o_m.id, o_m_status: 2), class: 'btn btn-warning', method: :put
+          = link_to t('o_m.done'), o_m_change_status_path(@o_m.id, o_m_status: 2), class: 'btn btn-warning', method: :put
         - unless @o_m.o_m_status == 3
-          = link_to 'Отгружен', o_m_change_status_path(@o_m.id, o_m_status: 3), class: 'btn btn-success', method: :put
+          = link_to t('o_m.shipped'), o_m_change_status_path(@o_m.id, o_m_status: 3), class: 'btn btn-success', method: :put
 
       - if o_m_materials_price.nil?
         - o_m_materials_price = 0.0
@@ -60,92 +60,92 @@
     .col-md-6
       .col-md-6
         .col-md-12
-          = label_tag :cost_price, "Себестоимость: ", class: 'summ_materials_jobs'
+          = label_tag :cost_price, "#{t('all_form.cost')}: ", class: 'summ_materials_jobs'
           = label_tag :cost_price, "#{@o_m.price.present? ? (o_m_materials_price + o_m_jobs_taxes + o_m_jobs_price).round(2): 0.0}", class: 'summ_materials_jobs'
         .col-md-12
-          = label_tag :materials_price, "Стоимость материалов: ", class: 'summ_materials_jobs'
+          = label_tag :materials_price, "#{t('o_m.material_price')}: ", class: 'summ_materials_jobs'
           = label_tag :materials_price, "#{o_m_materials_price.round(2)}", class: 'summ_materials_jobs'
         .col-md-12
-          = label_tag :indirect_costs_price, "Косвенные затраты: ", class: 'summ_materials_jobs'
+          = label_tag :indirect_costs_price, "#{t('o_m.indirect_costs_price')}: ", class: 'summ_materials_jobs'
           = label_tag :indirect_costs_price, "#{o_m_indirect_costs.present? ? o_m_indirect_costs.round(2): 0.0}", class: 'summ_materials_jobs'
         .col-md-12
-          = label_tag :extra_charge_price, "Сумма наценки: ", class: 'summ_materials_jobs'
+          = label_tag :extra_charge_price, "#{t('o_m.extra_charge_price')}: ", class: 'summ_materials_jobs'
           = label_tag :extra_charge_price, "#{o_m_extra_charge.present? ? o_m_extra_charge.round(2): 0.0}", class: 'summ_materials_jobs'
       .col-md-6
         .col-md-12
-          = label_tag :jobs_taxes_price, "Стоимость работы: ", class: 'summ_materials_jobs'
+          = label_tag :jobs_taxes_price, "#{t('o_m.jobs_taxes_price')}: ", class: 'summ_materials_jobs'
           = label_tag :jobs_taxes_price, "#{(o_m_jobs_price + o_m_jobs_taxes).round(2)}", class: 'summ_materials_jobs'
         .col-md-12
-          = label_tag :jobs_price, "Стоимость работы без налогов: ", class: 'summ_materials_jobs'
+          = label_tag :jobs_price, "#{t('o_m.jobs_taxes_price')}: ", class: 'summ_materials_jobs'
           = label_tag :jobs_price, "#{o_m_jobs_price.round(2)}", class: 'summ_materials_jobs'
         .col-md-12
-          = label_tag :jobs_taxes, "Налоги на работы: ", class: 'summ_materials_jobs'
+          = label_tag :jobs_taxes, "#{t('o_m.jobs_taxes_price')}: ", class: 'summ_materials_jobs'
           = label_tag :jobs_taxes, "#{o_m_jobs_taxes.round(2)}", class: 'summ_materials_jobs'
           %p
 = form_for @o_m, html: {class: 'submit-form'} do |f|
   .col-md-6
     .col-md-12
       .form-group
-        = f.label :counterparty, 'Контрагент'
+        = f.label :counterparty, t('menu.counterparty')
         = link_to '', id: 'add_counterparty_detail', remote: true, class: 'add_new_entity', 'data-toggle': 'modal', 'data-target': '#counterparties-modal' do
           = text_field_tag :counterparty, @o_m.counterparty.present? ? @o_m.counterparty.name : nil, class: 'form-control validate-field', name: 'order_manufacturing[counterparty]', id: 'counterparty',
           autocomplete: :off
     .col-md-12{style: 'margin-left: -15px; padding-right: 0;'}
       .col-md-3
         .form-group
-          = f.label :number, 'Номер'
+          = f.label :number, t('all_form.number')
           = f.text_field :number, class: 'form-control validate-field', autocomplete: :off
       .col-md-3
         .form-group
-          = f.label :start_date, 'Дата начала'
+          = f.label :start_date, t('all_form.start_date')
           = f.text_field :start_date, value: (@o_m.start_date.present? ? @o_m.start_date : Time.now.strftime('%d.%m.%Y')), class: 'form-control validate-field'
       .col-md-3
         .form-group
-          = f.label :finish_date, 'Дата выполнения'
+          = f.label :finish_date, t('all_form.finish_date')
           = f.text_field :finish_date, value: (@o_m.finish_date.present? ? @o_m.finish_date : Time.now.strftime('%d.%m.%Y')), class: 'form-control validate-field'
       .col-md-3
         .form-group
-          = f.label :invoice, 'Счет'
+          = f.label :invoice, t('all_form.invoice')
           = f.text_field :invoice, class: 'form-control', autocomplete: :off
       .col-md-3{style: 'padding-right: 0;'}
         .form-group
-          = f.label :price, 'Стоимость заказа'
+          = f.label :price, t('all_form.order_price')
           = f.number_field :price, class: 'form-control', step: 0.01, value: o_m_total_price
 
     .col-md-12{style: 'margin-left: -15px; padding-right: 0;'}
       .col-md-3
         .form-group
-          = f.label :weight, 'Вес'
+          = f.label :weight, t('all_form.weight')
           = f.number_field :weight, class: 'form-control', step: 0.001, autocomplete: :off
       .col-md-3
         .form-group
-          = f.label :volume, 'Объем'
+          = f.label :volume, t('all_form.volume')
           = f.number_field :volume, class: 'form-control', step: 0.0000001, autocomplete: :off
       .col-md-3
         .form-group
-          = f.label :total_price, 'Полная стоимость проекта'
+          = f.label :total_price, t('all_form.total_price')
           = f.number_field :total_price, class: 'form-control', step: 0.01, autocomplete: :off
       .col-md-3
         .form-group
-          = f.label :con_pay, 'Контрагент оплатил'
+          = f.label :con_pay, t('all_form.con_pay')
           = f.number_field :con_pay, class: 'form-control', step: 0.01, autocomplete: :off
     .col-md-12
       .form-group
-        = f.label :note, 'Примечание'
+        = f.label :note, t('all_form.note')
         = f.text_area :note, class: 'form-control'
   .col-md-6
     .col-md-12
       .col-md-3
         .form-group
-          = f.label :extra_charge, 'Наценка'
+          = f.label :extra_charge, t('all_form.extra_charge')
           = f.number_field :extra_charge, value: (@o_m.extra_charge.present? ? @o_m.extra_charge : 25.00), class: 'form-control validate-field', step: 0.01, autocomplete: :off
       .col-md-3
         .form-group
-          = f.label :indirect_costs, 'Косвенные затраты'
+          = f.label :indirect_costs, t('all_form.indirect_costs')
           = f.number_field :indirect_costs, value: (@o_m.indirect_costs.present? ? @o_m.indirect_costs : 16.00), class: 'form-control validate-field', step: 0.01, autocomplete: :off
       .col-md-3
         .form-group
-          = f.label :payroll_taxes, 'Налоги на ЗП'
+          = f.label :payroll_taxes, t('all_form.payroll_taxes')
           = f.number_field :payroll_taxes, value: (@o_m.payroll_taxes.present? ? @o_m.payroll_taxes : 22.00), class: 'form-control validate-field', step: 0.01, autocomplete: :off
 
   .col-md-6
@@ -154,7 +154,7 @@
         .col-md-6
           = link_to o_m_file.identifier, o_m_file.url, target: :_blank
         .col-md-6
-          = link_to "Удалить", remove_file_from_o_m_path(@o_m.id, file_index: index), class: 'btn btn-default', method: :put, data: { confirm: "Удалить?" }
+          = link_to t('all_form.delete'), remove_file_from_o_m_path(@o_m.id, file_index: index), class: 'btn btn-default', method: :put, data: { confirm: t('all_form.confirm_delete') }
     .col-md-12
       = f.file_field :o_m_files, multiple: true
 
@@ -162,27 +162,33 @@
     .add-new-button
       = link_to '', id: 'add_o_m_detail', remote: true, class: 'btn btn-default add_new_entity', 'data-toggle': 'modal', 'data-target': '#o_m-details-modal' do
         %i.fa.fa-plus-square
-          Добавить изделия
+          = t('all_form.add_items')
   .col-md-12.table-style.hidden-element
     %table#o_m-details-table{cellspacing: '1', cellpadding: '1', border: '1', width: '100%'}
       %thead
         %tr
           %th.table-2 №
-          %th.table-45 Наименование
-          %th.table-10 ед.изм.
-          %th.table-10 Количество
-          %th.table-10 Цена
-          %th.table-10 Сумма
-          %th.table-5 Удалить
+          %th.table-45
+            = t('all_form.name')
+          %th.table-10
+            = t('all_form.unit_short')
+          %th.table-10
+            = t('all_form.qty')
+          %th.table-10
+            = t('all_form.price')
+          %th.table-10
+            = t('all_form.sum')
+          %th.table-5
+            = t('all_form.delete')
       %tbody#o_m-details-table-body
         -if @o_m_details.present?
           = render partial: 'o_m_detail'
 
   .col-md-12
     .form-group
-      = f.submit 'Сохранить и выйти', class: 'btn btn-success'
-      = f.submit 'Сохранить', class: 'btn btn-success'
-      = link_to 'Отмена', root_path(active_tab: 'order_manufacturing'), class: 'btn btn-danger'
+      = f.submit t('all_form.save_out'), class: 'btn btn-success'
+      = f.submit t('all_form.save'), class: 'btn btn-success'
+      = link_to t('all_form.cancel'), cancel_button_path(returning_entity: 'order_manufacturing'), class: 'btn btn-danger'
 
 /модальне вікно для додавання до таблиці продукції
 #o_m-details-modal.modal.fade{:role => 'dialog'}
@@ -191,19 +197,23 @@
       = form_tag(add_o_m_detail_path, remote: true, method: :get, id: 'o_m_details_form') do
         .modal-header
           %button.close{'data-dismiss': 'modal', type: 'button'} ×
-          %h4.modal-title Добавить
+          %h4.modal-title
+            = t('all_form.add')
         .modal-body
-          %table#o_m-details-datatable.display.datatable-table{'data-source': details_datatable_order_manufacturing_url(format: 'json')}
+          %table#o_m-details-datatable.display.datatable-table{'data-source': details_datatable_order_manufacturings_url(format: 'json')}
             %thead
               %th.table-4 V
-              %th.table-40 Наименование
-              %th.table-10 Ед. измерения
-              %th.table-10 Группа
+              %th.table-40
+                = t('all_form.name')
+              %th.table-10
+                = t('all_form.unit')
+              %th.table-10
+                = t('all_form.group')
               .select-item-group
-                = select_tag "item_group", options_from_collection_for_select(@item_groups, "name", "name"), id:'item_group_in_o_m_d', include_blank: 'Все группы'
+                = select_tag "item_group", options_from_collection_for_select(@item_groups, "name", "name"), id:'item_group_in_o_m_d', include_blank: t('all_form.all_group')
             %tbody
         .modal-footer
-          = link_to 'Добавить', '#',class: 'btn btn-success', remote: true, 'data-dismiss': 'modal',
+          = link_to t('all_form.add'), '#',class: 'btn btn-success', remote: true, 'data-dismiss': 'modal',
             onclick: "$('#o_m_details_form').submit()"
           %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
 
@@ -214,14 +224,18 @@
       = form_tag(add_counterparty_path, remote: true, method: :get, id: 'o_m_counterparty_form') do
         .modal-header
           %button.close{'data-dismiss': 'modal', type: 'button'} ×
-          %h4.modal-title Добавить
+          %h4.modal-title
+            = t('all_form.add')
         .modal-body
           %table#counterparties-o_m-datatable.display.datatable-table{'data-source': o_m_counterparty_datatable_url(format: 'json')}
             %thead
               %th.table-10 V
-              %th.table-45 Наименование
-              %th.table-45 Короткое наименование
-              %th.table-10 Тип
+              %th.table-45
+                = t('all_form.name')
+              %th.table-45
+                = t('all_form.short_name')
+              %th.table-10
+                = t('all_form.type')
             %tbody
         .modal-footer
           %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
@@ -232,17 +246,23 @@
     .modal-content
       .modal-header
         %button.close{'data-dismiss': 'modal', type: 'button'} ×
-        %h4.modal-title Используемые материалы
+        %h4.modal-title
+          =t('all_form.used_material')
       .modal-body
         .col-md-12
           %table.table-materials-jobs-style
             %thead
               %th.table-10 №
-              %th.table-45 Наименование
-              %th.table-10 Ед. изм.
-              %th.table-10 Количество
-              %th.table-10 Цена
-              %th.table-10 Сумма
+              %th.table-45
+                = t('all_form.name')
+              %th.table-10
+                = t('all_form.unit')
+              %th.table-10
+                = t('all_form.qty')
+              %th.table-10
+                = t('all_form.price')
+              %th.table-10
+                = t('all_form.sum')
             %tbody#o_m-used-materials-table-body
       .modal-footer
         %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
@@ -253,16 +273,21 @@
     .modal-content
       .modal-header
         %button.close{'data-dismiss': 'modal', type: 'button'} ×
-        %h4.modal-title Используемые работы
+        %h4.modal-title
+          = t('all_form.used_jobs')
       .modal-body
         .col-md-12
           %table.table-materials-jobs-style
             %thead
               %th.table-10 №
-              %th.table-45 Наименование
-              %th.table-10 Количество
-              %th.table-10 Цена
-              %th.table-10 Сумма
+              %th.table-45
+                = t('all_form.name')
+              %th.table-10
+                = t('all_form.qty')
+              %th.table-10
+                = t('all_form.price')
+              %th.table-10
+                = t('all_form.sum')
             %tbody#o_m-used-jobs-table-body
       .modal-footer
         %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
@@ -274,19 +299,24 @@
         = form_tag(o_m_save_write_off_materials_path(@o_m.id, o_m_status: 1), method: :put, id: 'o_m_write_off_materils_form') do
           .modal-header
             %button.close{'data-dismiss': 'modal', type: 'button'} ×
-            %h4.modal-title Списание материалов
+            %h4.modal-title
+              = t('o_m.modal_use_material')
           .modal-body
             .col-md-12
               %table.table-materials-jobs-style
                 %thead
                   %th.table-10 №
-                  %th.table-45 Наименование
-                  %th.table-10 Количество
-                  %th.table-10 Цена
-                  %th.table-10 Сумма
+                  %th.table-45
+                    = t('all_form.name')
+                  %th.table-10
+                    = t('all_form.qty')
+                  %th.table-10
+                    = t('all_form.price')
+                  %th.table-10
+                    = t('all_form.sum')
                 %tbody#o_m-write-off-materials-table-body
           .modal-footer
-            = link_to 'Сохранить', '#',class: 'btn btn-success', 'data-dismiss': 'modal',
+            = link_to t('all_form.save'), '#',class: 'btn btn-success', 'data-dismiss': 'modal',
               onclick: "$('#o_m_write_off_materils_form').submit()"
             %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
 

@@ -11,18 +11,19 @@ class ItemGroupsController < ApplicationController
   end
 
   def edit
+    add_returning_path
     @item_group.attributes = permit_params
     @item_group.save!
     redirect_to root_path(active_tab: 'administration')
   end
 
   def destroy
-    if @item_group.destroy!
-      flash[:messages] = "'#{@item_group.name}' удалено"
+    if @item_group.destroy
+      flash[:messages] = "'#{@item_group.name}' #{t('all_form.deleted')}"
       flash[:class] = 'flash-success'
       redirect_to root_path(active_tab: 'administration')
     else
-      flash[:messages] = "'#{@item_group.name}' не удалено #{@item_group.errors}"
+      flash[:messages] = "'#{@item_group.name}' #{t('all_form.not_deleted')} #{@item_group.errors}"
       flash[:class] = 'flash-error'
     end
   end

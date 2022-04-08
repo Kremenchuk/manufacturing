@@ -1,5 +1,5 @@
 module ApplicationHelper
-  def check_box_helper(options ={})
+  def check_box_helper(options = {})
     input_body = ''
     input_body += " class='#{options[:class_name]}'" if options[:class_name].present?
     input_body += " name='#{options[:name]}#{options[:field_name]}'"

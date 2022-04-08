@@ -2,18 +2,18 @@
   .col-md-2
     - if @p_i.id.present?
       - if @p_i.p_i_status == 1
-        = link_to material_from_warehouse_path(@p_i.id), method: :put, class: 'btn btn-danger', title: 'Убрать материалы со склада', data: {confirm: 'Точно УБРАТЬ материал на склад?'} do
+        = link_to material_from_warehouse_path(@p_i.id), method: :put, class: 'btn btn-danger', title: t('purchase_invoices.remove_materials'), data: {confirm: t('purchase_invoices.confirm_remove')} do
           %i.fa.fa-cubes
-            Убрать материалы со склада
+            = t('purchase_invoices.remove_materials')
           = hidden_field_tag('p_i_id', @p_i.id)
       -else
         -if can? :manage, :all
-          = link_to purchase_invoice_path(@p_i.id), method: :delete, class: 'btn btn-default', title: 'Удалить', data: {confirm: 'Точно удалить?'} do
+          = link_to purchase_invoice_path(@p_i.id), method: :delete, class: 'btn btn-default', title: t('all_form.delete'), data: {confirm: t('all_form.confirm_delete')} do
             %i.fa.fa-trash
             = hidden_field_tag('p_i_id', @p_i.id)
-        = link_to material_to_warehouse_path(@p_i.id), method: :put, class: 'btn btn-success', title: 'Внесение материала на склад', data: {confirm: 'Точно ВНЕСТИ материал на склад?'} do
+        = link_to material_to_warehouse_path(@p_i.id), method: :put, class: 'btn btn-success', title: t('purchase_invoices.add_materials'), data: {confirm: t('purchase_invoices.confirm_add') } do
           %i.fa.fa-cubes
-            Внести материал на склад
+            = t('purchase_invoices.add_materials')
         = hidden_field_tag('p_i_id', @p_i.id)
 
 
@@ -22,45 +22,50 @@
     .col-md-12
       .col-md-6
         .form-group
-          = f.label :counterparty, 'Контрагент'
+          = f.label :counterparty, t('menu.counterparty')
           = link_to '', id: 'add_counterparty_detail', remote: true, class: 'add_new_entity', 'data-toggle': 'modal', 'data-target': '#counterparties-modal' do
             = text_field_tag :counterparty, @p_i.counterparty.present? ? @p_i.counterparty.name : nil, class: 'form-control validate-field', name: 'purchase_invoice[counterparty]', id: 'counterparty',
             autocomplete: :off
     .col-md-12
       .col-md-3
         .form-group
-          = f.label :number, 'Номер'
+          = f.label :number, t('all_form.number')
           = f.text_field :number, class: 'form-control validate-field', autocomplete: :off
         .form-group
-          = f.label :date, 'Дата'
+          = f.label :date, t('all_form.date')
           = f.text_field :date, value: (@p_i.date.present? ? @p_i.date : Time.now.strftime('%d.%m.%Y')), class: 'form-control validate-field'
       .col-md-3
         .form-group
-          = f.label :total_price, 'Полная стоимость накладной'
+          = f.label :total_price, t('all_form.total_price')
           = f.number_field :total_price, class: 'form-control validate-field', autocomplete: :off, step: 0.001
       .col-md-3
         .form-group
-          = f.label :we_pay, 'Мы оплатили'
+          = f.label :we_pay, t('all_form.we_pay')
           = f.number_field :we_pay, class: 'form-control validate-field', autocomplete: :off, step: 0.001
       .col-md-12
         .form-group
-          = f.label :note, 'Примечание'
+          = f.label :note, t('all_form.note')
           = f.text_area :note, class: 'form-control', autocomplete: :off
   .col-md-12.hidden-element
     .add-new-button
       = link_to '', id: 'add-material-details-to-p_i', remote: true, class: 'btn btn-default add_new_entity', 'data-toggle': 'modal', 'data-target': '#materials-modal' do
         %i.fa.fa-plus-square
-          Добавить материал
+          = t('all_form.add_material')
   .col-md-12.table-style.hidden-element
     %table#p_i-details-table{cellspacing: '1', cellpadding: '1', border: '1', width: '100%'}
       %thead
         %tr
           %th.table-2 №
-          %th.table-45 Наименование
-          %th.table-10 ед.изм.
-          %th.table-10 Количество
-          %th.table-10 Цена
-          %th.table-5 Удалить
+          %th.table-45
+            = t('all_form.name')
+          %th.table-10
+            = t('all_form.unit_short')
+          %th.table-10
+            = t('all_form.qty')
+          %th.table-10
+            = t('all_form.price')
+          %th.table-5
+            = t('all_form.delete')
       %tbody#p_i-details-table-body
         -if @p_i_details.present?
           = render partial: 'p_i_detail'
@@ -68,9 +73,9 @@
 
   .col-md-12
     .form-group
-      = f.submit 'Сохранить и выйти', class: 'btn btn-success'
-      = f.submit 'Сохранить', class: 'btn btn-success'
-      = link_to 'Отмена', root_path(active_tab: 'purchase_invoice'), class: 'btn btn-danger'
+      = f.submit t('all_form.save_out'), class: 'btn btn-success'
+      = f.submit t('all_form.save'), class: 'btn btn-success'
+      = link_to t('all_form.cancel'), cancel_button_path(returning_entity: 'purchase_invoice'), class: 'btn btn-danger'
 
 /модальне вікно для додавання контрагента
 #counterparties-modal.modal.fade{:role => 'dialog'}
@@ -79,14 +84,18 @@
       = form_tag(add_counterparty_p_i_path, remote: true, method: :get, id: 'p_i_counterparty_form') do
         .modal-header
           %button.close{'data-dismiss': 'modal', type: 'button'} ×
-          %h4.modal-title Добавить
+          %h4.modal-title
+            = t('all_form.add')
         .modal-body
           %table#counterparties_p_i-datatable.display.datatable-table{'data-source': p_i_counterparty_datatable_url(format: 'json')}
             %thead
               %th.table-10 V
-              %th.table-45 Наименование
-              %th.table-45 Короткое наименование
-              %th.table-10 Тип
+              %th.table-45
+                = t('all_form.name')
+              %th.table-45
+                = t('all_form.short_name')
+              %th.table-10
+                = t('all_form.type')
             %tbody
         .modal-footer
           %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
@@ -98,16 +107,19 @@
       = form_tag(add_p_i_detail_path, remote: true, method: :get, id: 'p_i_material_details_form') do
         .modal-header
           %button.close{'data-dismiss': 'modal', type: 'button'} ×
-          %h4.modal-title Добавить
+          %h4.modal-title
+            = t('all_form.add')
         .modal-body
           %table#material-details-datatable.display.datatable-table{'data-source': p_i_material_details_datatable_url(format: 'json')}
             %thead
               %th.table-4 V
-              %th.table-40 Наименование
-              %th.table-10 Ед. измерения
+              %th.table-40
+                = t('all_form.name')
+              %th.table-10
+                = t('all_form.unit')
             %tbody
         .modal-footer
-          = link_to 'Добавить', '#',class: 'btn btn-success', remote: true, 'data-dismiss': 'modal', id: 'submit_materials_form',
+          = link_to t('all_form.add'), '#',class: 'btn btn-success', remote: true, 'data-dismiss': 'modal', id: 'submit_materials_form',
             onclick: "$('#p_i_material_details_form').submit()"
           %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
 

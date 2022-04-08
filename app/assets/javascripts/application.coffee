@@ -5,6 +5,11 @@
 #= require dataTables/jquery.dataTables
 #= require jquery-ui/widgets/datepicker
 
+
+@itemId = () ->
+  item_id = document.getElementsByName('item_form')
+  return $(item_id[0]).data('id')
+
 @materialDetailsIds = () ->
   return $('.material_id_class').map(-> $(this).val()).get()
 
@@ -22,11 +27,12 @@
   return $('.job_id_class').map(-> $(this).val()).get()
 
 @checkboxChecked = (elem, $this) ->
+  console.log elem.checked
   if elem.checked == true
-    elem.checked = false
+    #elem.checked = false
     $($this).closest('tr').toggleClass('datatable-checkbox-checked-tr')
   else
-    elem.checked = true
+    #elem.checked = true
     $($this).closest('tr').toggleClass('datatable-checkbox-checked-tr')
 
 #Функція переміщення елементів таблиці по позиціях
@@ -348,3 +354,18 @@ $(document).ready ->
 
   filterGlobalOM = ->
     $('#o_m-details-datatable').DataTable().search($('#item_group_in_o_m_d').val()).draw()
+
+$(document).on 'change', '#change_locale', ->
+  custId = $(this).val()
+  $.ajax
+    type: "PUT"
+    url: "/change_user_locale"
+    dataType: "html"
+    data:
+      locale: $(this).val()
+    success: (result) ->
+      document.write(result)
+      document.close()
+  return
+
+

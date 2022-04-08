@@ -51,7 +51,8 @@ class MappingModelData
     if modal_query.present?
       model_data.where(modal_query != 'nil' ? modal_query : nil).map do |model_data_i|
         [
-            check_box_helper({value: model_data_i.id, name: 'item', field_name: '[item_details][id][]', class_name: 'datatable-checkbox'}),
+            check_box_helper({ value: model_data_i.id, name: 'item', field_name: '[item_details][id][]',
+                              class_name: 'datatable-checkbox', id: model_data_i.id }),
                 # model_data_i.id, 'item', '[item_details][id][]','datatable-checkbox'),
             #radio_helper(model_data_i.id, 'counterparty', '[id]','datatable-radio', 'data-dismiss="modal"'),
             model_data_i.name,
@@ -81,7 +82,8 @@ class MappingModelData
     if modal_query.present?
       model_data.where(modal_query != 'nil' ? modal_query : nil).map do |model_data_i|
         [
-            check_box_helper({value: model_data_i.id, name: 'job', field_name:'[job_details][id][]', class_name: 'datatable-checkbox'}),
+            check_box_helper({value: model_data_i.id, name: 'job', field_name:'[job_details][id][]',
+                              class_name: 'datatable-checkbox', id: model_data_i.id}),
                 # model_data_i.id, 'job', '[job_details][id][]','datatable-checkbox'),
             model_data_i.name,
             model_data_i.name_for_print,
@@ -169,7 +171,8 @@ class MappingModelData
       if modal_query == 'select'
         model_data.map do |model_data_i|
           [
-              check_box_helper({value: model_data_i.id, name: 'material', field_name:'[material_details][id][]', class_name: 'datatable-checkbox'}),
+              check_box_helper({value: model_data_i.id, name: 'material', field_name:'[material_details][id][]',
+                                class_name: 'datatable-checkbox', id: model_data_i.id}),
               model_data_i.name,
               model_data_i.unit
           ]

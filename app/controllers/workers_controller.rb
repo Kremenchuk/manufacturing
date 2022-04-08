@@ -21,6 +21,7 @@ class WorkersController < ApplicationController
   end
 
   def edit
+    add_returning_path
   end
 
   def update
@@ -35,8 +36,8 @@ class WorkersController < ApplicationController
   end
 
   def destroy
-    @worker.destroy!
-    flash[:messages] = "'#{@worker.fio}' удалено"
+    @worker.destroy
+    flash[:messages] = "'#{@worker.fio}' #{t('all_form.deleted')}"
     flash[:class] = 'flash-success'
     redirect_to root_path(active_tab: 'worker')
   end

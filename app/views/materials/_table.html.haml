@@ -1,10 +1,14 @@
 .col-md-12
   %table#material-table.display.datatable-table{'data-source': materials_url(format: 'json')}
     %thead
-      %th.table-45 Наименование
-      %th.table-10 Ед. измерения
-      %th.table-10 Количество
-      %th.table-10 Цена
+      %th.table-45
+        = t('all_form.name')
+      %th.table-10
+        = t('all_form.unit')
+      %th.table-10
+        = t('all_form.qty')
+      %th.table-10
+        = t('all_form.price')
     %tbody
 
 

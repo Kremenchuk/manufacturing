@@ -1,47 +1,50 @@
 .col-md-12
   .col-md-2
     - if @item.id.present?
-      = link_to copy_item_path(@item.id), class: 'btn btn-default', title: 'Копировать' do
+      = link_to copy_item_path(@item.id), class: 'btn btn-default', title: t('all_form.copy') do
         %i.fa.fa-clone
-      = link_to item_path(@item.id), method: :delete, class: 'btn btn-default', title: 'Удалить', data: {confirm: 'Точно удалить?'} do
+      = link_to item_path(@item.id), method: :delete, class: 'btn btn-default', title: t('all_form.delete'), data: {confirm: t('all_form.confirm_delete')} do
         %i.fa.fa-trash
+      = link_to t('all_form.include_in'), item_inclusions_item_path, class: 'btn btn-default', title: t('all_form.include_in'),
+       remote: true, 'data-toggle': 'modal', 'data-target': '#item-inclusions-modal'
       = hidden_field_tag('item_id', @item.id)
 
-= form_for @item, html: {class: 'submit-form'} do |f|
+= form_for @item, action: new_item_path(copyied: @copyied), html: {class: 'submit-form', data: {id: @item.id}, name: 'item_form'} do |f|
   .col-md-12
     .col-md-12
       .col-md-6
         .form-group
-          = f.label :name, 'Наименование'
+          = f.label :name, t('all_form.name')
           = f.text_field :name, class: "form-control validate-field #{flash[:class_element]}"
     .col-md-12
       .col-md-3
         .form-group
-          = f.label :unit, 'Ед. измерения'
+          = f.label :unit, t('all_form.unit')
           = f.select :unit, ['шт', 'м/п', 'кг', 'комп.'], {}, {class: 'form-control validate-field'}
         .form-group
-          = f.label :area, 'Площадь'
+          = f.label :area, t('all_form.area')
           = f.number_field :area, class: 'form-control', step: 0.00001, autocomplete: :off
         .form-group
-          = f.label :weight, 'Вес'
+          = f.label :weight, t('all_form.weight')
           = f.number_field :weight, class: 'form-control', step: 0.0001, autocomplete: :off
         .form-group
-          = f.label :volume, 'Объем'
+          = f.label :volume, t('all_form.volume')
           = f.number_field :volume, class: 'form-control', step: 0.00000001, autocomplete: :off
       .col-md-3
         .form-group
-          = f.label :size_l, 'Длина'
+          = f.label :size_l, t('all_form.size_l')
           = f.number_field :size_l, class: 'form-control', step: 1, autocomplete: :off
         .form-group
-          = f.label :size_a, 'Размер А'
+          = f.label :size_a, t('all_form.size_a')
           = f.number_field :size_a, class: 'form-control', step: 1, autocomplete: :off
         .form-group
-          = f.label :size_b, 'Размер Б'
+          = f.label :size_b, t('all_form.size_b')
           = f.number_field :size_b, class: 'form-control', step: 1, autocomplete: :off
         .form-group
-          = f.label :item_group, 'Группа изделия'
+          = f.label :item_group, t('all_form.item_group')
           = link_to '', id: 'add_item_group_detail', remote: true, class: 'add_new_entity', 'data-toggle': 'modal', 'data-target': '#items_group-modal' do
-            = text_field_tag :item_group, @item.item_group.present? ? @item.item_group.name : nil, class: 'form-control validate-field', name: 'item[item_group]', id: 'item_group', autocomplete: :off
+            = text_field_tag :item_group, @item.item_group.present? ? @item.item_group.name : nil,
+            class: 'form-control validate-field', name: 'item[item_group]', id: 'item_group', autocomplete: :off, readonly: true
       .col-md-4
         .form-group
           - @item.item_files.each_with_index do |item_file, index|
@@ -49,34 +52,46 @@
               .col-md-6
                 = link_to item_file.identifier, item_file.url, target: :_blank
               .col-md-6
-                = link_to "Удалить", remove_file_from_item_path(@item.id, file_index: index), class: 'btn btn-default', method: :put, data: { confirm: "Удалить?" }
+                = link_to t('all_form.delete'), remove_file_from_item_path(@item.id, file_index: index), class: 'btn btn-default', method: :put, data: { confirm: t('all_form.confirm_delete') }
           .col-md-12
             .col-md-6
               = f.file_field :item_files, multiple: true
-
+    .col-md-12
+      .form-group
+        = f.check_box :print_in_collection
+        = f.label :print_in_collection, t('all_form.print_in_collection')
   .col-md-12.hidden-element
     .add-new-button
       = link_to '', id: 'add-material-details-to-item', remote: true, class: 'btn btn-default add_new_entity', 'data-toggle': 'modal', 'data-target': '#materials-modal' do
         %i.fa.fa-plus-square
-          Добавить материал
+          = t('all_form.add_material')
       = link_to '', id: 'add-item-details-to-item', remote: true, class: 'btn btn-default add_new_entity', 'data-toggle': 'modal', 'data-target': '#items-modal' do
         %i.fa.fa-plus-square
-          Добавить изделия
+          = t('all_form.add_items')
       = link_to '', id: 'add-job-details-to-item', remote: true, class: 'btn btn-default add_new_entity', 'data-toggle': 'modal', 'data-target': '#jobs-modal' do
         %i.fa.fa-plus-square
-          Добавить работы
+          = t('all_form.add_jobs')
   .col-md-12.table-style.hidden-element
     %table#item-details-table{cellspacing: '1', cellpadding: '1', border: '1', width: '100%'}
       %thead
         %tr
           %th.table-2 №
-          %th.table-45 Наименование
-          %th.table-10 ед.изм.
-          %th.table-10 Количество
-          %th.table-10 Цена
-          %th.table-15 Сумма
-          %th.table-2 Печатать
-          %th.table-5 Удалить
+          %th.table-45
+            = t('all_form.name')
+          %th
+            = t('all_form.type')
+          %th.table-10
+            = t('all_form.unit_short')
+          %th.table-10
+            = t('all_form.qty')
+          %th.table-10
+            = t('all_form.price')
+          %th.table-15
+            = t('all_form.sum')
+          %th.table-2
+            = t('all_form.print')
+          %th.table-5
+            = t('all_form.delete')
       %tbody#item-details-table-body
         -if @item_details.present?
           = render partial: 'item_detail'
@@ -84,9 +99,11 @@
 
   .col-md-12
     .form-group
-      = f.submit 'Сохранить и выйти', class: 'btn btn-success'
-      = f.submit 'Сохранить', class: 'btn btn-success'
-      = link_to 'Отмена', root_path(active_tab: 'item'), class: 'btn btn-danger'
+      = f.submit t('all_form.save_out'), class: 'btn btn-success'
+      = f.submit t('all_form.save'), class: 'btn btn-success'
+      = link_to t('all_form.cancel'), cancel_button_path(returning_entity: 'item'), class: 'btn btn-danger'
+
+= render partial: 'layouts/modal_item_inclusions'
 
 /модальне вікно для додавання продукції до таблиці продукції
 #items-modal.modal.fade{:role => 'dialog'}
@@ -95,16 +112,19 @@
       = form_tag(add_item_detail_path(entity: :item), remote: true, method: :get, id: 'item_details_form') do
         .modal-header
           %button.close{'data-dismiss': 'modal', type: 'button'} ×
-          %h4.modal-title Добавить
+          %h4.modal-title
+            = t('all_form.add')
         .modal-body
           %table#item-details-datatable.display.datatable-table{'data-source': item_details_datatable_url(format: 'json')}
             %thead
               %th.table-4 V
-              %th.table-40 Наименование
-              %th.table-10 Ед. измерения
+              %th.table-40
+                = t('all_form.name')
+              %th.table-10
+                = t('all_form.unit')
             %tbody
         .modal-footer
-          = link_to 'Добавить', '#',class: 'btn btn-success', remote: true, 'data-dismiss': 'modal',
+          = link_to t('all_form.add'), '#',class: 'btn btn-success', remote: true, 'data-dismiss': 'modal',
             onclick: "$('#item_details_form').submit()"
           %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
 
@@ -115,16 +135,19 @@
       = form_tag(add_item_detail_path(entity: :material), remote: true, method: :get, id: 'material_details_form') do
         .modal-header
           %button.close{'data-dismiss': 'modal', type: 'button'} ×
-          %h4.modal-title Добавить
+          %h4.modal-title
+            = t('all_form.add')
         .modal-body
           %table#material-details-datatable.display.datatable-table{'data-source': item_material_datatable_url(format: 'json')}
             %thead
               %th.table-4 V
-              %th.table-40 Наименование
-              %th.table-10 Ед. измерения
+              %th.table-40
+                = t('all_form.name')
+              %th.table-10
+                = t('all_form.unit')
             %tbody
         .modal-footer
-          = link_to 'Добавить', '#',class: 'btn btn-success', remote: true, 'data-dismiss': 'modal', id: 'submit_materials_form',
+          = link_to t('all_form.add'), '#',class: 'btn btn-success', remote: true, 'data-dismiss': 'modal', id: 'submit_materials_form',
             onclick: "$('#material_details_form').submit()"
           %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
 
@@ -135,18 +158,23 @@
       = form_tag(add_item_detail_path(entity: :job), remote: true, method: :get, id: 'job_details_form') do
         .modal-header
           %button.close{'data-dismiss': 'modal', type: 'button'} ×
-          %h4.modal-title Добавить
+          %h4.modal-title
+            = t('all_form.add')
         .modal-body
           %table#job-details-datatable.display.datatable-table{'data-source': job_details_datatable_url(format: 'json')}
             %thead
               %th.table-4 V
-              %th.table-40 Наименование
-              %th.table-10 Цена
-              %th.table-15 Время
-              %th.table-15 Печать
+              %th.table-40
+                = t('all_form.name')
+              %th.table-10
+                = t('all_form.price')
+              %th.table-15
+                = t('all_form.time')
+              %th.table-15
+                = t('all_form.print')
             %tbody
         .modal-footer
-          = link_to 'Добавить', '#',class: 'btn btn-success', remote: true, 'data-dismiss': 'modal',
+          = link_to t('all_form.add'), '#',class: 'btn btn-success', remote: true, 'data-dismiss': 'modal',
             onclick: "$('#job_details_form').submit()"
           %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
 
@@ -157,13 +185,16 @@
       = form_tag(add_item_group_path, remote: true, method: :get, id: 'item_item_group_form') do
         .modal-header
           %button.close{'data-dismiss': 'modal', type: 'button'} ×
-          %h4.modal-title Добавить
+          %h4.modal-title
+            = t('all_form.add')
         .modal-body
           %table#items_item_group_datatable.display.datatable-table{'data-source': item_item_group_datatable_url(format: 'json')}
             %thead
               %th.table-10 V
-              %th.table-45 Наименование
-              %th.table-45 Ранг
+              %th.table-45
+                = t('all_form.name')
+              %th.table-45
+                = t('all_form.rank')
             %tbody
         .modal-footer
           %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
@@ -246,7 +277,7 @@
       cache: false
       type: 'GET'
       data: (d) ->
-        myData = {ids: itemDetailsIds()}
+        myData = {ids: itemDetailsIds(), id: itemId()}
         if myData
           $.extend d, myData
         return

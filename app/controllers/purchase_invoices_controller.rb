@@ -53,6 +53,7 @@ class PurchaseInvoicesController < ApplicationController
   end
 
   def edit
+    add_returning_path
     @p_i_details = @p_i.purchase_invoices_details
   end
 
@@ -67,12 +68,12 @@ class PurchaseInvoicesController < ApplicationController
   end
 
   def destroy
-    if @p_i.destroy!
-      flash[:messages] = "'#{@p_i.number}' удалено"
+    if @p_i.destroy
+      flash[:messages] = "'#{@p_i.number}' #{t('all_form.deleted')}"
       flash[:class] = 'flash-success'
       redirect_to root_path(active_tab: 'purchase_invoice')
     else
-      flash[:messages] = "'#{@p_i.number}' не удалено #{@p_i.errors}"
+      flash[:messages] = "'#{@p_i.number}' #{t('all_form.not_deleted')} #{@p_i.errors}"
       flash[:class] = 'flash-error'
     end
   end
@@ -135,7 +136,7 @@ class PurchaseInvoicesController < ApplicationController
       redirect_to new_purchase_invoice_path
       return
     end
-    if commit == 'Сохранить и выйти'
+    if commit == t('all_form.save_out')
       redirect_to root_path(active_tab: 'purchase_invoice')
       return
     else

@@ -3,12 +3,16 @@ Rails.application.routes.draw do
   devise_for :users
   root 'home#index'
 
+  # зміна локалізації для юзела
+  put 'change_user_locale' => 'application#change_user_locale'
+  get :cancel_button, controller: :application
+
   # users
     resources :users
 
   #order_manufacturings
     resources :order_manufacturings do
-      get :details_datatable, on: :member
+      get :details_datatable, on: :collection
       get :details_pre_print_datatable, on: :member
       get :automatic_print, on: :member
     end
@@ -35,7 +39,9 @@ Rails.application.routes.draw do
   #---payrolls---
 
   #items
-    resources :items
+    resources :items do
+      get :item_inclusions, on: :member
+    end
     get 'add_item_detail' => 'items#add_item_detail'
     get 'add_item_group' => 'items#add_item_group'
     # для заповнення модального вікна при виборі виробів для details
@@ -52,7 +58,9 @@ Rails.application.routes.draw do
   # ---item_groups---
 
   #jobs
-    resources :jobs
+    resources :jobs do
+      get :item_inclusions, on: :member
+    end
     # для заповнення модального вікна при виборі робіт для details
     get 'job_details_datatable' => 'jobs#job_details_datatable'
     get 'copy_job/:id' => 'jobs#copy_job', as: 'copy_job'
@@ -68,7 +76,9 @@ Rails.application.routes.draw do
   #---counterparties---
 
   #materials
-    resources :materials
+    resources :materials do
+      get :item_inclusions, on: :member
+    end
     get 'copy_material/:id' => 'materials#copy_material', as: 'copy_material'
     get 'add_material_detail' => 'materials#add_material_detail'
     get 'material_details_datatable' => 'materials#material_details_datatable'
@@ -96,9 +106,4 @@ Rails.application.routes.draw do
 
 
   # get 'material_details_datatable' => 'purchase_invoices#material_details_datatable'
-  # #semi_finisheds
-  #   resources :semi_finisheds
-  #   get 'copy_semi_finished/:id' => 'copy_semi_finisheds#copy_semi_finished', as: 'copy_semi_finished'
-  #   put 'add_semi_finished_details' => 'semi_finisheds#add_semi_finished_details'
-  # # #---semi_finisheds---
 end

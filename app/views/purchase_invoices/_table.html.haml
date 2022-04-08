@@ -1,10 +1,14 @@
 .col-md-12
   %table#purchase_invoice-table.display.datatable-table{'data-source': purchase_invoices_url(format: 'json')}
     %thead
-      %th.table-10 Номер
-      %th.table-10 Дата
-      %th.table-45 Контрагент
-      %th.table-15 Статус
+      %th.table-10
+        = t('all_form.number')
+      %th.table-10
+        = t('all_form.date')
+      %th.table-45
+        = t('menu.counterparty')
+      %th.table-15
+        = t('all_form.status')
     %tbody
 
 

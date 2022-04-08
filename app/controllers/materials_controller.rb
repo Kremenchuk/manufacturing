@@ -1,6 +1,6 @@
 class MaterialsController < ApplicationController
 
-  before_action :find_material, only: [:edit, :update, :destroy, :copy_material]
+  before_action :find_material, only: [:edit, :update, :destroy, :copy_material, :item_inclusions]
 
   def index
     data_hash = {
@@ -47,6 +47,7 @@ class MaterialsController < ApplicationController
   end
 
   def edit
+    add_returning_path
   end
 
   def create
@@ -60,10 +61,16 @@ class MaterialsController < ApplicationController
   end
 
   def destroy
-    @material.destroy!
-    flash[:messages] = "'#{@material.name}' удалено"
-    flash[:class] = 'flash-success'
-    redirect_to root_path(active_tab: 'material')
+    if find_item_inclusions(@material).present?
+      flash[:messages] = t('material.cant_delete')
+      flash[:class] = 'flash-error'
+      redirect_to edit_material_path(@material)
+    else
+      @material.destroy
+      flash[:messages] = "'#{@material.name}' #{t('all_form.deleted')}"
+      flash[:class] = 'flash-success'
+      redirect_to root_path(active_tab: 'material')
+    end
   end
 
   def copy_material
@@ -71,6 +78,11 @@ class MaterialsController < ApplicationController
     @material.id = nil
     session[:material] = @material.attributes
     redirect_to new_material_path
+  end
+
+  def item_inclusions
+    @item_inclusions = find_item_inclusions(@material)
+    render 'layouts/item_inclusions'
   end
 
   private
