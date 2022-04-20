@@ -79,7 +79,7 @@ class OrderManufacturingsController < ApplicationController
       @o_m.id = nil
       @o_m.start_date = nil
       @o_m.finish_date = nil
-      @o_m.o_m_status = 0
+      @o_m.o_m_status = :no_status
       # session.delete(:o_m)
     end
   end
@@ -129,7 +129,7 @@ class OrderManufacturingsController < ApplicationController
 
   def o_m_change_status
     @o_m.o_m_status = params[:o_m_status]
-    if @o_m.save and @o_m.o_m_status == 0
+    if @o_m.save and @o_m.o_m_status == :no_status
       @o_m.orders_manual_materials.each do |used_material|
         used_material.material.qty += used_material.qty
         used_material.material.save!
@@ -190,7 +190,7 @@ class OrderManufacturingsController < ApplicationController
   def o_m_save_write_off_materials
     if permit_write_off_materials.present?
       if @o_m.orders_manual_materials.present?
-        @o_m.orders_manual_materials.destroy!
+        @o_m.orders_manual_materials.destroy
       end
       permit_write_off_materials[:id].each_with_index do |material_id, index|
         material = Material.find_by_id(material_id)
@@ -211,10 +211,10 @@ class OrderManufacturingsController < ApplicationController
 
   private
 
-
   def create_update_action(o_m, commit)
       o_m.counterparty = Counterparty.find_by(name: params[:order_manufacturing][:counterparty])
       o_m.user = current_user
+      o_m.finish_date = permit_params[:finish_date].to_date
       if o_m.save
         o_m.order_manufacturings_details.each do |order_manufacturings_detail|
           order_manufacturings_detail.destroy!

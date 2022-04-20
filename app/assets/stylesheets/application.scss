@@ -290,3 +290,11 @@ table.display tbody tr:nth-child(odd):hover td, table.display tbody tr:nth-child
   background-color: darkcyan;
 
 }
+.datatable-text-without-border {
+  border: none;
+  background-color: inherit;
+}
+
+input[type="text"].datatable-text-without-border:focus-visible  {
+  outline: none;
+}

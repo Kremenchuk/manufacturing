@@ -9,13 +9,14 @@
     .wrapper
       - if current_user.present?
         .main-menu
-          .user-info
           - if current_user.present?
+            .user-info
+              = current_user.email
+              |
+              =link_to t('all_form.out'), destroy_user_session_path, method: :delete
             = link_to t('all_form.root_page'), root_path, class: 'btn btn-success'
             = select_tag :change_locale, options_for_select( %w(RU UK), I18n.locale.upcase)
-            = current_user.email
-            |
-            =link_to t('all_form.out'), destroy_user_session_path, method: :delete
+
         - if session[:path_to_return].present?
           .col-md-12
             .bread-crumbs

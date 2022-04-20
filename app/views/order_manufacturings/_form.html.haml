@@ -33,16 +33,18 @@
           %i.fa.fa-laptop
           = link_to t('all_form.used_material'), o_m_used_materials_path(@o_m.id), class: 'btn btn-default', 'data-toggle': 'modal', 'data-target': '#used-material-modal', remote: true
           = link_to t('all_form.used_jobs'), o_m_used_jobs_path(@o_m.id), class: 'btn btn-default', 'data-toggle': 'modal', 'data-target': '#used-jobs-modal', remote: true
-        - unless @o_m.o_m_status == 0
-          = link_to t('o_m.no_status'), o_m_change_status_path(@o_m.id, o_m_status: 0), class: 'btn btn-default', method: :put, data: {confirm: t('o_m.return_material')}
-        - unless @o_m.o_m_status == 1
-          = link_to t('o_m.in_progress'), o_m_write_off_materials_path(@o_m.id, o_m_status: 1), class: 'btn btn-danger', 'data-toggle': 'modal', 'data-target': '#write-off-materils-modal', remote: true,
-          data: {confirm: t('o_m.use_material')}
-
-        - unless @o_m.o_m_status == 2
-          = link_to t('o_m.done'), o_m_change_status_path(@o_m.id, o_m_status: 2), class: 'btn btn-warning', method: :put
-        - unless @o_m.o_m_status == 3
-          = link_to t('o_m.shipped'), o_m_change_status_path(@o_m.id, o_m_status: 3), class: 'btn btn-success', method: :put
+        - unless @o_m.o_m_status == 'no_status'
+          = link_to t('o_m.no_status'), o_m_change_status_path(@o_m.id, o_m_status: :no_status), class: 'btn btn-default', method: :put, data: {confirm: t('o_m.return_material')}
+        - unless @o_m.o_m_status == 'in_progress'
+          - if @o_m.o_m_status == 'no_status'
+            = link_to t('o_m.in_progress'), o_m_write_off_materials_path(@o_m.id, o_m_status: :in_progress), class: 'btn btn-danger', 'data-toggle': 'modal', 'data-target': '#write-off-materils-modal', remote: true,
+            data: {confirm: t('o_m.use_material')}
+          - else
+            = link_to t('o_m.in_progress'), o_m_change_status_path(@o_m.id, o_m_status: :in_progress), class: 'btn btn-danger', method: :put
+        - unless @o_m.o_m_status == 'produced'
+          = link_to t('o_m.done'), o_m_change_status_path(@o_m.id, o_m_status: :produced), class: 'btn btn-warning', method: :put
+        - unless @o_m.o_m_status == 'shipped'
+          = link_to t('o_m.shipped'), o_m_change_status_path(@o_m.id, o_m_status: :shipped), class: 'btn btn-success', method: :put
 
       - if o_m_materials_price.nil?
         - o_m_materials_price = 0.0
@@ -102,7 +104,7 @@
       .col-md-3
         .form-group
           = f.label :finish_date, t('all_form.finish_date')
-          = f.text_field :finish_date, value: (@o_m.finish_date.present? ? @o_m.finish_date : Time.now.strftime('%d.%m.%Y')), class: 'form-control validate-field'
+          = f.text_field :finish_date, value: (@o_m.finish_date.present? ? @o_m.finish_date.to_date.strftime('%d.%m.%Y') : Time.now.strftime('%d.%m.%Y')), class: 'form-control validate-field'
       .col-md-3
         .form-group
           = f.label :invoice, t('all_form.invoice')
@@ -291,12 +293,13 @@
             %tbody#o_m-used-jobs-table-body
       .modal-footer
         %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
-- if @o_m.id.present?
+- if @o_m.id.present? && @o_m.o_m_status == 'no_status'
+
   -#модальное окно списания материалов с ручным заданием количества материалов
   #write-off-materils-modal.modal.fade{:role => 'dialog'}
     .modal-dialog
       .modal-content
-        = form_tag(o_m_save_write_off_materials_path(@o_m.id, o_m_status: 1), method: :put, id: 'o_m_write_off_materils_form') do
+        = form_tag(o_m_save_write_off_materials_path(@o_m.id, o_m_status: :in_progress), method: :put, id: 'o_m_write_off_materils_form') do
           .modal-header
             %button.close{'data-dismiss': 'modal', type: 'button'} ×
             %h4.modal-title

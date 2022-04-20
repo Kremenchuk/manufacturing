@@ -3,9 +3,10 @@
   .col-md-12
     .col-md-6
       .form-group
-        = f.label :name, t('all_form.fio_short')
-        = link_to '', id: 'add_name', remote: true, class: 'add_new_entity', 'data-toggle': 'modal', 'data-target': '#worker-modal' do
-          = text_field_tag :name, @payroll.worker.present? ? @payroll.worker.fio : nil, class: 'form-control validate-field', name: 'payroll[worker', id: 'worker'
+        = f.label :worker, t('all_form.fio_short')
+        = link_to '', id: 'add_worker_name', remote: true, class: 'add_new_entity', 'data-toggle': 'modal', 'data-target': '#workers-modal' do
+          = text_field_tag :worker, @payroll.worker.present? ? @payroll.worker.fio : nil, class: 'form-control validate-field', name: 'payroll[worker]', id: 'worker_name',
+          autocomplete: :off
   .col-md-12
     .col-md-6{style: 'margin-left: -15px; padding-right: 0;'}
       .col-md-3
@@ -15,21 +16,24 @@
       .col-md-3
         .form-group
           = f.label :date, t('all_form.finish_date')
-          = f.text_field :date, value: (@payroll.date.present? ? @payroll.date : Time.now.strftime('%d.%m.%Y')), class: 'form-control validate-field'
+          = f.text_field :date, value: (@payroll.date.present? ? @payroll.date.to_date.strftime('%d.%m.%Y') : Time.now.strftime('%d.%m.%Y')), class: 'form-control validate-field'
   .col-md-12
     .add-new-button
-      = link_to '', id: 'add_o_m_job', remote: true, class: 'btn btn-default add_new_entity', 'data-toggle': 'modal', 'data-target': '#o_m-jobss-modal' do
+      = link_to '', id: 'chose_o_m_details_to_payroll', remote: true, class: 'btn btn-default add_new_entity', 'data-toggle': 'modal', 'data-target': '#o_ms-modal' do
         %i.fa.fa-plus-square
           = t('all_form.add_jobs')
+      .col-md-1{style: 'display: none'}
+        = link_to '' , remote: true, id: 'add_jobs_to_payroll', class: 'btn btn-default add_new_entity', 'data-toggle': 'modal', 'data-target': '#jobs-modal' do
+          Запрятане посилання
   .col-md-12.table-style.hidden-element
-    %table#o_m-details-table{cellspacing: '1', cellpadding: '1', border: '1', width: '100%'}
+    %table#payroll-details-table{cellspacing: '1', cellpadding: '1', border: '1', width: '100%'}
       %thead
         %tr
           %th.table-2 №
           %th.table-45
             = t('all_form.name')
           %th.table-10
-            = t('all_form.unit_short')
+            = t('all_form.qty_in_o_m')
           %th.table-10
             = t('all_form.qty')
           %th.table-10
@@ -38,119 +42,94 @@
             = t('all_form.sum')
           %th.table-5
             = t('all_form.delete')
-      %tbody#o_m-details-table-body
-        -if @o_m_details.present?
+      %tbody#payroll-details-table-body
+        -if @payroll_details.present?
           = render partial: 'payroll_detail'
 
 
   .form-group
     = f.submit t('all_form.save_out'), class: 'btn btn-success'
     = f.submit t('all_form.save'), class: 'btn btn-success'
-    = link_to t('all_form.cancel'), cancel_button_path(returning_entity: 'order_manufacturing'), class: 'btn btn-danger'
+    = link_to t('all_form.cancel'), cancel_button_path(returning_entity: 'payroll'), class: 'btn btn-danger'
 
-/модальне вікно для додавання до таблиці продукції
-#o_m-details-modal.modal.fade{:role => 'dialog'}
+
+/модальне вікно з виборов нарядів в виробництво
+#o_ms-modal.modal.fade{:role => 'dialog'}
   .modal-dialog
     .modal-content
-      = form_tag(add_o_m_detail_path, remote: true, method: :get, id: 'o_m_details_form') do
+      = form_tag(check_o_m_payrolls_path, remote: true, method: :get, id: 'check_o_m_payrolls_form') do
+        .modal-header
+          %button.close{'data-dismiss': 'modal', type: 'button'} ×
+          %h4.modal-title
+            = t('payrolls.choose_o_m')
+        .modal-body
+          %table#o_ms-details-datatable.display.datatable-table{'data-source': check_o_m_datatable_payrolls_url(format: 'json')}
+            %thead
+              %th.table-5 V
+              %th.table-10
+                = t('all_form.start_date')
+              %th.table-10
+                = t('all_form.finish_date')
+              %th.table-20
+                = t('all_form.number')
+              %th.table-45
+                = t('menu.counterparty')
+              %th.table-5
+                = t('all_form.invoice')
+            %tbody
+        .modal-footer
+          = link_to t('all_form.to_choose'), '#',class: 'btn btn-success', remote: true, 'data-dismiss': 'modal',
+            onclick: "$('#check_o_m_payrolls_form').submit()"
+          %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
+
+/модальне вікно для додавання роботи до зарплатних відомостей
+#jobs-modal.modal.fade{:role => 'dialog'}
+  .modal-dialog
+    .modal-content
+      = form_tag(add_details_payrolls_path(entity: :job, id: @payroll.id), remote: true, method: :get, id: 'add_details_payrolls_form') do
         .modal-header
           %button.close{'data-dismiss': 'modal', type: 'button'} ×
           %h4.modal-title
             = t('all_form.add')
         .modal-body
-          %table#o_m-details-datatable.display.datatable-table{'data-source': details_datatable_order_manufacturing_url(format: 'json')}
+          %table#job-details-datatable.display.datatable-table{'data-source': jobs_datatable_payrolls_url(format: 'json', id: @payroll.id)}
             %thead
               %th.table-4 V
               %th.table-40
                 = t('all_form.name')
               %th.table-10
-                = t('all_form.unit')
+                = t('all_form.qty_in_o_m')
+              %th.table-10
+                = t('all_form.price')
+              %th.table-15
+                = t('all_form.time')
             %tbody
         .modal-footer
-          = link_to t('all_form.add'), '#',class: 'btn btn-success', remote: true, 'data-dismiss': 'modal',
-            onclick: "$('#o_m_details_form').submit()"
+          = link_to t('all_form.add'), '#',class: 'btn btn-success', remote: true, 'data-dismiss': 'modal', onclick: "$('#add_details_payrolls_form').submit()"
           %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
 
-/модальне вікно для додавання контрагента
-#counterparties-modal.modal.fade{:role => 'dialog'}
+/модальне вікно для додавання робітника
+#workers-modal.modal.fade{:role => 'dialog'}
   .modal-dialog
     .modal-content
-      = form_tag(add_counterparty_path, remote: true, method: :get, id: 'o_m_counterparty_form') do
+      = form_tag(add_worker_payrolls_path, remote: true, method: :get, id: 'payroll_worker_form') do
         .modal-header
           %button.close{'data-dismiss': 'modal', type: 'button'} ×
           %h4.modal-title
             = t('all_form.add')
         .modal-body
-          %table#counterparties-o_m-datatable.display.datatable-table{'data-source': o_m_counterparty_datatable_url(format: 'json')}
+          %table#workers-payroll-datatable.display.datatable-table{'data-source': workers_datatable_payrolls_url(format: 'json')}
             %thead
               %th.table-10 V
-              %th.table-45
-                = t('all_form.name')
-              %th.table-45
-                = t('all_form.short_name')
-              %th.table-10
-                = t('all_form.type')
+              %th.table-70
+                = t('all_form.fio')
+              %th.table-30
+                = t('all_form.position')
             %tbody
         .modal-footer
+          = link_to t('all_form.to_choose'), '#',class: 'btn btn-success', remote: true, 'data-dismiss': 'modal',
+            onclick: "$('#payroll_worker_form').submit()"
           %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
-
-#used-material-jobs-modal.modal.fade{:role => 'dialog'}
-  .modal-dialog
-    .modal-content
-      .modal-header
-        %button.close{'data-dismiss': 'modal', type: 'button'} ×
-        %h4.modal-title
-          = t('all_form.add')
-      .modal-body
-        .col-md-12
-          %table
-            %thead
-              %th.table-10 №
-              %th.table-70
-                = t('all_form.name')
-              %th.table-10
-                = t('all_form.unit_short')
-              %th.table-10
-                = t('all_form.qty')
-            %tbody#o_m-used-materials-table-body
-        .col-md-12
-          %table
-            %thead
-              %th.table-10 №
-              %th.table-70
-                = t('all_form.name')
-              %th.table-10
-                = t('all_form.qty')
-              %th.table-10
-            %tbody#o_m-used-jobs-table-body
-      .modal-footer
-        %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
-
-
--#- if @o_m.id.present?
--#  /модальне вікно для вибору об'єднання однакових виробів пуд час друку
--#  #o_m_details_pre_print-modal.modal.fade{:role => 'dialog'}
--#    .modal-dialog
--#      .modal-content
--#        = form_tag(o_m_hand_print_path(@o_m.id), method: :get, id: 'o_m_details_pre_print_form') do
--#          = text_area_tag('item_arr_to_print', '', {hidden: true})
--#          .modal-header
--#            %button.close{'data-dismiss': 'modal', type: 'button'} ×
--#            %h4.modal-title Сортировать
--#          .modal-body
--#            = check_box_tag('check_all_check_box', 1, false, {class: 'o_m_details_pre_print-class'})
--#            = label_tag('check_box_label', 'Выбрать все', class: 'checkbox-inline')
--#            %table#o_m_details_pre_print_form-datatable.display.datatable-table{'data-source': details_pre_print_datatable_url(@o_m.present? ? @o_m.id : nil ,format: 'json')}
--#              %thead
--#                %th.table-4 V
--#                %th.table-40 = t('all_form.name')
--#                %th.table-10 = t('all_form.unit')
--#                %th.table-10 = t('all_form.qty')
--#              %tbody
--#          .modal-footer
--#            = link_to 'Печать', '#',class: 'btn btn-success', 'data-dismiss': 'modal',
--#              onclick: "$('#o_m_details_pre_print_form').submit()"
--#            %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
 
 
 :coffee
@@ -176,142 +155,70 @@
   weight_field = document.getElementsByClassName('weight_class')
   sumWeight(sum_field, weight_field)
 
-  @itemDetailsIds = () ->
-    return $('.item_id_class').map(-> $(this).val()).get()
-
-
-  #Підготовка даних до друку в Excel
-  @arrayToPrint = () ->
-    cycleToFor = $('.o_m_details_pre_print-class').length
-    printArray = []
-    checkedArray = []
-    i = 0
-
-    # створення масиву даних з об'єднаними виробами для друку
-    while i < cycleToFor
-      if $('#id_check_' + i.toString()).is(':checked') == true
-        checkedArray.push [$('#id_check_' + i.toString()).data('id'), $('#id_check_' + i.toString()).data('class'), $('#id_check_' + i.toString()).data('qty')]
-      else
-        printArray.push [$('#id_check_' + i.toString()).data('id'), $('#id_check_' + i.toString()).data('class'), $('#id_check_' + i.toString()).data('qty')]
-      j = i + 1
-
-      loop
-        if $('#id_check_' + i.toString()).data("class") == $('#id_check_' + j.toString()).data('class')
-          if $('#id_check_' + i.toString()).data("id") == $('#id_check_' + j.toString()).data('id')
-            if $('#id_check_' + j.toString()).is(':checked') == true
-              if checkedArray.length > 0
-                checkedArray[0][2] = parseFloat(checkedArray[0][2]) + parseFloat($('#id_check_' + j.toString()).data('qty'))
-              else
-                checkedArray.push [$('#id_check_' + j.toString()).data('id'), $('#id_check_' + j.toString()).data('class'), $('#id_check_' + j.toString()).data('qty')]
-            else
-              printArray.push [$('#id_check_' + j.toString()).data('id'), $('#id_check_' + j.toString()).data('class'), $('#id_check_' + j.toString()).data('qty')]
-          else
-            i = j - 1
-            j = cycleToFor
-            if checkedArray.length > 0
-              printArray.push checkedArray[0]
-            checkedArray = []
-        else
-          i = j - 1
-          j = cycleToFor
-          if checkedArray.length > 0
-            printArray.push checkedArray[0]
-          checkedArray = []
-
-        j++
-        unless j < cycleToFor
-          break
-      i++
-
-    $('#item_arr_to_print').val(printArray)
-    return
 
   $ ->
     # Масив усіх елементів для об'єднання
 
-    $('body').on 'click', 'table#counterparties-o_m-datatable tr', (event) ->
-      event.stopPropagation()
-      elem = document.getElementById($(this).find(':radio:eq(0)').attr('id'))
-      elem.click()
-
-    $('#order_manufacturing_date').datepicker({dateFormat: 'dd.mm.yy'})
-
-
-    $('body').on 'click', '.datatable-radio', (event) ->
-      event.stopPropagation()
-      elem = document.getElementById(this.id)
-      $('#o_m_counterparty_form').submit()
-
-
-    # створення масиву даних з об'єднаними виробами для друку
-    $('body').on 'click', ':checkbox', (event) ->
-      event.stopPropagation()
-      arrayToPrint()
-
-    # $('body').on 'submit', '#automatic_print_form', (event) ->
-    $('body').on 'submit', '#o_m_details_pre_print_form', (event) ->
-      arrayToPrint()
+    $('#payroll_date').datepicker({dateFormat: 'dd.mm.yy'})
 
     # Ініціалізація datatable
-    window.omDetailsTable = $('#o_m-details-datatable').DataTable
+
+    window.workersDetailsTable = $('#workers-payroll-datatable').DataTable
       bServerSide: true
       "language": window.dataTableJson
       ajax:
-        url: $('#o_m-details-datatable').data('source')
+        url: $('#workers-payroll-datatable').data('source')
         dataType: 'json'
         cache: false
         type: 'GET'
         data: (d) ->
-          myData = {ids: itemDetailsIds()}
+          myData = {ids: jobDetailsIds()}
           if myData
             $.extend d, myData
           return
 
-    # Ініціалізація datatable
-    window.omPrePrintDetailsTable = $('#o_m_details_pre_print_form-datatable').DataTable
+    $('#add_worker_name').click ->
+      window.workersDetailsTable.ajax.reload()
+
+    window.jobDetailsTable = $('#job-details-datatable').DataTable
       bServerSide: true
       "language": window.dataTableJson
-      searching: false
       ajax:
-        url: $('#o_m_details_pre_print_form-datatable').data('source')
+        url: $('#job-details-datatable').data('source')
         dataType: 'json'
         cache: false
         type: 'GET'
         data: (d) ->
-          myData = $('#o_m_details_pre_print').data('id')
-
-
-    $('#counterparties-o_m-datatable').DataTable
-      bServerSide: true
-      "language": window.dataTableJson
-      ajax:
-        url: $('#counterparties-o_m-datatable').data('source')
-        dataType: 'json'
-        cache: false
-        type: 'GET'
-        data: (d) ->
-          myData = {ids: itemDetailsIds()}
+          myData = {job_ids: jobDetailsIds()}
           if myData
             $.extend d, myData
           return
 
+    $('#add_jobs_to_payroll').click ->
+      window.jobDetailsTable.ajax.reload()
 
 
-    # Перезавантаження даних до таблиць details для item
-    $('#add_o_m_detail').click ->
-      window.omPrePrintDetailsTable.ajax.reload()
+    window.OmDetailsTable = $('#o_ms-details-datatable').DataTable
+      bServerSide: true
+      "language": window.dataTableJson
+      ajax:
+        url: $('#o_ms-details-datatable').data('source')
+        dataType: 'json'
+        cache: false
+        type: 'GET'
+        data: (d) ->
+          myData = {ids: jobDetailsIds()}
+          if myData
+            $.extend d, myData
+          return
 
-    $('#o_m_details_pre_print').click ->
-      window.omDetailsTable.ajax.reload()
+    $('#chose_o_m_details_to_payroll').click ->
+      window.OmDetailsTable.ajax.reload()
+
 
     $('form').on 'keypress', (e) ->
       if e.keyCode == 13
         return false
-
-    #Відмітити всі check_box на сторінці
-    $('#check_all_check_box').click ->
-      # $('#automatic_print_form')
-      $('.o_m_details_pre_print-class').prop('checked', this.checked)
 
     $('.calculated_field').on 'click', (e) ->
       $(this).select()

@@ -1,8 +1,9 @@
 class MappingModelData
   include ApplicationHelper
-  attr_accessor :model_data, :modal_query, :check_element
+  attr_accessor :model_data, :modal_query, :check_element, :data_hash
 
-  def initialize(model_data, modal_query = nil, check_element = nil)
+  def initialize(model_data, data_hash, modal_query = nil, check_element = nil)
+    @data_hash = data_hash
     @model_data = model_data
     @modal_query = modal_query if modal_query.present?
     @check_element = check_element if check_element.present?
@@ -13,7 +14,7 @@ class MappingModelData
       {
           DT_RowId:          model_data_i.id,
           start_date:        model_data_i.start_date,
-          finish_date:       model_data_i.finish_date,
+          finish_date:       model_data_i.finish_date.to_date.strftime('%d.%m.%Y'),
           number:            model_data_i.number,
           counterparty_name: model_data_i.counterparty.nil? ? 'ОШИБКА КОНТРАГЕНТА': model_data_i.counterparty.name,
           invoice:           model_data_i.invoice,
@@ -88,7 +89,7 @@ class MappingModelData
             model_data_i.name,
             model_data_i.name_for_print,
             Float(model_data_i.price),
-            model_data_i.time,
+            model_data_i.time
         ]
       end
     else
@@ -108,6 +109,7 @@ class MappingModelData
     if modal_query.present?
       model_data.where(modal_query != 'nil' ? modal_query : nil).map do |model_data_i|
       [
+          radio_helper(model_data_i.id, 'worker', '[id]','datatable-radio'),
           model_data_i.fio,
           model_data_i.position
       ]
@@ -210,6 +212,36 @@ class MappingModelData
           model_data_i[0].name,
           model_data_i[0].is_a?(Item) ? model_data_i[0].unit : '',
           Float(model_data_i[1])
+      ]
+    end
+  end
+
+  def o_ms_in_payroll
+    # start_date finish_date number counterparty.name invoice o_m_status
+    model_data.map.with_index do |model_data_i, index|
+      [
+        radio_helper(model_data_i.id, 'o_m_in_payroll', '[id]','datatable-radio'),
+        # check_box_helper({ class_name: 'o_ms_in_payroll-class',
+        #                    data: "data-id = '#{model_data_i.id}' data-class = '#{model_data_i.class.to_s}' data-index = '#{index}' ",
+        #                    id: "check_#{index}"}),
+        model_data_i.start_date,
+        model_data_i.finish_date.to_date.strftime('%d.%m.%Y'),
+        model_data_i.number,
+        model_data_i.counterparty.name,
+        model_data_i.invoice
+      ]
+    end
+  end
+
+  def job_in_payroll
+    model_data.map.with_index do |model_data_i, index|
+      [
+        check_box_helper( { value: "{'o_m_id':'#{@data_hash[:o_m].id}','job_id':'#{model_data_i[0].id}'}", name: 'job', field_name:'[id][]',
+                          class_name: 'datatable-checkbox', id: model_data_i[0].id }, { o_m_id: @data_hash[:o_m].id } ),
+        model_data_i[0].name,
+        Float(model_data_i[1]),
+        Float(model_data_i[0].price),
+        model_data_i[0].time
       ]
     end
   end

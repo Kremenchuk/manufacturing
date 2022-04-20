@@ -14,7 +14,10 @@
     %td.position{style: 'text-align: center;'}
       = label_tag 'position', position, class: 'position-label'
     %td
-      = link_to item.name, edit_item_path(id: item.id, path_to_return: URI(request.fullpath).path, breadcrumb_name: @o_m.number)
+      - if @o_m.present?
+        = link_to item.name, edit_item_path(id: item.id, path_to_return: URI(request.fullpath).path, breadcrumb_name: @o_m.number)
+      -else
+        = item.name
     %td.unit-field{'data-counter': item_counter, id: "unit_#{item_counter}"}
       = item.unit
     %td

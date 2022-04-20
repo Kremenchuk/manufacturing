@@ -4,6 +4,5 @@ class PayrollDetail < ApplicationRecord
   belongs_to :payroll
   belongs_to :job
 
-  validates :qty, :sum,
-      presence: true
+  validates :qty, :sum, presence: true
 end

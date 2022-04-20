@@ -1,6 +1,6 @@
 class OrderManufacturing < ApplicationRecord
   require 'carrierwave/orm/activerecord'
-  default_scope { order(created_at: :desc) }
+  default_scope -> { order(o_m_status: :asc, finish_date: :desc) }
 
   has_many :order_manufacturings_details, dependent: :destroy
   has_many :items, through: :order_manufacturings_details
@@ -17,6 +17,8 @@ class OrderManufacturing < ApplicationRecord
       uniqueness:  { scope: [:start_date, :finish_date] }
 
   mount_uploaders :o_m_files, OmUploader
+
+  enum o_m_status: %i(no_status in_progress produced shipped)
 
   def price
     begin

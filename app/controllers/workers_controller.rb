@@ -36,10 +36,16 @@ class WorkersController < ApplicationController
   end
 
   def destroy
-    @worker.destroy
-    flash[:messages] = "'#{@worker.fio}' #{t('all_form.deleted')}"
-    flash[:class] = 'flash-success'
-    redirect_to root_path(active_tab: 'worker')
+    if @worker.payrolls.present?
+      flash[:messages] = t('payrolls.cant_delete')
+      flash[:class] = 'flash-error'
+      redirect_to edit_job_path(@job)
+    else
+      @worker.destroy
+      flash[:messages] = "'#{@worker.fio}' #{t('all_form.deleted')}"
+      flash[:class] = 'flash-success'
+      redirect_to root_path(active_tab: 'worker')
+    end
   end
 
   private

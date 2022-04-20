@@ -4,6 +4,7 @@ class DatatableClass
   delegate :params, :link_to, :number_to_currency, to: :@view
 
   def initialize(data_hash)
+    @data_hash = data_hash
     @view = data_hash[:view_context]
     @sort_column = data_hash[:sort_column]
     @model = data_hash[:model]
@@ -22,18 +23,43 @@ class DatatableClass
   end
 
   def with_out_model(data = [])
+    if @data_hash[:model_data].present?
+      if params[:sSearch].present?
+        model_data = @data_hash[:model_data].where(@search_query, search: "%#{params[:sSearch].mb_chars.upcase.to_s}%")
+      elsif params[:search][:value].present?
+        model_data = @data_hash[:model_data].where(@search_query, search: "%#{params[:search][:value].mb_chars.upcase.to_s}%")
+      else
+        model_data = @data_hash[:model_data]
+      end
     {
         sEcho: params[:sEcho].to_i,
-        iTotalRecords: data.count,
-        iTotalDisplayRecords: data.count,
-        aaData: MappingModelData.new(data).send(@model.to_s.tableize.singularize)
+        iTotalRecords: @data_hash[:model_data].count,
+        iTotalDisplayRecords: @data_hash[:model_data].count,
+        aaData: MappingModelData.new(model_data, @data_hash, (@modal_query if @modal_query.present?), (@check_element if @check_element.present?)).send(@model.to_s.tableize.singularize)
+    }
+    else
+      {
+        sEcho: params[:sEcho].to_i,
+        iTotalRecords: @data_hash.count,
+        iTotalDisplayRecords: @data_hash.count,
+        aaData: MappingModelData.new(@data_hash, @data_hash,).send(@model.to_s.tableize.singularize)
+      }
+    end
+  end
+
+  def empty_response
+    {
+      sEcho: params[:sEcho].to_i,
+      iTotalRecords: 0,
+      iTotalDisplayRecords: 0,
+      aaData: {}
     }
   end
 
   private
 
   def data
-    MappingModelData.new(model_data, (@modal_query if @modal_query.present?), (@check_element if @check_element.present?)).send(@model.to_s.tableize.singularize)
+    MappingModelData.new(model_data, @data_hash, (@modal_query if @modal_query.present?), (@check_element if @check_element.present?)).send(@model.to_s.tableize.singularize)
   end
 
   def model_data

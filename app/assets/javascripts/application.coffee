@@ -100,7 +100,8 @@ $(document).ready ->
   $('#payroll-table').DataTable
     bServerSide: true
     "language": window.dataTableJson,
-    "pageLength": 25
+    "pageLength": 20,
+    "lengthMenu": [[10, 20, 50, 100], [10, 20, 50, 100]]
     ajax:
       url: $('#payroll-table').data('source')
       dataType: 'json'
@@ -120,7 +121,8 @@ $(document).ready ->
     bServerSide: true
     #sAjaxSource: $('#order_manufacturing-table').data('source')
     "language": window.dataTableJson,
-    "pageLength": 25
+    "lengthMenu": [[10, 20, 50, 100], [10, 20, 50, 100]]
+    "pageLength": 20,
     ajax:
       url: $('#order_manufacturing-table').data('source')
       dataType: 'json'
@@ -136,16 +138,16 @@ $(document).ready ->
     ]
     'fnRowCallback': (nRow, aData, iDisplayIndex) ->
       switch aData['o_m_status']
-        when 0
+        when 'no_status'
           $('td', nRow).addClass 'no-status'
           $('td:eq(5)', nRow).html('Без статуса')
-        when 1
+        when 'in_progress'
           $('td', nRow).addClass 'in-work-status'
           $('td:eq(5)', nRow).html('В работе')
-        when 2
+        when 'produced'
           $('td', nRow).addClass 'finished-status'
           $('td:eq(5)', nRow).html('Изготовлен')
-        when 3
+        when 'shipped'
           $('td', nRow).addClass 'shipped-status'
           $('td:eq(5)', nRow).html('Отгружен')
 
@@ -153,7 +155,8 @@ $(document).ready ->
   $('#purchase_invoice-table').DataTable
     bServerSide: true
     "language": window.dataTableJson,
-    "pageLength": 25
+    "pageLength": 20,
+    "lengthMenu": [[10, 20, 50, 100], [10, 20, 50, 100]]
     ajax:
       url: $('#purchase_invoice-table').data('source')
       dataType: 'json'
@@ -178,7 +181,8 @@ $(document).ready ->
   $('#item-table').DataTable
     bServerSide: true
     "language": window.dataTableJson,
-    "pageLength": 25
+    "pageLength": 20,
+    "lengthMenu": [[10, 20, 50, 100], [10, 20, 50, 100]]
     ajax:
       url: $('#item-table').data('source')
       dataType: 'json'
@@ -195,7 +199,8 @@ $(document).ready ->
   $('#material-table').DataTable
     bServerSide: true
     "language": window.dataTableJson,
-    "pageLength": 25
+    "pageLength": 20,
+    "lengthMenu": [[10, 20, 50, 100], [10, 20, 50, 100]]
     ajax:
       url: $('#material-table').data('source')
       dataType: 'json'
@@ -208,27 +213,11 @@ $(document).ready ->
       { "data": "price" }
     ]
 
-  $('#semi_finished-table').DataTable
-    bServerSide: true
-    "language": window.dataTableJson,
-    "pageLength": 25
-    ajax:
-      url: $('#semi_finished-table').data('source')
-      dataType: 'json'
-      cache: false
-      type: 'GET'
-    columns: [
-      { "data": "name" },
-      { "data": "unit" },
-      { "data": "size_l" },
-      { "data": "size_a" },
-      { "data": "size_b" }
-    ]
-
   $('#job-table').DataTable
     bServerSide: true
     "language": window.dataTableJson,
-    "pageLength": 25
+    "pageLength": 20,
+    "lengthMenu": [[10, 20, 50, 100], [10, 20, 50, 100]]
     ajax:
       url: $('#job-table').data('source')
       dataType: 'json'
@@ -244,7 +233,8 @@ $(document).ready ->
   $('#worker-table').DataTable
     bServerSide: true
     "language": window.dataTableJson,
-    "pageLength": 25
+    "pageLength": 20,
+    "lengthMenu": [[10, 20, 50, 100], [10, 20, 50, 100]]
     ajax:
       url: $('#worker-table').data('source')
       dataType: 'json'
@@ -259,7 +249,8 @@ $(document).ready ->
     bServerSide: true
     #sAjaxSource: $('#counterparty-table').data('source')
     "language": window.dataTableJson,
-    "pageLength": 25
+    "pageLength": 20,
+    "lengthMenu": [[10, 20, 50, 100], [10, 20, 50, 100]]
     ajax:
       url: $('#counterparty-table').data('source')
       dataType: 'json'

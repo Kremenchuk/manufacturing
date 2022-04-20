@@ -1,16 +1,16 @@
 %h1
   .col-md-12{style: '  padding-bottom: 25px'}
     - case @o_m.o_m_status
-      - when 0
+      - when 'no_status'
         .no-status-text
           = "#{t('all_form.edit')} '#{@o_m.number}'. #{t('o_m.order')} #{t('o_m.no_status')}"
-      - when 1
+      - when 'in_progress'
         .in-work-status-text
           = "#{t('all_form.edit')} '#{@o_m.number}'. #{t('o_m.order')} #{t('o_m.in_progress')}"
-      - when 2
+      - when 'produced'
         .finished-status-text
           = "#{t('all_form.edit')} '#{@o_m.number}'. #{t('o_m.order')} #{t('o_m.done')}"
-      - when 3
+      - when 'shipped'
         .shipped-status-text
           = "#{t('all_form.edit')} '#{@o_m.number}'. #{t('o_m.order')} #{t('o_m.shipped')}"
 .col-md-12

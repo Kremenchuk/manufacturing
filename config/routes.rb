@@ -35,7 +35,15 @@ Rails.application.routes.draw do
   #---order_manufacturings---
 
   #payrolls
-    resources :payrolls
+    resources :payrolls do
+      get :details_datatable, on: :collection
+      get :add_details, on: :collection
+      get :add_worker, on: :collection
+      get :workers_datatable, on: :collection
+      get :check_o_m, on: :collection
+      get :check_o_m_datatable, on: :collection
+      get :jobs_datatable, on: :collection
+    end
   #---payrolls---
 
   #items
