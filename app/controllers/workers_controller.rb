@@ -39,7 +39,7 @@ class WorkersController < ApplicationController
     if @worker.payrolls.present?
       flash[:messages] = t('payrolls.cant_delete')
       flash[:class] = 'flash-error'
-      redirect_to edit_job_path(@job)
+      redirect_to edit_worker_path(@worker)
     else
       @worker.destroy
       flash[:messages] = "'#{@worker.fio}' #{t('all_form.deleted')}"

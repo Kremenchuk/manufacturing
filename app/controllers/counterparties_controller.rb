@@ -38,10 +38,16 @@ class CounterpartiesController < ApplicationController
   end
 
   def destroy
-    @counterparty.destroy!
-    flash[:messages] = "'#{@counterparty.name}' #{t('all_form.deleted')}"
-    flash[:class] = 'flash-success'
-    redirect_to root_path(active_tab: 'counterparty')
+    if @counterparty.order_manufacturings.present? || @counterparty.purchase_invoices.present?
+      flash[:messages] = t('counterparties.cant_delete')
+      flash[:class] = 'flash-error'
+      redirect_to edit_counterparty_path(@counterparty)
+    else
+      @counterparty.destroy!
+      flash[:messages] = "'#{@counterparty.name}' #{t('all_form.deleted')}"
+      flash[:class] = 'flash-success'
+      redirect_to root_path(active_tab: 'counterparty')
+    end
   end
 
   private
