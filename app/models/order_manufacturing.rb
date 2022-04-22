@@ -8,6 +8,7 @@ class OrderManufacturing < ApplicationRecord
   belongs_to :user
   has_many :orders_manual_materials, dependent: :destroy
   has_many :materials, through: :orders_manual_materials
+  has_many :payroll_details
 
 
   validates :number, :start_date, :finish_date,
@@ -89,8 +90,55 @@ class OrderManufacturing < ApplicationRecord
     return o_m_used_jobs
   end
 
+  def used_jobs_by_payrolls(payroll_detail = nil)
+    filtered_used_jobs = Array.new
+    used_jobs_in_o_m = []
+    result_qty = 0
+    self.order_manufacturings_details.each do |stillage|
+      used_jobs_in_o_m << stillage.item.all_used_jobs(stillage.qty)
+    end
+
+    # Объединение одинаковых работ
+    used_jobs_in_o_m = DataOperation.marge_unit(used_jobs_in_o_m.flatten(1))
+    o_m_used_jobs_in_payrolls = PayrollDetail.where(order_manufacturing: self).map { |x| { entity: x.job, qty: x.qty }}
+    o_m_used_jobs_in_payrolls = DataOperation.marge_unit(o_m_used_jobs_in_payrolls)
+
+    if o_m_used_jobs_in_payrolls.present?
+      used_jobs_in_o_m.each do |job, qty|
+        o_m_used_jobs_in_payrolls.each do |job_in_payrolls, qty_in_payrolls|
+          if job_in_payrolls == job
+            if payroll_detail.present?
+              qty_in_detail = payroll_detail.job == job ? payroll_detail.qty : 0
+              result_qty = qty.to_f.round(2) - qty_in_payrolls.to_f.round(2) + qty_in_detail.to_f.round(2)
+              break
+            else
+              result_qty = qty.to_f.round(2) - qty_in_payrolls.to_f.round(2)
+              break
+            end
+          else
+            result_qty = qty.to_f.round(2)
+          end
+        end
+        if result_qty > 0
+          filtered_used_jobs << { job: job, residual_qty: result_qty, qty_in_o_m: qty}
+        else
+          next
+        end
+      end
+    else
+      filtered_used_jobs = refactor_used_jobs(used_jobs_in_o_m)
+    end
+    filtered_used_jobs
+  end
+
 
 private
+
+  def refactor_used_jobs(used_jobs_in_o_m)
+    used_jobs_in_o_m.map do |used_job|
+      { job: used_job[0], residual_qty: used_job[1], qty_in_o_m: used_job[1]}
+    end
+  end
 
   # def marge_unit(unit_array)
   #   unit_array = unit_array.flatten(1)

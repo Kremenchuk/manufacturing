@@ -4,5 +4,8 @@ class PayrollDetail < ApplicationRecord
   belongs_to :payroll
   belongs_to :job
 
-  validates :qty, :sum, presence: true
+  validates :residual_qty, :qty, :sum, presence: true
+
+  default_scope { order(order_manufacturing_id: :asc) }
+
 end

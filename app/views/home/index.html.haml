@@ -29,6 +29,9 @@
         -if can? :manage, :all
           %li#administration-li.tabs-class
             =link_to t('menu.administrate') , '#administration', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
+        -if can? :manage, :all
+          %li#administration-li.tabs-class
+            =link_to t('menu.reports') , '#report', :class =>'list-group-item', 'data-toggle' => 'tab', remote: true
 
 
 
@@ -109,6 +112,10 @@
         #administration-data
           = render 'administration/index'
 
+    #report.tabs-class.tab-pane.fade.in
+      .col-md-10
+        #administration-data
+          = render 'reports/index'
 -#:javascript
 -#  var order_manufacturings_path = "#{escape_javascript(order_manufacturings_path)}"
 -#

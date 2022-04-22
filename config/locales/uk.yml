@@ -17,10 +17,13 @@ uk:
     counterparties: Контрагенти
     counterparty: Контрагент
     administrate: Адміністрування
+    reports: Звіти
   administrate:
     user_role: Ролі користувачів
     administrate: Адміністрування користувачів
   all_form:
+    all_workers: Всі робітники
+    residual_qty: Залишкова кількість
     o_m: Наряд в виробництво
     qty_in_o_m: Кількість в наряді в виробництво
     to_choose: Обрати
@@ -131,3 +134,7 @@ uk:
     confirm_remove: Точно ПРИБРАТИ метеріали зі складу?
   workers:
     new: Новий робітник
+  reports:
+    select_workers: Вибір робітника
+    start_date: З
+    end_date: По

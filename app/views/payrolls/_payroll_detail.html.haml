@@ -14,18 +14,33 @@
     - item_sum = 0
   %tr{class: 'position_details_line', 'data-position': position}
     %td{style: 'display: none'}
-      = text_field_tag "details[id][]", "{'o_m_id':'#{detail[:o_m].id}','job_id':'#{detail[:job].id}'}", id: "o_m_id_#{detail_counter}", class: 'o_m_id_class'
+      = text_field_tag "details[id][]", "{'o_m_id':'#{detail[:o_m].id}','job_id':'#{detail[:job].id}'}", id: "o_m_id_#{detail_counter}", class: 'job_id_class'
+    %td{style: 'display: none'}
+      = text_field_tag "details[qty_in_o_m][]", detail[:qty_o_m], id: "o_m_qty_#{detail_counter}", class: 'o_m_qty_class'
+    %td{style: 'display: none'}
+      = text_field_tag "details[residual_qty][]", detail[:residual_qty], id: "o_m_residual_qty_#{detail_counter}", class: 'o_m_residual_qty_class'
     %td.position{style: 'text-align: center;'}
       = label_tag 'position', position, class: 'position-label'
     %td
-      = detail[:job].name
+      - if @payroll.present?
+        = link_to detail[:job].name, edit_job_path(id: detail[:job].id, path_to_return: URI(request.fullpath).path, breadcrumb_name: @payroll.number)
+      -else
+        = detail[:job].name
+    %td.o_m_payroll_details
+      - if @payroll.present?
+        = link_to detail[:o_m].number, edit_order_manufacturing_path(id: detail[:o_m].id, path_to_return: URI(request.fullpath).path, breadcrumb_name: @payroll.number)
+      -else
+        = detail[:o_m].number
     %td
-      = detail[:qty_o_m]
+      = detail[:qty_o_m].to_f.round(2)
     %td
-      = number_field_tag 'details[qty][]', detail[:qty], step: 0.001, class: 'form-control calculated_field', id: "qty_#{detail_counter}", 'data-counter': detail_counter
+      = detail[:residual_qty].to_f.round(2)
+    %td
+      = number_field_tag 'details[qty][]', detail[:qty].to_f.round(2), step: 0.001,
+      class: 'form-control calculated_field', id: "qty_#{detail_counter}", 'data-counter': detail_counter, max: detail[:residual_qty]
     %td{id: "price_#{detail_counter}"}
-      = detail[:job].price
+      = detail[:job].price.to_f.round(2)
     %td.sum_field{id: "sum_#{detail_counter}", 'data-counter': detail_counter}
-      = item_sum
+      = item_sum.to_f.round(2)
     %td.remove_row{id: "remove_#{detail_counter}", 'data-counter': detail_counter}
 

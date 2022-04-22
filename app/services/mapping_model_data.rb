@@ -28,7 +28,7 @@ class MappingModelData
       {
           DT_RowId:   model_data_i.id,
           number:     model_data_i.number,
-          date:       model_data_i.date,
+          date:       model_data_i.date.to_date.strftime('%d.%m.%Y'),
           worker_fio: model_data_i.worker.nil? ? 'ОШИБКА РАБОЧЕГО': model_data_i.worker.fio
       }
     end
@@ -236,12 +236,13 @@ class MappingModelData
   def job_in_payroll
     model_data.map.with_index do |model_data_i, index|
       [
-        check_box_helper( { value: "{'o_m_id':'#{@data_hash[:o_m].id}','job_id':'#{model_data_i[0].id}'}", name: 'job', field_name:'[id][]',
-                          class_name: 'datatable-checkbox', id: model_data_i[0].id }, { o_m_id: @data_hash[:o_m].id } ),
-        model_data_i[0].name,
-        Float(model_data_i[1]),
-        Float(model_data_i[0].price),
-        model_data_i[0].time
+        check_box_helper( { value: "{'o_m_id':'#{@data_hash[:o_m].id}','job_id':'#{model_data_i[:job].id}'}", name: 'job', field_name:'[id][]',
+                          class_name: 'datatable-checkbox', id: model_data_i[:job].id }, { o_m_id: @data_hash[:o_m].id } ),
+        model_data_i[:job].name,
+        Float(model_data_i[:qty_in_o_m].to_f.round(3)),
+        Float(model_data_i[:residual_qty].to_f.round(3)),
+        model_data_i[:job].price.to_f.round(2),
+        model_data_i[:job].time
       ]
     end
   end

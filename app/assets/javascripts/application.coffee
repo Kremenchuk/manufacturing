@@ -26,6 +26,9 @@
 @jobDetailsIds = () ->
   return $('.job_id_class').map(-> $(this).val()).get()
 
+@residualQty = () ->
+  return $('.o_m_residual_qty_class').map(-> $(this).val()).get()
+
 @checkboxChecked = (elem, $this) ->
   console.log elem.checked
   if elem.checked == true

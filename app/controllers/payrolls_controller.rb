@@ -1,6 +1,6 @@
 class PayrollsController < ApplicationController
 
-  before_action :find_payroll, only: [:edit, :update, :destroy, :jobs_datatable]
+  before_action :find_payroll, only: [:edit, :update, :destroy]
 
   def index
     data_hash = {
@@ -58,14 +58,27 @@ class PayrollsController < ApplicationController
       modal_query: 'nil'
     }
     if session[:o_m_payroll_id].present?
-      if params[:ids].present?
-        data_hash[:modal_query] = "id NOT IN (#{params[:ids].join(',')})"
-      end
       o_m = OrderManufacturing.find(session[:o_m_payroll_id])
+      used_jobs = []
+      if params[:job_ids].present?
+        jobs_included_in_payroll = params[:job_ids].map { |x| Job.find(JSON.parse(x.gsub("'",'"'))["job_id"]) if JSON.parse(x.gsub("'",'"'))["o_m_id"].to_i == o_m.id }.compact
+        used_jobs = o_m.used_jobs_by_payrolls.map do |used_job|
+          unless jobs_included_in_payroll.include? used_job[:job]
+            { job: used_job[:job], residual_qty: used_job[:residual_qty], qty_in_o_m: used_job[:qty_in_o_m]}
+          end
+        end
+      else
+        used_jobs = o_m.used_jobs_by_payrolls
+      end
+
       data_hash[:o_m] = o_m
-      data_hash[:model_data] = o_m.used_jobs
+      data_hash[:model_data] = used_jobs.compact
       session.delete(:o_m_payroll_id)
-      response = DatatableClass.new(data_hash).with_out_model
+      if data_hash[:model_data].present?
+        response = DatatableClass.new(data_hash).with_out_model
+      else
+        response = DatatableClass.new(data_hash).empty_response
+      end
     else
       response = DatatableClass.new(data_hash).empty_response
     end
@@ -79,15 +92,19 @@ class PayrollsController < ApplicationController
   def add_details
     @payroll_details = []
     if permit_details_param[:id].present?
-      permit_details_param[:id].each do |value|
+      permit_details_param[:id].each_with_index do |value, index|
         add_to_table = JSON.parse(value.gsub("'",'"'))
         selected_o_m = OrderManufacturing.find(add_to_table["o_m_id"])
         selected_job = Job.find(add_to_table["job_id"])
+        qty_o_m, residual_qty = selected_o_m.used_jobs_by_payrolls.select do | used_job |
+          break used_job[:qty_in_o_m], used_job[:residual_qty] if used_job[:job] == selected_job
+        end
         @payroll_details << {
           job: selected_job,
           o_m: selected_o_m,
           qty: 0,
-          qty_o_m: selected_o_m.used_jobs.select { |job, qty| break qty if job == selected_job },
+          residual_qty: residual_qty,
+          qty_o_m: qty_o_m,
           sum: 0
         }
       end
@@ -135,17 +152,24 @@ class PayrollsController < ApplicationController
         payroll.worker = Worker.find_by_fio(params.require(:payroll).permit(:worker)[:worker])
         payroll.date = permit_params[:date].to_date
         payroll.details.destroy_all
-        permit_save_details_param[:id].each_with_index do |value, index|
-          add_to_table = JSON.parse(value.gsub("'",'"'))
-          selected_o_m = OrderManufacturing.find(add_to_table["o_m_id"])
-          selected_job = Job.find(add_to_table["job_id"])
-          PayrollDetail.create(
-            order_manufacturing: selected_o_m,
-            job: selected_job,
-            payroll: payroll,
-            qty: permit_save_details_param[:qty][index],
-            sum: Float(selected_job.price * permit_save_details_param[:qty][index].to_f)
-          )
+        if params[:details].present?
+          permit_save_details_param[:id].each_with_index do |value, index|
+            add_to_table = JSON.parse(value.gsub("'",'"'))
+            selected_job = Job.find(add_to_table["job_id"])
+            if permit_save_details_param[:qty][index].to_f > permit_save_details_param[:residual_qty][index].to_f
+              qty = permit_save_details_param[:residual_qty][index].to_f
+            else
+              qty = permit_save_details_param[:qty][index].to_f
+            end
+            PayrollDetail.create(
+              order_manufacturing: OrderManufacturing.find(add_to_table["o_m_id"]),
+              job: selected_job,
+              payroll: payroll,
+              residual_qty: permit_save_details_param[:residual_qty][index].to_f,
+              qty: qty,
+              sum: Float(selected_job.price.to_f * qty)
+            )
+          end
         end
         unless payroll.save
           flash[:messages] = "Errors: #{payroll.errors.full_messages}"
@@ -172,7 +196,7 @@ class PayrollsController < ApplicationController
   end
 
   def permit_save_details_param
-    params.require(:details).permit(qty: [], id: [])
+    params.require(:details).permit(qty: [], id: [], qty_in_o_m: [], residual_qty: [])
   end
 
   def find_payroll
@@ -180,12 +204,29 @@ class PayrollsController < ApplicationController
   end
 
   def detail_json(detail)
+    residual_qty = recalculate_residual_qty(detail)
       {
         job: detail.job,
         o_m: detail.order_manufacturing,
         qty: detail.qty,
+        residual_qty: residual_qty,
         qty_o_m: detail.order_manufacturing.used_jobs.select { |job, qty| break qty if job == detail.job},
         sum: detail.sum
       }
+  end
+
+  def recalculate_residual_qty(detail)
+    new_residual_qty = detail.order_manufacturing.used_jobs_by_payrolls(detail).select do | used_job |
+      break used_job[:residual_qty] if used_job[:job] == detail.job
+    end
+    if new_residual_qty.present?
+      if detail.qty < new_residual_qty
+        new_residual_qty
+      else
+        detail.qty
+      end
+    else
+      detail.residual_qty
+    end
   end
 end

@@ -17,7 +17,10 @@ class ItemsController < ApplicationController
   end
 
   def item_details_datatable
-    ids = (find_item_inclusions(@items) + params[:ids]).join(',')
+    ids = []
+    if @items.present?
+      ids = (find_item_inclusions(@items) + params[:ids]).join(',')
+    end
     data_hash = {
         view_context: view_context,
         sort_column: %w[name unit item_group],
@@ -237,7 +240,7 @@ class ItemsController < ApplicationController
   end
 
   def find_item
-    @item = Item.find(params[:id])
+    @item = params[:id].present? ? Item.find(params[:id]) : nil
   end
 
 end

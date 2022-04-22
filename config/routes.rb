@@ -7,6 +7,10 @@ Rails.application.routes.draw do
   put 'change_user_locale' => 'application#change_user_locale'
   get :cancel_button, controller: :application
 
+  # reports
+  get :workers_report, controller: :reports
+  # === reports ===
+
   # users
     resources :users
 

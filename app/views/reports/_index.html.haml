@@ -1,0 +1,52 @@
+.col-md-12
+  %h1
+    = t('menu.reports')
+.col-md-12
+
+  = form_tag(workers_report_path, method: :get, id: 'new_role_form', remote: true) do
+    .col-md-12
+      = label_tag :worker, t('reports.select_workers')
+      = select_tag :worker, options_for_select(@workers.collect{ |u| [u.fio, u.id] }.unshift([t('all_form.all_workers'), :all])), class: 'form-control validate-field', name: 'workers_report[worker_id]'
+    .col-md-2
+      = label_tag :start_date, t('reports.start_date')
+      = text_field_tag :start_date, Date.today.at_beginning_of_month.strftime('%d.%m.%Y'), class: 'form-control validate-field', name: 'workers_report[start_date]'
+    .col-md-2
+      = label_tag :end_date, t('reports.end_date')
+      = text_field_tag :end_date, Date.today.strftime('%d.%m.%Y'), class: 'form-control validate-field', name: 'workers_report[end_date]'
+    .col-md-12
+      = submit_tag t('all_form.add'), class: 'btn btn-success'
+    .col-md-1{style: 'display: none'}
+      = link_to '' , remote: true, id: 'workers_report_modal_link', class: 'btn btn-default', 'data-toggle': 'modal', 'data-target': '#workers-report-modal' do
+        Запрятане посилання
+
+
+-# модальне вікно звіту по заробітній платі робітника/робітників
+#workers-report-modal.modal.fade{:role => 'dialog'}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{'data-dismiss': 'modal', type: 'button'} ×
+        %h4.modal-title
+          = t('menu.reports')
+      .modal-body
+        .col-md-12
+          %table.table-workers-report-style
+            %thead
+              %th.table-10 №
+              %th.table-45
+                = t('all_form.fio')
+              %th.table-10
+                = t('all_form.sum')
+            %tbody#workers-report-table-body
+      .modal-footer
+        %button.btn.btn-default{'data-dismiss': 'modal', type: 'button'} Close
+
+
+
+
+:coffee
+  $ ->
+    # Масив усіх елементів для об'єднання
+
+    $('#start_date').datepicker({dateFormat: 'dd.mm.yy'})
+    $('#end_date').datepicker({dateFormat: 'dd.mm.yy'})

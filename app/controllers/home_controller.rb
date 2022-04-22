@@ -5,5 +5,6 @@ class HomeController < ApplicationController
     @item_groups = ItemGroup.all
     @users = User.all
     @roles = Role.all
+    @workers = Worker.all
   end
 end

@@ -17,11 +17,14 @@ ru:
     counterparties: Контрагенты
     counterparty: Контрагент
     administrate: Администрирование
+    reports: Отчеты
   administrate:
     user_role: Роли пользователей
     item_group: Группы изделий
     administrate: Администрирование пользователей
   all_form:
+    all_workers: Все рабочие
+    residual_qty: Оставшееся количество
     o_m: Наряд в производство
     qty_in_o_m: Количество в наряде в производство
     to_choose: Выбрать
@@ -83,7 +86,7 @@ ru:
     payroll_taxes: Налоги на ЗП
     sum_up: Итого
     status: Статус
-    fio: ФИО
+    fio: Фамилия Имя Отчество
     fio_short: ФИО
     worker: Работник
     we_pay: Мы оплатили
@@ -132,3 +135,7 @@ ru:
     confirm_remove: Точно УБРАТЬ материал на склад?
   workers:
     new: Новый работник
+  reports:
+    select_workers: Выбор рабочего
+    start_date: С
+    end_date: По

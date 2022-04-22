@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20220412141500) do
+ActiveRecord::Schema.define(version: 20220421124322) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -131,10 +131,11 @@ ActiveRecord::Schema.define(version: 20220412141500) do
     t.integer  "order_manufacturing_id"
     t.integer  "payroll_id"
     t.integer  "job_id"
-    t.float    "qty",                    null: false
-    t.float    "sum",                    null: false
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.float    "qty",                                  null: false
+    t.float    "sum",                                  null: false
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
+    t.float    "residual_qty",           default: 0.0
     t.index ["job_id"], name: "index_payroll_details_on_job_id", using: :btree
     t.index ["order_manufacturing_id"], name: "index_payroll_details_on_order_manufacturing_id", using: :btree
     t.index ["payroll_id"], name: "index_payroll_details_on_payroll_id", using: :btree
