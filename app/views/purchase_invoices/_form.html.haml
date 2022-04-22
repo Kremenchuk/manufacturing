@@ -33,7 +33,7 @@
           = f.text_field :number, class: 'form-control validate-field', autocomplete: :off
         .form-group
           = f.label :date, t('all_form.date')
-          = f.text_field :date, value: (@p_i.date.present? ? @p_i.date : Time.now.strftime('%d.%m.%Y')), class: 'form-control validate-field'
+          = f.text_field :date, value: (@p_i.date.present? ? @p_i.date : Date.today.strftime('%d.%m.%Y')), class: 'form-control validate-field datepicker'
       .col-md-3
         .form-group
           = f.label :total_price, t('all_form.total_price')
@@ -219,8 +219,6 @@
             $.extend d, myData
           return
 
-
-    $('#purchase_invoice_date').datepicker({dateFormat: 'dd.mm.yy'})
 
 
     $('body').on 'click', '.datatable-radio', (event) ->

@@ -3,8 +3,14 @@
 #= require jquery_ujs
 #= require bootstrap.min.js
 #= require dataTables/jquery.dataTables
-#= require jquery-ui/widgets/datepicker
+#= require bootstrap-datepicker
+#= require bootstrap-datepicker/core
+#= require bootstrap-datepicker/locales/bootstrap-datepicker.ru.js
+#= require bootstrap-datepicker/locales/bootstrap-datepicker.uk.js
 
+@datepicerLanguage = () ->
+  lang = document.getElementById('change_locale')
+  return lang.value.toLowerCase()
 
 @itemId = () ->
   item_id = document.getElementsByName('item_form')
@@ -99,6 +105,11 @@ window.dataTableJson =
 
 # Ініціалізація jquery datatable
 $(document).ready ->
+  $('.datepicker').datepicker({
+    format: 'dd.mm.yyyy',
+    language: datepicerLanguage()
+  })
+
 
   $('#payroll-table').DataTable
     bServerSide: true

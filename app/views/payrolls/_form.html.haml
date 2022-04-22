@@ -23,7 +23,7 @@
       .col-md-3
         .form-group
           = f.label :date, t('all_form.finish_date')
-          = f.text_field :date, value: (@payroll.date.present? ? @payroll.date.to_date.strftime('%d.%m.%Y') : Time.now.strftime('%d.%m.%Y')), class: 'form-control validate-field'
+          = f.text_field :date, value: (@payroll.date.present? ? @payroll.date.to_date.strftime('%d.%m.%Y') : Date.today.strftime('%d.%m.%Y')), class: 'form-control validate-field datepicker'
   .col-md-12
     .add-new-button
       = link_to '', id: 'chose_o_m_details_to_payroll', remote: true, class: 'btn btn-default add_new_entity', 'data-toggle': 'modal', 'data-target': '#o_ms-modal' do
@@ -170,9 +170,6 @@
 
 
   $ ->
-    # Масив усіх елементів для об'єднання
-
-    $('#payroll_date').datepicker({dateFormat: 'dd.mm.yy'})
 
     # Ініціалізація datatable
 

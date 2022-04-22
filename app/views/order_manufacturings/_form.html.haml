@@ -100,11 +100,11 @@
       .col-md-3
         .form-group
           = f.label :start_date, t('all_form.start_date')
-          = f.text_field :start_date, value: (@o_m.start_date.present? ? @o_m.start_date : Time.now.strftime('%d.%m.%Y')), class: 'form-control validate-field'
+          = f.text_field :start_date, value: (@o_m.start_date.present? ? @o_m.start_date : Date.today.strftime('%d.%m.%Y')), class: 'form-control validate-field datepicker'
       .col-md-3
         .form-group
           = f.label :finish_date, t('all_form.finish_date')
-          = f.text_field :finish_date, value: (@o_m.finish_date.present? ? @o_m.finish_date.to_date.strftime('%d.%m.%Y') : Time.now.strftime('%d.%m.%Y')), class: 'form-control validate-field'
+          = f.text_field :finish_date, value: (@o_m.finish_date.present? ? @o_m.finish_date.to_date.strftime('%d.%m.%Y') : Date.today.strftime('%d.%m.%Y')), class: 'form-control validate-field datepicker'
       .col-md-3
         .form-group
           = f.label :invoice, t('all_form.invoice')
@@ -405,9 +405,6 @@
       event.stopPropagation()
       elem = document.getElementById($(this).find(':radio:eq(0)').attr('id'))
       elem.click()
-
-    $('#order_manufacturing_start_date').datepicker({dateFormat: 'dd.mm.yy'})
-    $('#order_manufacturing_finish_date').datepicker({dateFormat: 'dd.mm.yy'})
 
 
     $('body').on 'click', '.datatable-radio', (event) ->
