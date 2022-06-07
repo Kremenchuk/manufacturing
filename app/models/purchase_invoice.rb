@@ -1,3 +1,22 @@
+# == Schema Information
+#
+# Table name: purchase_invoices
+#
+#  id              :integer          not null, primary key
+#  date            :string           not null
+#  note            :text
+#  number          :string           not null
+#  p_i_status      :integer          default(0)
+#  total_price     :float            not null
+#  we_pay          :float            not null
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  counterparty_id :integer
+#
+# Indexes
+#
+#  index_purchase_invoices_on_counterparty_id  (counterparty_id)
+#
 class PurchaseInvoice < ApplicationRecord
 
 

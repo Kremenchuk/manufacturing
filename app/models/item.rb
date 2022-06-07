@@ -1,3 +1,27 @@
+# == Schema Information
+#
+# Table name: items
+#
+#  id                  :integer          not null, primary key
+#  area                :float
+#  for_sale            :boolean          default(NULL)
+#  item_files          :json
+#  name                :string           not null
+#  print_in_collection :boolean          default(TRUE)
+#  size_a              :float
+#  size_b              :float
+#  size_l              :float
+#  unit                :integer          default("шт"), not null
+#  volume              :float
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  item_group_id       :integer
+#
+# Indexes
+#
+#  index_items_on_item_group_id  (item_group_id)
+#  index_items_on_name           (name) UNIQUE
+#
 class Item < ApplicationRecord
 
   has_many :item_details, as: :detailable

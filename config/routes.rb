@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :item_groups
+
   devise_for :users
   root 'home#index'
 
@@ -7,9 +7,20 @@ Rails.application.routes.draw do
   put 'change_user_locale' => 'application#change_user_locale'
   get :cancel_button, controller: :application
 
+  namespace :api, format: :json do
+    namespace :v1 do
+      resources :jobs
+      resources :materials
+    end
+  end
+
+
+
   # reports
   get :workers_report, controller: :reports
   # === reports ===
+
+  resources :item_groups
 
   # users
     resources :users

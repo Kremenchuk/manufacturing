@@ -1,3 +1,30 @@
+# == Schema Information
+#
+# Table name: order_manufacturings
+#
+#  id              :integer          not null, primary key
+#  con_pay         :float
+#  extra_charge    :float
+#  finish_date     :string           not null
+#  indirect_costs  :float
+#  invoice         :string
+#  note            :text
+#  number          :string           not null
+#  o_m_files       :json
+#  o_m_status      :integer          default("no_status")
+#  payroll_taxes   :float
+#  start_date      :string           not null
+#  total_price     :float
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  counterparty_id :integer
+#  user_id         :integer
+#
+# Indexes
+#
+#  index_order_manufacturings_on_counterparty_id  (counterparty_id)
+#  index_order_manufacturings_on_user_id          (user_id)
+#
 class OrderManufacturing < ApplicationRecord
   require 'carrierwave/orm/activerecord'
   default_scope -> { order(o_m_status: :asc, finish_date: :desc) }

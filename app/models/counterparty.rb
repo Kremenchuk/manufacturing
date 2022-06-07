@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: counterparties
+#
+#  id         :integer          not null, primary key
+#  c_type     :integer          default("Покупатель"), not null
+#  name       :string           not null
+#  short_name :string           not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
 class Counterparty < ApplicationRecord
   enum c_type: ['Покупатель', 'Продавец']
 
