@@ -116,6 +116,7 @@ ru:
     use_material: Материалы будут СПИСАНЫ со склада!
     done: Готов
     shipped: Отгружен
+    ship_it: Отгрузить
     order: Заказ
     material_price: Стоимость материалов
     indirect_costs_price: Косвенные затраты
@@ -123,6 +124,7 @@ ru:
     jobs_taxes_price: Стоимость работы
     jobs_price: Стоимость работы без налогов
     jobs_taxes: Налоги на работы
+    total_price_by_prog: Полная стоимость по программе
     modal_use_material: Списание материалов
   payrolls:
     new: Новий наряд на сдельную работу

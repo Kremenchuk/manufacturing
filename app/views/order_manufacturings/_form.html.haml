@@ -22,29 +22,30 @@
         - o_m_total_price = (o_m_materials_price + o_m_jobs_taxes + o_m_indirect_costs + o_m_extra_charge + o_m_jobs_price).round(2)
 
 
-
-        = link_to copy_o_m_path(@o_m.id), class: 'btn btn-default', title: t('all_form.copy') do
-          %i.fa.fa-clone
-        -if can? :manage, :all
-          = link_to order_manufacturing_path(@o_m.id), method: :delete, class: 'btn btn-danger', title: t('all_form.delete'), data: {confirm: t('all_form.confirm_delete')} do
-            %i.fa.fa-trash
-        = link_to automatic_print_order_manufacturing_path(@o_m.id), id: 'automatic_print', class: 'btn btn-default',  title: t('all_form.print') do
-          %i.fa.fa-print
-          %i.fa.fa-laptop
+        .col-md-12.button-line
+          = link_to copy_o_m_path(@o_m.id), class: 'btn btn-default', title: t('all_form.copy') do
+            %i.fa.fa-clone
+          -if can? :manage, :all
+            = link_to order_manufacturing_path(@o_m.id), method: :delete, class: 'btn btn-danger', title: t('all_form.delete'), data: {confirm: t('all_form.confirm_delete')} do
+              %i.fa.fa-trash
+          = link_to automatic_print_order_manufacturing_path(@o_m.id), id: 'automatic_print', class: 'btn btn-default',  title: t('all_form.print') do
+            %i.fa.fa-print
+            %i.fa.fa-laptop
           = link_to t('all_form.used_material'), o_m_used_materials_path(@o_m.id), class: 'btn btn-default', 'data-toggle': 'modal', 'data-target': '#used-material-modal', remote: true
           = link_to t('all_form.used_jobs'), o_m_used_jobs_path(@o_m.id), class: 'btn btn-default', 'data-toggle': 'modal', 'data-target': '#used-jobs-modal', remote: true
-        - unless @o_m.o_m_status == 'no_status'
-          = link_to t('o_m.no_status'), o_m_change_status_path(@o_m.id, o_m_status: :no_status), class: 'btn btn-default', method: :put, data: {confirm: t('o_m.return_material')}
-        - unless @o_m.o_m_status == 'in_progress'
-          - if @o_m.o_m_status == 'no_status'
-            = link_to t('o_m.in_progress'), o_m_write_off_materials_path(@o_m.id, o_m_status: :in_progress), class: 'btn btn-danger', 'data-toggle': 'modal', 'data-target': '#write-off-materils-modal', remote: true,
-            data: {confirm: t('o_m.use_material')}
-          - else
-            = link_to t('o_m.in_progress'), o_m_change_status_path(@o_m.id, o_m_status: :in_progress), class: 'btn btn-danger', method: :put
-        - unless @o_m.o_m_status == 'produced'
-          = link_to t('o_m.done'), o_m_change_status_path(@o_m.id, o_m_status: :produced), class: 'btn btn-warning', method: :put
-        - unless @o_m.o_m_status == 'shipped'
-          = link_to t('o_m.shipped'), o_m_change_status_path(@o_m.id, o_m_status: :shipped), class: 'btn btn-success', method: :put
+        .col-md-12.button-line
+          - unless @o_m.o_m_status == 'no_status'
+            = link_to t('o_m.no_status'), o_m_change_status_path(@o_m.id, o_m_status: :no_status), class: 'btn btn-default', method: :put, data: {confirm: t('o_m.return_material')}
+          - unless @o_m.o_m_status == 'in_progress'
+            - if @o_m.o_m_status == 'no_status'
+              = link_to t('o_m.in_progress'), o_m_write_off_materials_path(@o_m.id, o_m_status: :in_progress), class: 'btn btn-danger', 'data-toggle': 'modal', 'data-target': '#write-off-materils-modal', remote: true,
+              data: {confirm: t('o_m.use_material')}
+            - else
+              = link_to t('o_m.in_progress'), o_m_change_status_path(@o_m.id, o_m_status: :in_progress), class: 'btn btn-danger', method: :put
+          - unless @o_m.o_m_status == 'produced'
+            = link_to t('o_m.done'), o_m_change_status_path(@o_m.id, o_m_status: :produced), class: 'btn btn-warning', method: :put
+          - unless @o_m.o_m_status == 'shipped'
+            = link_to t('o_m.ship_it'), o_m_change_status_path(@o_m.id, o_m_status: :shipped), class: 'btn btn-success', method: :put
 
       - if o_m_materials_price.nil?
         - o_m_materials_price = 0.0
@@ -63,7 +64,8 @@
       .col-md-6
         .col-md-12
           = label_tag :cost_price, "#{t('all_form.cost')}: ", class: 'summ_materials_jobs'
-          = label_tag :cost_price, "#{@o_m.price.present? ? (o_m_materials_price + o_m_jobs_taxes + o_m_jobs_price).round(2): 0.0}", class: 'summ_materials_jobs'
+          = label_tag :cost_price, "#{@o_m.price.present? ? (o_m_materials_price + o_m_jobs_taxes + o_m_jobs_price).round(2): 0.0}",
+          class: 'summ_materials_jobs'
         .col-md-12
           = label_tag :materials_price, "#{t('o_m.material_price')}: ", class: 'summ_materials_jobs'
           = label_tag :materials_price, "#{o_m_materials_price.round(2)}", class: 'summ_materials_jobs'
@@ -73,15 +75,18 @@
         .col-md-12
           = label_tag :extra_charge_price, "#{t('o_m.extra_charge_price')}: ", class: 'summ_materials_jobs'
           = label_tag :extra_charge_price, "#{o_m_extra_charge.present? ? o_m_extra_charge.round(2): 0.0}", class: 'summ_materials_jobs'
+        .col-md-12.red-text-color
+          = label_tag :extra_charge_price, "#{t('o_m.total_price_by_prog')}: ", class: 'summ_materials_jobs'
+          = label_tag :extra_charge_price, "#{o_m_total_price}", class: 'summ_materials_jobs'
       .col-md-6
         .col-md-12
           = label_tag :jobs_taxes_price, "#{t('o_m.jobs_taxes_price')}: ", class: 'summ_materials_jobs'
           = label_tag :jobs_taxes_price, "#{(o_m_jobs_price + o_m_jobs_taxes).round(2)}", class: 'summ_materials_jobs'
         .col-md-12
-          = label_tag :jobs_price, "#{t('o_m.jobs_taxes_price')}: ", class: 'summ_materials_jobs'
+          = label_tag :jobs_price, "#{t('o_m.jobs_price')}: ", class: 'summ_materials_jobs'
           = label_tag :jobs_price, "#{o_m_jobs_price.round(2)}", class: 'summ_materials_jobs'
         .col-md-12
-          = label_tag :jobs_taxes, "#{t('o_m.jobs_taxes_price')}: ", class: 'summ_materials_jobs'
+          = label_tag :jobs_taxes, "#{t('o_m.jobs_taxes')}: ", class: 'summ_materials_jobs'
           = label_tag :jobs_taxes, "#{o_m_jobs_taxes.round(2)}", class: 'summ_materials_jobs'
           %p
 = form_for @o_m, html: {class: 'submit-form'} do |f|
@@ -109,10 +114,6 @@
         .form-group
           = f.label :invoice, t('all_form.invoice')
           = f.text_field :invoice, class: 'form-control', autocomplete: :off
-      .col-md-3{style: 'padding-right: 0;'}
-        .form-group
-          = f.label :price, t('all_form.order_price')
-          = f.number_field :price, class: 'form-control', step: 0.01, value: o_m_total_price
 
     .col-md-12{style: 'margin-left: -15px; padding-right: 0;'}
       .col-md-3
@@ -160,11 +161,12 @@
     .col-md-12
       = f.file_field :o_m_files, multiple: true
 
-  .col-md-12
-    .add-new-button
-      = link_to '', id: 'add_o_m_detail', remote: true, class: 'btn btn-default add_new_entity', 'data-toggle': 'modal', 'data-target': '#o_m-details-modal' do
-        %i.fa.fa-plus-square
-          = t('all_form.add_items')
+  -if @o_m.o_m_status == 'no_status'
+    .col-md-12
+      .add-new-button
+        = link_to '', id: 'add_o_m_detail', remote: true, class: 'btn btn-default add_new_entity', 'data-toggle': 'modal', 'data-target': '#o_m-details-modal' do
+          %i.fa.fa-plus-square
+            = t('all_form.add_items')
   .col-md-12.table-style.hidden-element
     %table#o_m-details-table{cellspacing: '1', cellpadding: '1', border: '1', width: '100%'}
       %thead

@@ -115,6 +115,7 @@ uk:
     use_material: Матеріали будуть СПИСАНІ зі складу!
     done: Готове
     shipped: Відвантажено
+    ship_it: Відвантажити
     order: Замовлення
     material_price: Вартість матеріалів
     indirect_costs_price: Непрямі витрати
@@ -122,6 +123,7 @@ uk:
     jobs_taxes_price: Вартість робіт
     jobs_price: Вартість робіт без податків
     jobs_taxes: Податки на роботи
+    total_price_by_prog: Повна вартість по програмі
     modal_use_material: Списання матеріалів
   payrolls:
     new: Новий наряд на відрядну роботу

@@ -298,3 +298,12 @@ table.display tbody tr:nth-child(odd):hover td, table.display tbody tr:nth-child
 input[type="text"].datatable-text-without-border:focus-visible  {
   outline: none;
 }
+
+.modal-form {
+  //overflow-y: auto;
+  //max-height: 95vh;
+}
+
+.modal {
+  overflow-y: auto;
+}

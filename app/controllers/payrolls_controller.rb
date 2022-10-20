@@ -73,7 +73,7 @@ class PayrollsController < ApplicationController
 
       data_hash[:o_m] = o_m
       data_hash[:model_data] = used_jobs.compact
-      session.delete(:o_m_payroll_id)
+      # session.delete(:o_m_payroll_id)
       if data_hash[:model_data].present?
         response = DatatableClass.new(data_hash).with_out_model
       else

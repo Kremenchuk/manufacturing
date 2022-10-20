@@ -34,15 +34,15 @@ class DatatableClass
     {
         sEcho: params[:sEcho].to_i,
         iTotalRecords: @data_hash[:model_data].count,
-        iTotalDisplayRecords: @data_hash[:model_data].count,
-        aaData: MappingModelData.new(model_data, @data_hash, (@modal_query if @modal_query.present?), (@check_element if @check_element.present?)).send(@model.to_s.tableize.singularize)
+        iTotalDisplayRecords: pagination_with_out_model(model_data).count,
+        aaData: MappingModelData.new(pagination_with_out_model(model_data), @data_hash, (@modal_query if @modal_query.present?), (@check_element if @check_element.present?)).send(@model.to_s.tableize.singularize)
     }
     else
       {
         sEcho: params[:sEcho].to_i,
         iTotalRecords: @data_hash.count,
-        iTotalDisplayRecords: @data_hash.count,
-        aaData: MappingModelData.new(@data_hash, @data_hash,).send(@model.to_s.tableize.singularize)
+        iTotalDisplayRecords: pagination_with_out_model(@data_hash).count,
+        aaData: MappingModelData.new(pagination_with_out_model(@data_hash), @data_hash,).send(@model.to_s.tableize.singularize)
       }
     end
   end
@@ -57,6 +57,10 @@ class DatatableClass
   end
 
   private
+
+  def pagination_with_out_model(data)
+    data[((page - 1) * per_page)..((page * per_page) - 1)]
+  end
 
   def data
     MappingModelData.new(model_data, @data_hash, (@modal_query if @modal_query.present?), (@check_element if @check_element.present?)).send(@model.to_s.tableize.singularize)

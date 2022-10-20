@@ -1,6 +1,10 @@
 source 'https://rubygems.org'
 
 # gem 'mimemagic', github: 'mimemagicrb/mimemagic', ref: '01f92d86d15d85cfd0f20dabd025dcbd36a8a60f'
+
+ruby '2.4.0'
+
+gem "panko_serializer"
 gem 'haml'
 gem 'devise'
 gem 'jquery-ui-rails'
@@ -32,7 +36,7 @@ gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
 # See https://github.com/rails/execjs#readme for more supported runtimes
-gem 'therubyracer', platforms: :ruby
+# gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'

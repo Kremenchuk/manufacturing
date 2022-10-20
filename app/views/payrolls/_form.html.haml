@@ -97,7 +97,8 @@
 #jobs-modal.modal.fade{:role => 'dialog'}
   .modal-dialog
     .modal-content
-      = form_tag(add_details_payrolls_path(entity: :job, id: @payroll.id), remote: true, method: :get, id: 'add_details_payrolls_form') do
+      = form_tag(add_details_payrolls_path(entity: :job, id: @payroll.id), remote: true, method: :get, id: 'add_details_payrolls_form',
+      class: 'modal-form') do
         .modal-header
           %button.close{'data-dismiss': 'modal', type: 'button'} ×
           %h4.modal-title
