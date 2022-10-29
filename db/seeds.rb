@@ -92,22 +92,3 @@ workers.each do |i|
   end
 end
 
-item_groups.each do |i|
-  ItemGroup.find_or_initialize_by(name: i[0]).tap do |f|
-    f.range    = i[1]
-    f.save!
-  end
-end
-
-items.each do |i|
-  Item.find_or_initialize_by(name: i[0]).tap do |f|
-    f.unit    = i[1]
-    f.size_l  = i[2]
-    f.size_a  = i[3]
-    f.size_b  = i[4]
-    f.details = i[5]
-    f.item_group = ItemGroup.find_by_range(i[6])
-    f.save!
-  end
-end
-

@@ -40,8 +40,8 @@
 # gem 'pg'
 #
 default: &default
-  username: rempg
-  password: 1
+  username: <%= ENV['MANUF_DB_USER_DEV'] %>
+  password: <%= ENV['MANUF_DB_PASSWORD_DEV'] %>
   adapter: postgresql
   encoding: unicode
   # For details on connection pooling, see rails configuration guide
