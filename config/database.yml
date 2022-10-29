@@ -109,6 +109,6 @@ test:
 #
 production:
   <<: *default
-  database: manufacturing_production
-  username: manufacturing
-  password: <%= ENV['MANUFACTURING_DATABASE_PASSWORD'] %>
+  database: <%= ENV['MANUF_DB'] %>
+  username: <%= ENV['MANUF_DB_USER'] %>
+  password: <%= ENV['MANUF_DB_PASSWORD'] %>

@@ -18,6 +18,7 @@ gem 'jquery-datatables-rails'
 gem 'cancancan'
 gem 'rubyXL'
 gem 'carrierwave'
+gem 'dotenv'
 
 gem 'bootstrap-datepicker-rails'
 
