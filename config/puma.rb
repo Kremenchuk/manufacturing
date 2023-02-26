@@ -1,5 +1,5 @@
 # Change to match your CPU core count
-workers 2
+workers ENV.fetch("PUMA_MAX_WORKERS", 2)
 
 # Min and Max threads per worker
 max_threads_count = ENV.fetch("RAILS_MAX_THREADS", 5)
