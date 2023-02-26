@@ -1,15 +1,12 @@
 
 default: &default
-  username: <%= ENV['MANUF_DB_USER_DEV'] %>
-  password: <%= ENV['MANUF_DB_PASSWORD_DEV'] %>
   adapter: postgresql
   encoding: unicode
-  # For details on connection pooling, see rails configuration guide
-  # http://guides.rubyonrails.org/configuring.html#database-pooling
-  pool: 16
   host: <%= ENV.fetch("POSTGRES_DB_HOST") { 'localhost' } %>
-  port: <%= ENV.fetch("POSTGRES_DB_PORT") { 5432 } %>
-  timeout: 5000
+  port: <%= ENV.fetch("POSTGRES_DB_PORT") { '5432' } %>
+  username: <%= ENV.fetch("MANUF_DB_USER_DEV") { 'postgres' } %>
+  password: <%= ENV.fetch("MANUF_DB_PASSWORD_DEV") { '' } %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 16 } %>
   checkout_timeout: <%= ENV.fetch('CHECKOUT_TIMEOUT') { 5 }%>
 
 development:
@@ -23,5 +20,5 @@ test:
 production:
   <<: *default
   database: <%= ENV.fetch("MANUF_DB") {''} %>
-  username: <%= ENV.fetch("'MANUF_DB_USER") {''} %>
+  username: <%= ENV.fetch("MANUF_DB_USER") {''} %>
   password: <%= ENV.fetch("MANUF_DB_PASSWORD") {''} %>
