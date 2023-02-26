@@ -7,10 +7,10 @@ default: &default
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: 16
-  host: <%= ENV.fetch("POSTGRES_DB_HOST", 'localhost') %>
-  port: <%= ENV.fetch("POSTGRES_DB_PORT", 5432) %>
+  host: <%= ENV.fetch("POSTGRES_DB_HOST") { 'localhost' } %>
+  port: <%= ENV.fetch("POSTGRES_DB_PORT") { '5432' } %>
   timeout: 5000
-  checkout_timeout: <%= ENV["CHECKOUT_TIMEOUT"].to_i %>
+  checkout_timeout: <%= ENV.fetch('CHECKOUT_TIMEOUT') { 5 }%>
 
 development:
   <<: *default
@@ -22,6 +22,6 @@ test:
 
 production:
   <<: *default
-  database: <%= ENV['MANUF_DB'] %>
-  username: <%= ENV['MANUF_DB_USER'] %>
-  password: <%= ENV['MANUF_DB_PASSWORD'] %>
+  database: <%= ENV.fetch("MANUF_DB") {''} %>
+  username: <%= ENV.fetch("'MANUF_DB_USER") {''} %>
+  password: <%= ENV.fetch("MANUF_DB_PASSWORD") {''} %>
