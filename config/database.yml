@@ -46,11 +46,11 @@ default: &default
   encoding: unicode
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  host: <%= ENV.fetch("POSTGRES_DB_HOST") { 'localhost' } %>
-  port: <%= ENV.fetch("POSTGRES_DB_PORT") { '5432' } %>
+  pool: 40
+  host: 'localhost'
+  port: 5432
   timeout: 5000
-  checkout_timeout: <%= ENV.fetch("CHECKOUT_TIMEOUT").to_i  { 5 } %>
+  checkout_timeout: <%= ENV["CHECKOUT_TIMEOUT"].to_i %>
 
 development:
   <<: *default
