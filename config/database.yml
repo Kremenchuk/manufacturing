@@ -50,6 +50,7 @@ default: &default
   host: <%= ENV.fetch("POSTGRES_DB_HOST") { 'localhost' } %>
   port: <%= ENV.fetch("POSTGRES_DB_PORT") { '5432' } %>
   timeout: 5000
+  checkout_timeout: 10
 
 development:
   <<: *default
