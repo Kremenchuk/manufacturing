@@ -8,7 +8,7 @@ default: &default
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: 16
   host: <%= ENV.fetch("POSTGRES_DB_HOST") { 'localhost' } %>
-  port: <%= ENV.fetch("POSTGRES_DB_PORT") { '5432' } %>
+  port: <%= ENV.fetch("POSTGRES_DB_PORT") { 5432 } %>
   timeout: 5000
   checkout_timeout: <%= ENV.fetch('CHECKOUT_TIMEOUT') { 5 }%>
 
