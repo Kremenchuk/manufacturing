@@ -2,7 +2,7 @@
 workers 2
 
 # Min and Max threads per worker
-threads 1, 1
+threads 1, 2
 
 app_dir = File.expand_path("../..", __FILE__)
 shared_dir = "#{app_dir}/shared"
