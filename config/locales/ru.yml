@@ -19,6 +19,10 @@ ru:
     administrate: Администрирование
     reports: Отчеты
   administrate:
+    tab_title:
+      user: Администрирование юзеров
+      material: Администрирование материалов
+      job: Администрирование работ
     user_role: Роли пользователей
     item_group: Группы изделий
     administrate: Администрирование пользователей

@@ -19,6 +19,10 @@ uk:
     administrate: Адміністрування
     reports: Звіти
   administrate:
+    tab_title:
+      user: Адміністрування користувачів
+      material: Адміністрування матеріалів
+      job: Адміністрування робіт
     user_role: Ролі користувачів
     administrate: Адміністрування користувачів
   all_form:

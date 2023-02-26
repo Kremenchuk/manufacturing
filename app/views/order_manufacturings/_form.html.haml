@@ -26,8 +26,9 @@
           = link_to copy_o_m_path(@o_m.id), class: 'btn btn-default', title: t('all_form.copy') do
             %i.fa.fa-clone
           -if can? :manage, :all
-            = link_to order_manufacturing_path(@o_m.id), method: :delete, class: 'btn btn-danger', title: t('all_form.delete'), data: {confirm: t('all_form.confirm_delete')} do
-              %i.fa.fa-trash
+            - if @o_m.o_m_status == 'no_status'
+              = link_to order_manufacturing_path(@o_m.id), method: :delete, class: 'btn btn-danger', title: t('all_form.delete'), data: {confirm: t('all_form.confirm_delete')} do
+                %i.fa.fa-trash
           = link_to automatic_print_order_manufacturing_path(@o_m.id), id: 'automatic_print', class: 'btn btn-default',  title: t('all_form.print') do
             %i.fa.fa-print
             %i.fa.fa-laptop

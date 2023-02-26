@@ -50,6 +50,10 @@
         .form-group
           = f.label :note, t('all_form.note')
           = f.text_area :note, class: 'form-control'
+        -if can? :manage, :superuser
+          .form-group
+            = f.label :qty, 'Кількість'
+            = f.number_field :qty, step: 0.001, class: 'form-control'
 
   .col-md-12
     .form-group

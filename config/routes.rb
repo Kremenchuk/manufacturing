@@ -128,5 +128,10 @@ Rails.application.routes.draw do
   #---purchese_invoice---
 
 
+  # administrations
+  post :zeroing_material_balances, controller: :administrations
+  post :increase_decrease_jobs_price, controller: :administrations
+  #---administrations---
+
   # get 'material_details_datatable' => 'purchase_invoices#material_details_datatable'
 end

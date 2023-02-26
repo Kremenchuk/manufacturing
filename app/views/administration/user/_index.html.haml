@@ -1,0 +1,77 @@
+.col-md-12
+  %h1
+    = t('administrate.user_role')
+.col-md-12
+  - @roles.each do |role|
+    = form_tag(edit_role_path(role.id), method: :get, id: 'role_form') do
+      .col-md-3
+        = text_field_tag :role_name, role.name, class: 'form-control validate-field', name: 'role[name]'
+      .col-md-7
+        = text_field_tag :role_available_classes, role.available_classes, class: 'form-control validate-field', name: 'role[available_classes]'
+      .col-md-2
+        = submit_tag t('all_form.edit'), class: 'btn btn-success'
+        = link_to role_path(id: role.id), method: :delete, class: 'btn btn-default', title: t('all_form.delete'), data: {confirm: t('all_form.confirm_delete')} do
+          %i.fa.fa-trash
+  = form_tag(roles_path, method: :post, id: 'new_role_form') do
+    .col-md-3
+      = text_field_tag :role_name, '', class: 'form-control validate-field', name: 'role[name]'
+    .col-md-7
+      = text_field_tag :role_available_classes, '', class: 'form-control validate-field', name: 'role[available_classes]'
+    .col-md-2
+      = submit_tag t('all_form.add'), class: 'btn btn-success'
+
+.col-md-12
+  %hr
+
+.col-md-12
+  %h1
+    = t('all_form.item_group')
+
+.col-md-12
+  - @item_groups.each do |item_group|
+    = form_tag(edit_item_group_path(item_group.id), method: :get, id: 'role_form') do
+      .col-md-3
+        = text_field_tag :item_group_name, item_group.name, class: 'form-control validate-field', name: 'item_group[name]'
+      .col-md-7
+        = text_field_tag :item_group_available_classes, item_group.range, class: 'form-control validate-field', name: 'item_group[range]'
+      .col-md-2
+        = submit_tag t('all_form.edit'), class: 'btn btn-success'
+        = link_to item_group_path(id: item_group.id), method: :delete, class: 'btn btn-default', title: t('all_form.delete'), data: {confirm: t('all_form.confirm_delete')} do
+          %i.fa.fa-trash
+  = form_tag(item_groups_path, method: :post, id: 'new_role_form') do
+    .col-md-3
+      = text_field_tag :item_group_name, '', class: 'form-control validate-field', name: 'item_group[name]'
+    .col-md-7
+      = text_field_tag :item_group_range, '', class: 'form-control validate-field', name: 'item_group[range]'
+    .col-md-2
+      = submit_tag t('all_form.add'), class: 'btn btn-success'
+
+.col-md-12
+  %hr
+
+.col-md-12
+  %h1
+    = t('administrate.administrate')
+
+.col-md-12
+  - @users.each do |user|
+    = form_tag(edit_user_path(user.id), method: :get, id: 'role_form') do
+      .col-md-3
+        = text_field_tag :user_email, user.email, class: 'form-control validate-field', name: 'user[email]'
+      .col-md-3
+        = text_field_tag :user_password, user.password, class: 'form-control validate-field', name: 'user[password]'
+      .col-md-4
+        = select_tag :user_role, options_for_select(@roles.collect{ |u| [u.name, u.id] }, user.role.id), class: 'form-control validate-field', name: 'user[role]'
+      .col-md-2
+        = submit_tag t('all_form.edit'), class: 'btn btn-success'
+        = link_to user_path(id: user.id), method: :delete, class: 'btn btn-default', title: t('all_form.delete'), data: {confirm: t('all_form.confirm_delete')} do
+          %i.fa.fa-trash
+  = form_tag(users_path, method: :post, id: 'new_role_form') do
+    .col-md-3
+      = text_field_tag :user_name, '', class: 'form-control validate-field', name: 'user[email]'
+    .col-md-3
+      = text_field_tag :user_range, '', class: 'form-control validate-field', name: 'user[password]'
+    .col-md-4
+      = select_tag :user_role, options_for_select(@roles.collect{ |u| [u.name, u.id] }), class: 'form-control validate-field', name: 'user[role]'
+    .col-md-2
+      = submit_tag t('all_form.add'), class: 'btn btn-success'

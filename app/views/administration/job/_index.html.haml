@@ -1,0 +1,9 @@
+.col-md-12
+  %h2
+    Збільшити (+) або зменьшити (-) вартість всіх робіт. Вводити відсоток
+  .col-md-12
+    = form_tag(increase_decrease_jobs_price_path, method: :post) do
+      .col-md-12
+        = number_field_tag :percents, '', name: 'percents', step: 0.1
+      .col-md-12
+        = submit_tag t('all_form.save'), class: 'btn btn-success'
